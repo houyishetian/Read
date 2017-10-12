@@ -1,6 +1,7 @@
 package com.lin.read.fragment;
 
 
+import android.animation.StateListAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +64,8 @@ public class ScanFragment extends Fragment {
         scanFilterTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation anim= AnimationUtils.loadAnimation(getActivity(),R.anim.set_scan_filter_menu_in);
+                scanFilterLayout.startAnimation(anim);
                 scanFilterLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -67,7 +73,24 @@ public class ScanFragment extends Fragment {
         scanFilterBlank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanFilterLayout.setVisibility(View.GONE);
+                Animation anim= AnimationUtils.loadAnimation(getActivity(),R.anim.set_scan_filter_menu_out);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        scanFilterLayout.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                scanFilterLayout.startAnimation(anim);
             }
         });
     }
