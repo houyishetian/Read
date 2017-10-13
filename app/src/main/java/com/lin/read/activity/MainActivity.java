@@ -67,10 +67,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setSelectBackground(0);
                 break;
             case R.id.rl_search:
+                scanFragment.hideFilterLayoutWithoutAnimation();
                 localFragmentTransaction.show(this.searchFragment).hide(this.scanFragment).hide(this.downloadHistoryFragment);
                 setSelectBackground(1);
                 break;
             case R.id.rl_history:
+                scanFragment.hideFilterLayoutWithoutAnimation();
                 localFragmentTransaction.show(this.downloadHistoryFragment).hide(this.searchFragment).hide(this.scanFragment);
                 setSelectBackground(2);
                 break;
@@ -96,6 +98,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private long lastClick = 0L;
     public void onBackPressed()
     {
+        if(scanFragment.isFilterLayoutVisble()){
+            scanFragment.hideFilterLayout();
+            return;
+        }
         long current = System.currentTimeMillis();
         if (current - this.lastClick <= 2000L)
         {
@@ -105,4 +111,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Toast.makeText(this, "再次按返回键退出", Toast.LENGTH_SHORT).show();
         this.lastClick = current;
     }
+
+
 }
