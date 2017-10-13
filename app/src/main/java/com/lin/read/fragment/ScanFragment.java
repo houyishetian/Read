@@ -1,6 +1,7 @@
 package com.lin.read.fragment;
 
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -23,6 +26,8 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.ScanTypeAdapter;
 import com.lin.read.ScanTypeItemDecoration;
+import com.lin.read.filter.SearchInfo;
+import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
 import com.lin.read.utils.NumberInputFilter;
 import com.lin.read.utils.ScoreInputFilter;
@@ -54,11 +59,14 @@ public class ScanFragment extends Fragment {
 
     private ScrollView scrollView;
 
+    private Button scanOK;
+
     //添加用来在键盘显示的时候，改变该view的高度（键盘高度），从而把layout顶上去；若是键盘隐藏，则将该view高度设置为0
     private View tempViewForSoft;
 
     //用来记录上次监听到的屏幕高度变化时的高度，避免重复处理，否则会陷入死循环
     int lastHeight = -1;
+    private boolean isSoftInputDisplay=false;
 
     private Handler handler;
 
@@ -89,6 +97,7 @@ public class ScanFragment extends Fragment {
         scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
 
         tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
+        scanOK = (Button) view.findViewById(R.id.scan_ok);
 
         handler=new Handler();
 
@@ -109,6 +118,15 @@ public class ScanFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 hideFilterLayout();
+            }
+        });
+
+        scanOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideFilterLayout();
+                SearchInfo searchInfo=getSearchInfo();
+                Log.e("Test",searchInfo.toString());
             }
         });
     }
@@ -139,6 +157,13 @@ public class ScanFragment extends Fragment {
     }
 
     public void hideFilterLayout() {
+        if(isSoftInputDisplay){
+            View view=getFocusEt();
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+            view.clearFocus();
+        }
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_out);
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -160,6 +185,13 @@ public class ScanFragment extends Fragment {
     }
 
     public void hideFilterLayoutWithoutAnimation() {
+        if(isSoftInputDisplay){
+            View view=getFocusEt();
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
+            view.clearFocus();
+        }
         scanFilterLayout.setVisibility(View.GONE);
     }
 
@@ -186,9 +218,11 @@ public class ScanFragment extends Fragment {
                 //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
                 int heightDifference = screenHeight - r.bottom;
                 if (heightDifference == 0) {
-                    android.util.Log.e("Test", "hide softInput!---"+heightDifference);
+                    isSoftInputDisplay=false;
+                    android.util.Log.e("Test", "hide softInput!---" + heightDifference);
                 } else {
-                    android.util.Log.e("Test", "show softInput!---"+heightDifference);
+                    isSoftInputDisplay=true;
+                    android.util.Log.e("Test", "show softInput!---" + heightDifference);
                 }
 
                 //若当前height改变还未处理过
@@ -244,5 +278,37 @@ public class ScanFragment extends Fragment {
             return recommendEt;
         }
         return null;
+    }
+
+    public SearchInfo getSearchInfo() {
+        SearchInfo searchInfo = new SearchInfo();
+        searchInfo.setWebType(scanWebTypeAdapter.getCheckedInfo().getId());
+        searchInfo.setRankType(scanRankTypeAdapter.getCheckedInfo().getId());
+        searchInfo.setBookType(scanBookTypeAdapter.getCheckedInfo().getId());
+        String score = scoreEt.getText().toString();
+        String scoreNum = scoreNumEt.getText().toString();
+        String wordsNum = wordsNumEt.getText().toString();
+        String recommend = recommendEt.getText().toString();
+        if (StringUtils.isEmpty(score)) {
+            score = "8.0";
+            scoreEt.setText(score);
+        }
+        if (StringUtils.isEmpty(scoreNum)) {
+            scoreNum = "300";
+            scoreNumEt.setText(scoreNum);
+        }
+        if (StringUtils.isEmpty(wordsNum)) {
+            wordsNum = "200";
+            wordsNumEt.setText(wordsNum);
+        }
+        if (StringUtils.isEmpty(recommend)) {
+            recommend = "50";
+            recommendEt.setText(recommend);
+        }
+        searchInfo.setScore(score);
+        searchInfo.setScoreNum(scoreNum);
+        searchInfo.setWordsNum(wordsNum);
+        searchInfo.setRecommend(recommend);
+        return searchInfo;
     }
 }
