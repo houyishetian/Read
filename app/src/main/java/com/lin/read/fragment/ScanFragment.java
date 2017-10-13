@@ -1,6 +1,7 @@
 package com.lin.read.fragment;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +129,7 @@ public class ScanFragment extends Fragment {
                 hideFilterLayout();
                 SearchInfo searchInfo=getSearchInfo();
                 Log.e("Test",searchInfo.toString());
+                showScaningDialog();
             }
         });
     }
@@ -310,5 +313,18 @@ public class ScanFragment extends Fragment {
         searchInfo.setWordsNum(wordsNum);
         searchInfo.setRecommend(recommend);
         return searchInfo;
+    }
+
+    private void showScaningDialog(){
+        Dialog dialog = new Dialog(this.getActivity(), R.style.Dialog_Fullscreen);
+        dialog.show();
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View viewDialog = inflater.inflate(R.layout.dialog_scaning, null);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        //设置dialog的宽高为屏幕的宽高
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+        dialog.setContentView(viewDialog, layoutParams);
     }
 }
