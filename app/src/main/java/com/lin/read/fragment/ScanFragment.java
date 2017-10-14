@@ -3,6 +3,7 @@ package com.lin.read.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.ScanTypeAdapter;
 import com.lin.read.ScanTypeItemDecoration;
+import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.SearchInfo;
 import com.lin.read.filter.StringUtils;
@@ -130,7 +132,8 @@ public class ScanFragment extends Fragment {
                 hideFilterLayout();
                 SearchInfo searchInfo=getSearchInfo();
                 Log.e("Test",searchInfo.toString());
-                showScaningDialog();
+//                showScaningDialog();
+                startActivity(new Intent(getActivity(), LoadingDialogActivity.class));
             }
         });
     }

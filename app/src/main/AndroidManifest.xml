@@ -20,6 +20,9 @@
             android:name=".activity.MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
+
+        <activity android:name=".activity.LoadingDialogActivity"
+            android:theme="@style/LoadingDialogActivityStyle"/>
     </application>
 
 </manifest>
