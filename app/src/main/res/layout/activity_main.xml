@@ -15,11 +15,13 @@
         android:orientation="horizontal"></LinearLayout>
 
     <View
+        android:id="@+id/main_split_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E8E8E8" />
 
     <LinearLayout
+        android:id="@+id/ll_main_functions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

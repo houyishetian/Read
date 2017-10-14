@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.lin.read.R;
@@ -24,6 +25,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private View searchView;
     private View downloadHistoryView;
 
+    private View mainSplitView;
+    private LinearLayout mainFunctionViews;
+
     private List<View> allFunctionViews;
 
     @Override
@@ -38,6 +42,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         scanView = findViewById(R.id.rl_scan);
         searchView = findViewById(R.id.rl_search);
         downloadHistoryView = findViewById(R.id.rl_history);
+        mainSplitView=findViewById(R.id.main_split_view);
+        mainFunctionViews= (LinearLayout) findViewById(R.id.ll_main_functions);
 
         allFunctionViews=new ArrayList<>();
         allFunctionViews.add(scanView);
@@ -110,6 +116,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
         Toast.makeText(this, "再次按返回键退出", Toast.LENGTH_SHORT).show();
         this.lastClick = current;
+    }
+
+    public void hideBottomViews(boolean isHide){
+        if(isHide){
+            mainSplitView.setVisibility(View.GONE);
+            mainFunctionViews.setVisibility(View.GONE);
+        }else{
+            mainSplitView.setVisibility(View.VISIBLE);
+            mainFunctionViews.setVisibility(View.VISIBLE);
+        }
     }
 
 

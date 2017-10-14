@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.ScanTypeAdapter;
 import com.lin.read.ScanTypeItemDecoration;
+import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.SearchInfo;
 import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
@@ -233,10 +234,16 @@ public class ScanFragment extends Fragment {
                     //将该height设置到tempViewForSoft
                     ViewGroup.LayoutParams params = tempViewForSoft.getLayoutParams();
                     params.height = heightDifference;
+                    if(params.height!=0){
+                        params.height=200;
+                    }
                     tempViewForSoft.setLayoutParams(params);
                     //若此时是键盘显示
                     if (heightDifference != 0) {
+                        ((MainActivity)getActivity()).hideBottomViews(true);
                         scrollToEndAndRequestFocus();
+                    }else{
+                        ((MainActivity)getActivity()).hideBottomViews(false);
                     }
                     //将当前高度记为已处理，否则fullScroll会requestLayout,会再次触发onGlobalLayout，这样会陷入死循环
                     lastHeight = heightDifference;
