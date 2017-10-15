@@ -158,7 +158,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         if(scoreBookInfo!=null){
                             scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, bookInfos.get(index));
                             synchronized (Runnable.class) {
-                                if (scoreBookInfo == null) {
+                                if (scoreBookInfo != null) {
                                     resultBookInfo.add(scoreBookInfo);
                                     MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE, resultBookInfo.size());
                                 }
