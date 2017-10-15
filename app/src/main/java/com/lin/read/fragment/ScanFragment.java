@@ -131,9 +131,11 @@ public class ScanFragment extends Fragment {
             public void onClick(View v) {
                 hideFilterLayout();
                 SearchInfo searchInfo=getSearchInfo();
-                Log.e("Test",searchInfo.toString());
+                if(searchInfo!=null){
+                  Log.e("Test",searchInfo.toString());
 //                showScaningDialog();
-                startActivity(new Intent(getActivity(), LoadingDialogActivity.class));
+                    startActivity(new Intent(getActivity(), LoadingDialogActivity.class));
+                }
             }
         });
     }
@@ -298,26 +300,18 @@ public class ScanFragment extends Fragment {
         searchInfo.setWebType(scanWebTypeAdapter.getCheckedInfo().getId());
         searchInfo.setRankType(scanRankTypeAdapter.getCheckedInfo().getId());
         searchInfo.setBookType(scanBookTypeAdapter.getCheckedInfo().getId());
-        String score = scoreEt.getText().toString();
-        String scoreNum = scoreNumEt.getText().toString();
-        String wordsNum = wordsNumEt.getText().toString();
-        String recommend = recommendEt.getText().toString();
-        if (StringUtils.isEmpty(score)) {
-            score = "8.0";
-            scoreEt.setText(score);
+
+        String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(),"8.0",StringUtils.INPUTTYPE_FLOAT);
+        String scoreNum =StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(),"300",StringUtils.INPUTTYPE_INTEGER);
+        String wordsNum =StringUtils.setQiDianDefaultValue(wordsNumEt.getText().toString(),"200",StringUtils.INPUTTYPE_INTEGER);
+        String recommend =StringUtils.setQiDianDefaultValue(recommendEt.getText().toString(),"50",StringUtils.INPUTTYPE_INTEGER);
+        if (score == null || scoreNum == null || wordsNum == null || recommend == null) {
+            return null;
         }
-        if (StringUtils.isEmpty(scoreNum)) {
-            scoreNum = "300";
-            scoreNumEt.setText(scoreNum);
-        }
-        if (StringUtils.isEmpty(wordsNum)) {
-            wordsNum = "200";
-            wordsNumEt.setText(wordsNum);
-        }
-        if (StringUtils.isEmpty(recommend)) {
-            recommend = "50";
-            recommendEt.setText(recommend);
-        }
+        scoreEt.setText(score);
+        scoreNumEt.setText(scoreNum);
+        wordsNumEt.setText(wordsNum);
+        recommendEt.setText(recommend);
         searchInfo.setScore(score);
         searchInfo.setScoreNum(scoreNum);
         searchInfo.setWordsNum(wordsNum);

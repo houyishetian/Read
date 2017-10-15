@@ -1,5 +1,7 @@
 package com.lin.read.filter;
 
+import android.util.Log;
+
 import com.lin.read.filter.qidian.QiDianConstants;
 
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 public class StringUtils {
 
 	private static String baseRankPage = "https://www.qidian.com/rank/%s?chn=%d&page=%d";
+	public static final String INPUTTYPE_FLOAT="INPUTTYPE_FLOAT";
+	public static final String INPUTTYPE_INTEGER="INPUTTYPE_INTEGER";
 
 	public static boolean isEmpty(String data) {
 		return data == null || data.length() == 0;
@@ -36,6 +40,41 @@ public class StringUtils {
 		for (KeyValuePair item : typeList) {
 			if (typeKey.equals(item.getKey())) {
 				return item.getValue();
+			}
+		}
+		return null;
+	}
+
+	public static String setQiDianDefaultValue(String currentInput,String defaultValue,String inputType){
+		if(isEmpty(defaultValue)||isEmpty(inputType)){
+			return null;
+		}
+		if(isEmpty(currentInput)){
+			return defaultValue;
+		}
+		if(inputType.equals(INPUTTYPE_INTEGER)){
+			try {
+				int current=Integer.parseInt(currentInput);
+				int defaultOne=Integer.parseInt(defaultValue);
+				if(current<defaultOne){
+					return defaultValue;
+				}
+				return currentInput;
+			}catch (Exception e){
+				e.printStackTrace();
+				return null;
+			}
+		}else if(inputType.equals(INPUTTYPE_FLOAT)){
+			try {
+				float current=Float.parseFloat(currentInput);
+				float defaultOne=Float.parseFloat(defaultValue);
+				if(current<defaultOne){
+					return defaultValue;
+				}
+				return currentInput;
+			}catch (Exception e){
+				e.printStackTrace();
+				return null;
 			}
 		}
 		return null;
