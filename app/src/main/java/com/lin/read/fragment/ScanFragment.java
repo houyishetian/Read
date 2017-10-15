@@ -31,11 +31,16 @@ import com.lin.read.ScanTypeAdapter;
 import com.lin.read.ScanTypeItemDecoration;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
+import com.lin.read.filter.ReadGetBookInfoFactory;
+import com.lin.read.filter.ReadGetQiDianBookInfoFactory;
 import com.lin.read.filter.SearchInfo;
 import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
+import com.lin.read.utils.Constants;
 import com.lin.read.utils.NumberInputFilter;
 import com.lin.read.utils.ScoreInputFilter;
+
+import java.util.List;
 
 /**
  * Created by lisonglin on 2017/10/11.
@@ -134,7 +139,9 @@ public class ScanFragment extends Fragment {
                 if(searchInfo!=null){
                   Log.e("Test",searchInfo.toString());
 //                showScaningDialog();
-                    startActivity(new Intent(getActivity(), LoadingDialogActivity.class));
+                    Intent intent=new Intent(getActivity(), LoadingDialogActivity.class);
+                    intent.putExtra(Constants.KEY_SEARCH_INFO,searchInfo);
+                    startActivity(intent);
                 }
             }
         });

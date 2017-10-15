@@ -1,10 +1,13 @@
 package com.lin.read.filter;
 
+
+import java.io.Serializable;
+
 /**
  * Created by lisonglin on 2017/10/14.
  */
 
-public class SearchInfo {
+public class SearchInfo implements Serializable{
     private String webType;
     private String rankType;
     private String bookType;
@@ -81,4 +84,5 @@ public class SearchInfo {
                 ", recommend='" + recommend + '\'' +
                 '}';
     }
+
 }

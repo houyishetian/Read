@@ -3,12 +3,22 @@ package com.lin.read.filter;
 import android.util.Log;
 
 import com.lin.read.filter.qidian.QiDianConstants;
+import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
 
 	private static String baseRankPage = "https://www.qidian.com/rank/%s?chn=%d&page=%d";
+	private static String baseRankPageString = "https://www.qidian.com/rank/%s?chn=%s&page=%s";
+	private static String baseBookInfoPage="https://book.qidian.com";
 	public static final String INPUTTYPE_FLOAT="INPUTTYPE_FLOAT";
 	public static final String INPUTTYPE_INTEGER="INPUTTYPE_INTEGER";
 
@@ -33,6 +43,14 @@ public class StringUtils {
 		}
 	}
 
+	public static String getRankPageUrlByTypeAndPageString(String rankType,
+													 String bookType, int page) {
+		if (isEmpty(rankType) || isEmpty(bookType) || page <= 0) {
+			return null;
+		}
+		return String.format(baseRankPageString, rankType, bookType, page);
+	}
+
 	public static Object getType(List<KeyValuePair> typeList, String typeKey) {
 		if (typeList == null || typeList.size() == 0 || isEmpty(typeKey)) {
 			return null;
@@ -41,6 +59,37 @@ public class StringUtils {
 			if (typeKey.equals(item.getKey())) {
 				return item.getValue();
 			}
+		}
+		return null;
+	}
+
+	public static String getBookScoreUrl(String token,String bookId){
+		if(isEmpty(token)||isEmpty(bookId)){
+			return null;
+		}
+//		/ajax/comment/index?_csrfToken=iB7tBdYlfk0KZO12QQoqKjF3d9deFyOXC2eU46wZ&bookId=1004895684&pageSize=15
+		String resultUrl=baseBookInfoPage+"/ajax/comment/index?_csrfToken=%s&bookId=%s&pageSize=15";
+		return String.format(resultUrl,token,bookId);
+	}
+
+	public static String getBookDetailsInfo(String bookId){
+		if(isEmpty(bookId)){
+			return null;
+		}
+//		https://book.qidian.com/info/1004895684
+		return baseBookInfoPage+"/info/"+bookId;
+	}
+
+	public static String getBookId(String bookUrl){
+		if(isEmpty(bookUrl)){
+			return null;
+		}
+		//  //book.qidian.com/info/1005263115
+		String firstHandle=bookUrl.replace("//book.qidian.com/info/","");
+		Pattern p=Pattern.compile("\\d+");
+		Matcher m=p.matcher(firstHandle);
+		if(m.matches()){
+			return firstHandle;
 		}
 		return null;
 	}
@@ -80,4 +129,41 @@ public class StringUtils {
 		return null;
 	}
 
+	public static String getAllContentString(HttpURLConnection conn) throws IOException {
+		if(conn==null){
+			return null;
+		}
+		InputStream input=conn.getInputStream();
+		BufferedReader reader=new BufferedReader(new InputStreamReader(
+				input, "UTF-8"));
+		String current=null;
+		String result="";
+		while((current=reader.readLine())!=null){
+			result=result+current;
+		}
+		reader.close();
+		input.close();
+		return result;
+	}
+
+	public static boolean isWordsNumVipClickRecommendFit(SearchInfo searchInfo, QiDianBookInfo qiDianBookInfo) {
+		if (searchInfo == null || qiDianBookInfo == null) {
+			return false;
+		}
+		if (searchInfo.getWordsNum() != null && searchInfo.getRecommend() != null && qiDianBookInfo.getWordsNum() != null
+				&& qiDianBookInfo.getVipClick() != null && qiDianBookInfo.getRecommend() != null) {
+			try {
+				float currentRecommend = Float.parseFloat(qiDianBookInfo.getRecommend());
+				float searchRecommend = Float.parseFloat(searchInfo.getRecommend());
+
+				float currentWordsNum = Float.parseFloat(qiDianBookInfo.getWordsNum());
+				float searchWordsNum = Float.parseFloat(searchInfo.getWordsNum());
+
+				return currentRecommend >= searchRecommend && currentWordsNum >= searchWordsNum;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 }

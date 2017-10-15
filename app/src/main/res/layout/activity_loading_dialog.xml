@@ -20,15 +20,49 @@
             android:layout_weight="1">
 
             <com.lin.read.view.LoadingView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/loading" />
+
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/loading_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/black"
+                android:gravity="center"
+                android:text="100%"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"></LinearLayout>
+            android:gravity="center_vertical"
+            android:layout_weight="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/loading_scan_book"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:textColor="@android:color/black"
+                    android:text="正在扫描书籍信息..." />
+
+                <TextView
+                    android:id="@+id/loading_scan_book_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:textColor="@android:color/black"
+                    android:text="正在过滤书籍信息，已找到51本" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
