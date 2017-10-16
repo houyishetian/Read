@@ -24,12 +24,19 @@ import java.util.List;
 
 public class QiDianHttpUtils {
 	public static final String TOKEY_KEY="_csrfToken";
+	public static final String EXCEPTION_GET_CONN_ERROR="EXCEPTION_GET_CONN_ERROR";
 	public static String getToken() throws IOException {
 		String url = "https://book.qidian.com/";
 		CookieManager manager = new CookieManager();
 		CookieHandler.setDefault(manager);
 		HttpURLConnection conn = getConn(url,3);
+		if(conn==null){
+			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+		}
 		conn=getConn(url,3);
+		if(conn==null){
+			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+		}
 		CookieStore cookieJar = manager.getCookieStore();
 		List<HttpCookie> cookies = cookieJar.getCookies();
 		for (HttpCookie cookie : cookies) {
@@ -50,7 +57,9 @@ public class QiDianHttpUtils {
 		HttpURLConnection conn = getConn(urlLink,3);
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
 		BufferedReader reader = null;
-		if (conn != null) {
+		if(conn==null){
+			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+		}else{
 			reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream(), "UTF-8"));
 			String current = null;
@@ -78,7 +87,6 @@ public class QiDianHttpUtils {
 			}
 			return maxPageAndBookUrlList;
 		}
-		return null;
 	}
 
 	/**
@@ -90,7 +98,9 @@ public class QiDianHttpUtils {
 		HttpURLConnection conn = getConn(urlLink,3);
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
 		BufferedReader reader = null;
-		if (conn != null) {
+		if(conn==null){
+			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+		}else {
 			try {
 				reader = new BufferedReader(new InputStreamReader(
 						conn.getInputStream(), "UTF-8"));
@@ -133,15 +143,18 @@ public class QiDianHttpUtils {
 		return null;
 	}
 
-	public static QiDianBookInfo getBookScoreInfo(SearchInfo searchInfo, String token, String bookUrl) throws IOException {
+	public static QiDianBookInfo getBookScoreInfo(SearchInfo searchInfo, String token, String bookUrl,int totalNum) throws IOException {
 		//book.qidian.com/info/1005263115
+		if(totalNum<=0){
+			return null;
+		}
 		String url=StringUtils.getBookScoreUrl(token,StringUtils.getBookId(bookUrl));
 		if(StringUtils.isEmpty(url)){
 			return null;
 		}
 		HttpURLConnection conn=getConn(url,3);
 		if(conn==null){
-			throw new IOException();
+			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}
 
 //		{
@@ -193,9 +206,10 @@ public class QiDianHttpUtils {
 			}
 			return null;
 		} catch (Exception e) {
+			Log.e("Test","解析失败："+url+",进行下一次");
 			e.printStackTrace();
+			return getBookScoreInfo(searchInfo,token,bookUrl,totalNum-1);
 		}
-		return null;
 	}
 
 	public static QiDianBookInfo getBookDetailsInfo(SearchInfo searchInfo, QiDianBookInfo qiDianBookInfo, String bookUrl) throws IOException {

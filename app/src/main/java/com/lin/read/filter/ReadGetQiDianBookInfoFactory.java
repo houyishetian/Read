@@ -9,7 +9,6 @@ import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 import com.lin.read.utils.MessageUtils;
 
 import java.io.IOException;
-import java.security.CodeSigner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -29,6 +28,9 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
     private List<String> allBookInfo;
     private String qidianToken = null;
     private Handler handler;
+
+    ExecutorService scanAndFilterService;
+    ExecutorService scanBookInfoService;
 
     @Override
     public void getBookInfo(Handler handler, SearchInfo searchInfo, OnGetBookInfoListener onGetBookInfoListener) {
@@ -90,12 +92,12 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                 strings.remove(0);
                 allBookInfo.addAll(strings);
                 if (maxPage > 1) {
-                    final ExecutorService service = Executors.newFixedThreadPool(10);
+                    scanBookInfoService = Executors.newFixedThreadPool(10);
                     final int totalTaskNum = maxPage - 1;
                     final List<String> completeTask = new ArrayList<String>();
                     for (int i = 2; i <= maxPage; i++) {
                         final int index = i;
-                        service.execute(new Runnable() {
+                        scanBookInfoService.execute(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -112,11 +114,17 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                                         }
                                     }
                                 } catch (IOException e) {
-                                    e.printStackTrace();
-                                    if (onGetBookInfoListener != null) {
-                                        onGetBookInfoListener.failed(CODE_NETWORK_ERROR);
+                                    synchronized (Runnable.class){
+                                        e.printStackTrace();
+                                        if (scanBookInfoService != null) {
+                                            scanBookInfoService.shutdownNow();
+                                            scanBookInfoService = null;
+                                            Log.e("Test", "扫描书籍信息失败，停止扫描！");
+                                            if (onGetBookInfoListener != null) {
+                                                onGetBookInfoListener.failed(CODE_NETWORK_ERROR);
+                                            }
+                                        }
                                     }
-                                    service.shutdownNow();
                                 }
                             }
                         });
@@ -128,6 +136,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
             }
         }
     }
+
 
     private void scanBookInfoByCondition(final List<String> bookInfos) {
         if (bookInfos == null || bookInfos.size() == 0) {
@@ -141,19 +150,19 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         Log.e("Test","开始过滤");
         final ArrayList<QiDianBookInfo> resultBookInfo=new ArrayList<>();
         MessageUtils.sendWhat(handler,MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START);
-        final ExecutorService service = Executors.newFixedThreadPool(10);
+        scanAndFilterService = Executors.newFixedThreadPool(10);
         final List<String> completeTask = new ArrayList<String>();
         final int maxSize=bookInfos.size();
         for (int i = 0; i <bookInfos.size(); i++) {
             final int index = i;
-            service.execute(new Runnable() {
+            scanAndFilterService.execute(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         if(index>=maxSize){
                             Log.e("Test","重新扫描："+ bookInfos.get(index));
                         }
-                        QiDianBookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,bookInfos.get(index));
+                        QiDianBookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,bookInfos.get(index),3);
 
                         if(scoreBookInfo!=null){
                             scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, bookInfos.get(index));
@@ -187,19 +196,34 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        synchronized (Runnable.class){
-                            int count=getCount(bookInfos,bookInfos.get(index));
-                            Log.e("Test","扫描失败："+ bookInfos.get(index)+",已经失败"+count+"次");
-                            if(count<3){
-                                bookInfos.add(bookInfos.get(index));
-                            }else{
-                                completeTask.add("1");
-                                MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE, completeTask.size());
-                                if (bookInfos.size() == completeTask.size()) {
-                                    Log.e("Test", "all scan end!");
-                                    MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, resultBookInfo);
+                        if(QiDianHttpUtils.EXCEPTION_GET_CONN_ERROR.equals(e.getMessage())){
+                            synchronized (Runnable.class){
+                                int count=getCount(bookInfos,bookInfos.get(index));
+                                Log.e("Test","扫描失败："+ bookInfos.get(index)+",已经失败"+count+"次");
+                                if(count<3){
+                                    completeTask.add("1");
+                                    bookInfos.add(bookInfos.get(index));
+                                }else{
+                                    completeTask.add("1");
+                                    MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE, completeTask.size());
+                                    if (bookInfos.size() == completeTask.size()) {
+                                        Log.e("Test", "all scan end!");
+                                        MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, resultBookInfo);
+                                        if (onGetBookInfoListener != null) {
+                                            onGetBookInfoListener.succ(resultBookInfo);
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            synchronized (Runnable.class){
+                                if(scanAndFilterService !=null){
+                                    scanAndFilterService.shutdownNow();
+                                    scanAndFilterService =null;
+                                    Log.e("Test","扫描失败，停止扫描！");
+                                    setCode(CODE_NETWORK_ERROR);
                                     if (onGetBookInfoListener != null) {
-                                        onGetBookInfoListener.succ(resultBookInfo);
+                                        onGetBookInfoListener.failed(getCode());
                                     }
                                 }
                             }
