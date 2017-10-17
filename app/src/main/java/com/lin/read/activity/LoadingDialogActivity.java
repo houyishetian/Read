@@ -1,6 +1,7 @@
 package com.lin.read.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -93,14 +94,22 @@ public class LoadingDialogActivity extends Activity {
         new ReadGetQiDianBookInfoFactory().getBookInfo(handler,searchInfo, new ReadGetBookInfoFactory.OnGetBookInfoListener() {
             @Override
             public void succ(Object allBookInfo) {
-                if(allBookInfo instanceof List){
+                if(allBookInfo!=null){
                     Log.e("Test","共："+((List) allBookInfo).size());
+                    ArrayList<QiDianBookInfo> allBooks= (ArrayList<QiDianBookInfo>) allBookInfo;
+                    Intent intent=new Intent();
+                    Bundle bundle=new Bundle();
+                    bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA,allBooks);
+                    intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA,bundle);
+                    setResult(Constants.SCAN_RESPONSE_SUCC,intent);
+                    finish();
                 }
             }
 
             @Override
             public void failed(int code) {
-
+                setResult(Constants.SCAN_RESPONSE_FAILED);
+                finish();
             }
         });
     }

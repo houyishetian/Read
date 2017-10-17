@@ -36,10 +36,12 @@ import com.lin.read.filter.ReadGetQiDianBookInfoFactory;
 import com.lin.read.filter.SearchInfo;
 import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
+import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NumberInputFilter;
 import com.lin.read.utils.ScoreInputFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,7 +143,7 @@ public class ScanFragment extends Fragment {
 //                showScaningDialog();
                     Intent intent=new Intent(getActivity(), LoadingDialogActivity.class);
                     intent.putExtra(Constants.KEY_SEARCH_INFO,searchInfo);
-                    startActivity(intent);
+                    startActivityForResult(intent,Constants.SCAN_REQUEST_CODE);
                 }
             }
         });
@@ -337,5 +339,23 @@ public class ScanFragment extends Fragment {
         //设置dialog的宽高为屏幕的宽高
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         dialog.setContentView(viewDialog, layoutParams);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case Constants.SCAN_RESPONSE_FAILED:
+                scanResultTv.setVisibility(View.VISIBLE);
+                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT,0));
+                break;
+            case Constants.SCAN_RESPONSE_SUCC:
+                if(data!=null){
+                    ArrayList<QiDianBookInfo> allBookData=data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
+                    scanResultTv.setVisibility(View.VISIBLE);
+                    scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT,allBookData.size()));
+                }
+                break;
+        }
     }
 }
