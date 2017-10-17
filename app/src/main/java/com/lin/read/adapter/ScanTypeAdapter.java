@@ -1,7 +1,6 @@
-package com.lin.read;
+package com.lin.read.adapter;
 
 import android.content.Context;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.lin.read.R;
 import com.lin.read.filter.ScanTypeInfo;
 
 import java.util.List;

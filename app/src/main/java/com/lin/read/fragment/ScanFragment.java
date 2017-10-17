@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
@@ -27,12 +28,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.lin.read.R;
-import com.lin.read.ScanTypeAdapter;
+import com.lin.read.adapter.ScanBookItemAdapter;
+import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.ScanTypeItemDecoration;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
-import com.lin.read.filter.ReadGetBookInfoFactory;
-import com.lin.read.filter.ReadGetQiDianBookInfoFactory;
 import com.lin.read.filter.SearchInfo;
 import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
@@ -42,7 +42,6 @@ import com.lin.read.utils.NumberInputFilter;
 import com.lin.read.utils.ScoreInputFilter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lisonglin on 2017/10/11.
@@ -59,10 +58,12 @@ public class ScanFragment extends Fragment {
     private RecyclerView scanWebTypeRcv;
     private RecyclerView scanRankTypeRcv;
     private RecyclerView scanBookTypeRcv;
+    private RecyclerView allBooksRcv;
 
     private ScanTypeAdapter scanWebTypeAdapter;
     private ScanTypeAdapter scanRankTypeAdapter;
     private ScanTypeAdapter scanBookTypeAdapter;
+    private ScanBookItemAdapter allBookAdapter;
 
     private EditText scoreEt;
     private EditText scoreNumEt;
@@ -70,6 +71,8 @@ public class ScanFragment extends Fragment {
     private EditText recommendEt;
 
     private ScrollView scrollView;
+
+    private ArrayList<QiDianBookInfo> allBookData;
 
     private Button scanOK;
 
@@ -100,6 +103,7 @@ public class ScanFragment extends Fragment {
         scanWebTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_web);
         scanRankTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_rank);
         scanBookTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_booktype);
+        allBooksRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_all_books);
 
         scoreEt = (EditText) view.findViewById(R.id.et_socre);
         scoreNumEt = (EditText) view.findViewById(R.id.et_socre_num);
@@ -110,6 +114,8 @@ public class ScanFragment extends Fragment {
 
         tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
         scanOK = (Button) view.findViewById(R.id.scan_ok);
+
+        allBookData=new ArrayList<>();
 
         handler=new Handler();
 
@@ -141,9 +147,9 @@ public class ScanFragment extends Fragment {
                 if(searchInfo!=null){
                   Log.e("Test",searchInfo.toString());
 //                showScaningDialog();
-                    Intent intent=new Intent(getActivity(), LoadingDialogActivity.class);
-                    intent.putExtra(Constants.KEY_SEARCH_INFO,searchInfo);
-                    startActivityForResult(intent,Constants.SCAN_REQUEST_CODE);
+                    Intent intent = new Intent(getActivity(), LoadingDialogActivity.class);
+                    intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
+                    startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
                 }
             }
         });
@@ -153,6 +159,7 @@ public class ScanFragment extends Fragment {
         scanWebTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanWebTypeList);
         scanRankTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanRankTypeList);
         scanBookTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanBookTypeList);
+        allBookAdapter=new ScanBookItemAdapter(getActivity(),allBookData);
 
         scanWebTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         scanWebTypeAdapter.setDefaultChecked("起点");
@@ -168,6 +175,10 @@ public class ScanFragment extends Fragment {
         scanBookTypeAdapter.setDefaultChecked("玄幻");
         scanBookTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanBookTypeRcv.setAdapter(scanBookTypeAdapter);
+
+        allBooksRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        allBooksRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
+        allBooksRcv.setAdapter(allBookAdapter);
     }
 
     public boolean isFilterLayoutVisble() {
@@ -343,19 +354,29 @@ public class ScanFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case Constants.SCAN_RESPONSE_FAILED:
-                scanResultTv.setVisibility(View.VISIBLE);
-                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT,0));
-                break;
-            case Constants.SCAN_RESPONSE_SUCC:
-                if(data!=null){
-                    ArrayList<QiDianBookInfo> allBookData=data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
+        if (requestCode == Constants.SCAN_REQUEST_CODE) {
+            switch (resultCode) {
+                case Constants.SCAN_RESPONSE_FAILED:
                     scanResultTv.setVisibility(View.VISIBLE);
-                    scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT,allBookData.size()));
-                }
-                break;
+                    scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0));
+                    allBookData.clear();
+                    allBookAdapter.notifyDataSetChanged();
+                    break;
+                case Constants.SCAN_RESPONSE_SUCC:
+                    if (data != null) {
+                        ArrayList<QiDianBookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
+                        scanResultTv.setVisibility(View.VISIBLE);
+                        Log.e("Test", "接收:" + allBookDataFromScan);
+                        scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                        allBookData.clear();
+                        allBookData.addAll(allBookDataFromScan);
+                        allBookAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }

@@ -33,6 +33,8 @@ public class LoadingDialogActivity extends Activity {
     private TextView tvScanBookResultState;
 
     private int totalNum=0;
+
+    private Handler handlerFromScan;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +102,7 @@ public class LoadingDialogActivity extends Activity {
                     Intent intent=new Intent();
                     Bundle bundle=new Bundle();
                     bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA,allBooks);
+                    Log.e("Test","传递："+ allBooks.toString());
                     intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA,bundle);
                     setResult(Constants.SCAN_RESPONSE_SUCC,intent);
                     finish();
