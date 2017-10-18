@@ -30,7 +30,8 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
-import com.lin.read.ScanTypeItemDecoration;
+import com.lin.read.decoration.ScanBooksItemDecoration;
+import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.SearchInfo;
@@ -177,7 +178,7 @@ public class ScanFragment extends Fragment {
         scanBookTypeRcv.setAdapter(scanBookTypeAdapter);
 
         allBooksRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        allBooksRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
+        allBooksRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
         allBooksRcv.setAdapter(allBookAdapter);
     }
 

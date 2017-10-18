@@ -1,4 +1,4 @@
-package com.lin.read;
+package com.lin.read.decoration;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.lin.read.R;
 import com.lin.read.utils.UIUtils;
 
 /**
