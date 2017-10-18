@@ -116,4 +116,9 @@ public class LoadingDialogActivity extends Activity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
 }
