@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -165,5 +168,43 @@ public class StringUtils {
 			}
 		}
 		return false;
+	}
+
+	public static String formatLastUpdate(String srcDate){
+		if(isEmpty(srcDate)){
+			return null;
+		}
+		if(srcDate.contains("今天")||srcDate.contains("今日")){
+			Date date=new Date();
+			SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+			String day=format.format(date);
+			Pattern p=Pattern.compile("[ ]?(\\d{2}:\\d{2})");
+			Matcher m=p.matcher(srcDate);
+			if(m.find()){
+				return day+" "+m.group(1)+"更新";
+			}
+			return null;
+		}else if(srcDate.contains("昨日")||srcDate.contains("昨天")){
+			Date date=new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.DAY_OF_MONTH, -1);
+			date = calendar.getTime();
+			SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+			String day=format.format(date);
+			Pattern p=Pattern.compile("[ ]?(\\d{2}:\\d{2})");
+			Matcher m=p.matcher(srcDate);
+			if(m.find()){
+				return day+" "+m.group(1)+"更新";
+			}
+			return null;
+		}else{
+			Pattern p=Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}):\\d{2}");
+			Matcher m=p.matcher(srcDate);
+			if(m.matches()){
+				return m.group(1)+"更新";
+			}
+		}
+		return null;
 	}
 }

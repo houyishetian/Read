@@ -371,6 +371,7 @@ public class ScanFragment extends Fragment {
                         allBookData.clear();
                         allBookData.addAll(allBookDataFromScan);
                         allBookAdapter.notifyDataSetChanged();
+                        allBooksRcv.smoothScrollToPosition(0);
                     }
                     break;
             }

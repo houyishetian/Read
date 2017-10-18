@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.lin.read.R;
+import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 
 import java.util.ArrayList;
@@ -39,12 +40,12 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         holder.bookName.setText(qiDianBookInfo.getBookName());
         holder.authorName.setText(qiDianBookInfo.getAuthorName());
         holder.webType.setText("起点");
-        holder.lastUpdate.setText(qiDianBookInfo.getLastUpdate());
-        holder.wordsNum.setText(qiDianBookInfo.getWordsNum());
-        holder.recommend.setText(qiDianBookInfo.getRecommend());
-        holder.vipClick.setText(qiDianBookInfo.getVipClick());
+        holder.lastUpdate.setText(StringUtils.formatLastUpdate(qiDianBookInfo.getLastUpdate()));
+        holder.wordsNum.setText(qiDianBookInfo.getWordsNum()+"万字");
+        holder.recommend.setText(qiDianBookInfo.getRecommend()+"万推荐");
+        holder.vipClick.setText(qiDianBookInfo.getVipClick()+"万点击");
         holder.score.setText(qiDianBookInfo.getScore());
-        holder.scoreNum.setText(qiDianBookInfo.getScoreNum());
+        holder.scoreNum.setText(qiDianBookInfo.getScoreNum()+"人");
     }
 
     @Override
@@ -73,7 +74,7 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
             recommend= (TextView) itemView.findViewById(R.id.book_item_recommend);
             vipClick= (TextView) itemView.findViewById(R.id.book_item_vipclick);
             score= (TextView) itemView.findViewById(R.id.book_item_score);
-            scoreNum= (TextView) itemView.findViewById(R.id.book_item_score);
+            scoreNum= (TextView) itemView.findViewById(R.id.book_item_scorenum);
         }
     }
 }
