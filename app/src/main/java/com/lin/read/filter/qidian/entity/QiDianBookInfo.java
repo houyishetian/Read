@@ -122,13 +122,33 @@ public class QiDianBookInfo implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(this.bookName);
+        dest.writeString(this.authorName);
+        dest.writeString(this.webType);
+        dest.writeString(this.lastUpdate);
+        dest.writeString(this.wordsNum);
+        dest.writeString(this.recommend);
+        dest.writeString(this.vipClick);
+        dest.writeString(this.score);
+        dest.writeString(this.scoreNum);
+        dest.writeString(this.lastChapter);
     }
 
     public static final Creator<QiDianBookInfo> CREATOR = new Creator<QiDianBookInfo>() {
         @Override
         public QiDianBookInfo createFromParcel(Parcel in) {
-            return new QiDianBookInfo();
+            QiDianBookInfo qiDianBookInfo=new QiDianBookInfo();
+            qiDianBookInfo.setBookName(in.readString());
+            qiDianBookInfo.setAuthorName(in.readString());
+            qiDianBookInfo.setWebType(in.readString());
+            qiDianBookInfo.setLastUpdate(in.readString());
+            qiDianBookInfo.setWordsNum(in.readString());
+            qiDianBookInfo.setRecommend(in.readString());
+            qiDianBookInfo.setVipClick(in.readString());
+            qiDianBookInfo.setScore(in.readString());
+            qiDianBookInfo.setScoreNum(in.readString());
+            qiDianBookInfo.setLastChapter(in.readString());
+            return qiDianBookInfo;
         }
 
         @Override
