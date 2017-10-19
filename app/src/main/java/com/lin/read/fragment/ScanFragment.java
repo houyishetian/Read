@@ -386,6 +386,7 @@ public class ScanFragment extends Fragment {
                     scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0));
                     allBookData.clear();
                     allBookAdapter.notifyDataSetChanged();
+                    lastClickItem=-1;
                     break;
                 case Constants.SCAN_RESPONSE_SUCC:
                     if (data != null) {
@@ -398,6 +399,7 @@ public class ScanFragment extends Fragment {
                         Collections.sort(allBookData,new QiDianBookComparator(QiDianBookComparator.SortType.DESCEND, QiDianBookComparator.BookType.SCORE));
                         allBookAdapter.notifyDataSetChanged();
                         allBooksRcv.smoothScrollToPosition(0);
+                        lastClickItem=-1;
                     }
                     break;
             }
