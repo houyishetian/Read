@@ -495,7 +495,7 @@ public class ScanFragment extends Fragment {
                 bookType= QiDianBookComparator.BookType.RECOMMEND;
                 break;
             case SORT_BY_VIP_CLICK:
-                bookType= QiDianBookComparator.BookType.VIPC_LICK;
+                bookType= QiDianBookComparator.BookType.VIP_CLICK;
                 break;
         }
         return bookType;

@@ -1,7 +1,5 @@
 package com.lin.read.utils;
 
-import android.util.Log;
-
 import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
     }
 
     public enum BookType {
-        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIPC_LICK
+        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIP_CLICK
     }
 
     private SortType sortType;
@@ -103,7 +101,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
                     return 0;
                 }
                 break;
-            case VIPC_LICK:
+            case VIP_CLICK:
                 try {
                     num0 = Float.parseFloat(bookInfo0.getVipClick());
                     num1 = Float.parseFloat(bookInfo1.getVipClick());
@@ -130,7 +128,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
         result.add(BookType.SCORE_NUM);
         result.add(BookType.WORDS_NUM);
         result.add(BookType.RECOMMEND);
-        result.add(BookType.VIPC_LICK);
+        result.add(BookType.VIP_CLICK);
         result.remove(bookType);
         result.add(0, bookType);
         return result;
