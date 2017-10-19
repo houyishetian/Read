@@ -31,10 +31,19 @@ public class QiDianRegexUtils {
 
     public static boolean getQiDianBookNameAndAuthorName(QiDianBookInfo bookInfo,String data){
 //        <h1><em>火照鬼擎传</em><span><a class="writer" href="//me.qidian.com/authorIndex.aspx?id=7049455" target="_blank" data-eid="qd_G08">小韵和小云</a> 著</span></h1>
+
+//        <h1>
+//
+//            <em>神武图</em>
+//            <span><a class="writer" href="//me.qidian.com/authorIndex.aspx?id=7634821" target="_blank" data-eid="qd_G08">醉上空城</a> 著</span>
+//
+//        </h1>
+//        <title>《神武图》_醉上空城著_玄幻_起点中文网</title>
         if(bookInfo==null||StringUtils.isEmpty(data)){
             return false;
         }
-        Pattern pattern=Pattern.compile("<h1><em>([^\n]{1,})</em>[^\n]{1,}>([^\n]{1,})</a> 著");
+//        Pattern pattern=Pattern.compile("<h1>[\\s]*<em>([^\n]{1,})</em>[\\s]*[^\n]{1,}>([^\n]{1,})</a> 著");
+        Pattern pattern=Pattern.compile("<title>《([^\\n]{1,})》_([^\\n]{1,})著_[^\\n]{1,}_起点中文网</title>");
         Matcher matcher=pattern.matcher(data);
         if(matcher.find()){
             bookInfo.setBookName(matcher.group(1));
