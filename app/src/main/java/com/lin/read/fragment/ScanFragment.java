@@ -39,10 +39,13 @@ import com.lin.read.filter.StringUtils;
 import com.lin.read.filter.qidian.QiDianConstants;
 import com.lin.read.filter.qidian.entity.QiDianBookInfo;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.utils.NumberInputFilter;
+import com.lin.read.utils.QiDianBookComparator;
 import com.lin.read.utils.ScoreInputFilter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by lisonglin on 2017/10/11.
@@ -86,6 +89,18 @@ public class ScanFragment extends Fragment {
 
     private Handler handler;
 
+    private final int SORT_BY_SCORE=0;
+    private final int SORT_BY_SCORE_NUM=1;
+    private final int SORT_BY_WORDS=2;
+    private final int SORT_BY_RECOMMEND=3;
+    private final int SORT_BY_VIP_CLICK=4;
+
+    private final int SORT_ASCEND=1;
+    private final int SORT_DESCEND=2;
+
+    private int lastClickItem=-1;
+    private int lastSortType=-1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
@@ -124,25 +139,25 @@ public class ScanFragment extends Fragment {
 
         setInputFilter();
 
-        scanFilterTv.setOnClickListener(new View.OnClickListener() {
+        scanFilterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNoDoubleClick(View v) {
                 Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_in);
                 scanFilterLayout.startAnimation(anim);
                 scanFilterLayout.setVisibility(View.VISIBLE);
             }
         });
 
-        scanFilterBlank.setOnClickListener(new View.OnClickListener() {
+        scanFilterBlank.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNoDoubleClick(View v) {
                 hideFilterLayout();
             }
         });
 
-        scanOK.setOnClickListener(new View.OnClickListener() {
+        scanOK.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNoDoubleClick(View v) {
                 hideFilterLayout();
                 SearchInfo searchInfo=getSearchInfo();
                 if(searchInfo!=null){
@@ -151,6 +166,15 @@ public class ScanFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), LoadingDialogActivity.class);
                     intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
                     startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
+                }
+            }
+        });
+
+        scanSortIv.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                if(allBookData.size()!=0){
+                    showSortDialog();
                 }
             }
         });
@@ -371,6 +395,7 @@ public class ScanFragment extends Fragment {
                         scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
                         allBookData.clear();
                         allBookData.addAll(allBookDataFromScan);
+                        Collections.sort(allBookData,new QiDianBookComparator(QiDianBookComparator.SortType.DESCEND, QiDianBookComparator.BookType.SCORE));
                         allBookAdapter.notifyDataSetChanged();
                         allBooksRcv.smoothScrollToPosition(0);
                     }
@@ -380,5 +405,99 @@ public class ScanFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    Dialog sortDialog;
+    private void showSortDialog(){
+        sortDialog = new Dialog(this.getActivity(), R.style.Dialog_Fullscreen);
+        sortDialog.show();
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View viewDialog = inflater.inflate(R.layout.dialog_qidian_book_sort, null);
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        //设置dialog的宽高为屏幕的宽高
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+        sortDialog.setContentView(viewDialog, layoutParams);
 
+        View sortByScore=viewDialog.findViewById(R.id.qidian_sort_by_score);
+        View sortByScoreNum=viewDialog.findViewById(R.id.qidian_sort_by_scorenum);
+        View sortByWordsNum=viewDialog.findViewById(R.id.qidian_sort_by_wordsnum);
+        View sortByRecommend=viewDialog.findViewById(R.id.qidian_sort_by_recommend);
+        View sortByVipClick=viewDialog.findViewById(R.id.qidian_sort_by_vipclick);
+        sortByScore.setTag(SORT_BY_SCORE);
+        sortByScoreNum.setTag(SORT_BY_SCORE_NUM);
+        sortByWordsNum.setTag(SORT_BY_WORDS);
+        sortByRecommend.setTag(SORT_BY_RECOMMEND);
+        sortByVipClick.setTag(SORT_BY_VIP_CLICK);
+        sortByScore.setOnClickListener(new SortDialogItemsClickListener());
+        sortByScoreNum.setOnClickListener(new SortDialogItemsClickListener());
+        sortByWordsNum.setOnClickListener(new SortDialogItemsClickListener());
+        sortByRecommend.setOnClickListener(new SortDialogItemsClickListener());
+        sortByVipClick.setOnClickListener(new SortDialogItemsClickListener());
+    }
+
+    class SortDialogItemsClickListener extends NoDoubleClickListener{
+
+        @Override
+        public void onNoDoubleClick(View v) {
+            Object o=v.getTag();
+            if(o!=null){
+                try {
+                    int currentItem= (int) o;
+                    QiDianBookComparator.SortType sortType=getSortType(currentItem);
+                    QiDianBookComparator.BookType bookType=getSortBookType(currentItem);
+                    Collections.sort(allBookData,new QiDianBookComparator(sortType, bookType));
+                    allBookAdapter.notifyDataSetChanged();
+                    allBooksRcv.smoothScrollToPosition(0);
+
+                    if(sortDialog!=null&&sortDialog.isShowing()){
+                        sortDialog.dismiss();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private QiDianBookComparator.SortType getSortType(int currentClickItem){
+        if(lastClickItem==currentClickItem){
+            if(lastSortType==SORT_ASCEND){
+                lastSortType=SORT_DESCEND;
+            }else{
+                lastSortType=SORT_ASCEND;
+            }
+        }else{
+            lastSortType=SORT_DESCEND;
+        }
+        lastClickItem=currentClickItem;
+        QiDianBookComparator.SortType sortType;
+        if(lastSortType==SORT_DESCEND){
+            sortType= QiDianBookComparator.SortType.DESCEND;
+        }else{
+            sortType= QiDianBookComparator.SortType.ASCEND;
+        }
+        return sortType;
+    }
+
+    private QiDianBookComparator.BookType getSortBookType(int currentClickItem){
+        QiDianBookComparator.BookType bookType=null;
+        switch (currentClickItem) {
+            case SORT_BY_SCORE:
+                bookType= QiDianBookComparator.BookType.SCORE;
+                break;
+            case SORT_BY_SCORE_NUM:
+                bookType= QiDianBookComparator.BookType.SCORE_NUM;
+                break;
+            case SORT_BY_WORDS:
+                bookType= QiDianBookComparator.BookType.WORDS_NUM;
+                break;
+            case SORT_BY_RECOMMEND:
+                bookType= QiDianBookComparator.BookType.RECOMMEND;
+                break;
+            case SORT_BY_VIP_CLICK:
+                bookType= QiDianBookComparator.BookType.VIPC_LICK;
+                break;
+        }
+        return bookType;
+    }
 }
