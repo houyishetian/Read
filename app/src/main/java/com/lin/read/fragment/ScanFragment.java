@@ -23,9 +23,11 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lin.read.R;
 import com.lin.read.adapter.ScanBookItemAdapter;
@@ -62,12 +64,16 @@ public class ScanFragment extends Fragment {
     private RecyclerView scanWebTypeRcv;
     private RecyclerView scanRankTypeRcv;
     private RecyclerView scanBookTypeRcv;
+    private RecyclerView scanDateTypeRcv;
     private RecyclerView allBooksRcv;
 
     private ScanTypeAdapter scanWebTypeAdapter;
     private ScanTypeAdapter scanRankTypeAdapter;
     private ScanTypeAdapter scanBookTypeAdapter;
+    private ScanTypeAdapter scanDateTypeAdapter;
     private ScanBookItemAdapter allBookAdapter;
+
+    private LinearLayout scanDateLinearLayout;
 
     private EditText scoreEt;
     private EditText scoreNumEt;
@@ -115,10 +121,12 @@ public class ScanFragment extends Fragment {
         scanResultTv = (TextView) view.findViewById(R.id.scan_result);
         scanFilterLayout = view.findViewById(R.id.layout_scan_filter);
         scanFilterBlank = view.findViewById(R.id.scan_filter_blank);
+        scanDateLinearLayout= (LinearLayout) view.findViewById(R.id.ll_scan_date);
 
         scanWebTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_web);
         scanRankTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_rank);
         scanBookTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_booktype);
+        scanDateTypeRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_date);
         allBooksRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_all_books);
 
         scoreEt = (EditText) view.findViewById(R.id.et_socre);
@@ -184,26 +192,64 @@ public class ScanFragment extends Fragment {
         scanWebTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanWebTypeList);
         scanRankTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanRankTypeList);
         scanBookTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanBookTypeList);
+        scanDateTypeAdapter=new ScanTypeAdapter(getActivity(),QiDianConstants.scanDateTypeList);
         allBookAdapter=new ScanBookItemAdapter(getActivity(),allBookData);
 
         scanWebTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        scanWebTypeAdapter.setDefaultChecked("起点");
+        scanWebTypeAdapter.setDefaultChecked(QiDianConstants.WEB_QIDIAN);
         scanWebTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanWebTypeRcv.setAdapter(scanWebTypeAdapter);
 
         scanRankTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        scanRankTypeAdapter.setDefaultChecked("推荐");
+        scanRankTypeAdapter.setDefaultChecked(QiDianConstants.RANK_RECOMMEND);
         scanRankTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanRankTypeRcv.setAdapter(scanRankTypeAdapter);
 
         scanBookTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        scanBookTypeAdapter.setDefaultChecked("玄幻");
+        scanBookTypeAdapter.setDefaultChecked(QiDianConstants.BOOK_XUAN_HUAN);
         scanBookTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanBookTypeRcv.setAdapter(scanBookTypeAdapter);
+
+        scanDateTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+        scanDateTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
+        scanDateTypeRcv.setAdapter(scanDateTypeAdapter);
+        scanDateLinearLayout.setVisibility(View.VISIBLE);
 
         allBooksRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
         allBooksRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
         allBooksRcv.setAdapter(allBookAdapter);
+
+        scanWebTypeAdapter.setOnRankTypeItemClickListener(new ScanTypeAdapter.OnRankTypeItemClickListener() {
+            @Override
+            public void onItemClick(String clickText) {
+                if(!StringUtils.isEmpty(clickText)){
+                    String rankType=scanRankTypeAdapter.getCheckedText();
+                    if (QiDianConstants.WEB_QIDIAN.equals(clickText) && (rankType.equals(QiDianConstants.RANK_RECOMMEND) || rankType.equals(QiDianConstants.RANK_FINAL))) {
+                        scanDateLinearLayout.setVisibility(View.VISIBLE);
+                        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+                        scanDateTypeAdapter.notifyDataSetChanged();
+                    }else{
+                        scanDateLinearLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+
+        scanRankTypeAdapter.setOnRankTypeItemClickListener(new ScanTypeAdapter.OnRankTypeItemClickListener() {
+            @Override
+            public void onItemClick(String clickText) {
+                if(!StringUtils.isEmpty(clickText)){
+                    if (QiDianConstants.WEB_QIDIAN.equals(scanWebTypeAdapter.getCheckedText()) && (clickText.equals(QiDianConstants.RANK_RECOMMEND) || clickText.equals(QiDianConstants.RANK_FINAL))) {
+                        scanDateLinearLayout.setVisibility(View.VISIBLE);
+                        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+                        scanDateTypeAdapter.notifyDataSetChanged();
+                    }else{
+                        scanDateLinearLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     public boolean isFilterLayoutVisble() {
@@ -345,6 +391,9 @@ public class ScanFragment extends Fragment {
         searchInfo.setWebType(scanWebTypeAdapter.getCheckedInfo().getId());
         searchInfo.setRankType(scanRankTypeAdapter.getCheckedInfo().getId());
         searchInfo.setBookType(scanBookTypeAdapter.getCheckedInfo().getId());
+        if(scanDateLinearLayout.getVisibility()==View.VISIBLE){
+            searchInfo.setDateType(scanDateTypeAdapter.getCheckedInfo().getId());
+        }
 
         String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(),"8.0",StringUtils.INPUTTYPE_FLOAT);
         String scoreNum =StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(),"300",StringUtils.INPUTTYPE_INTEGER);
@@ -387,6 +436,7 @@ public class ScanFragment extends Fragment {
                     allBookData.clear();
                     allBookAdapter.notifyDataSetChanged();
                     lastClickItem=-1;
+                    Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.SCAN_RESPONSE_SUCC:
                     if (data != null) {
@@ -400,6 +450,7 @@ public class ScanFragment extends Fragment {
                         allBookAdapter.notifyDataSetChanged();
                         allBooksRcv.smoothScrollToPosition(0);
                         lastClickItem=-1;
+                        Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

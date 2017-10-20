@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class SearchInfo implements Serializable{
     private String webType;
     private String rankType;
+    private String dateType;
     private String bookType;
     private String score;
     private String scoreNum;
@@ -72,11 +73,20 @@ public class SearchInfo implements Serializable{
         this.recommend = recommend;
     }
 
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
+    }
+
     @Override
     public String toString() {
         return "SearchInfo{" +
                 "webType='" + webType + '\'' +
                 ", rankType='" + rankType + '\'' +
+                ", dateType='" + dateType + '\'' +
                 ", bookType='" + bookType + '\'' +
                 ", score='" + score + '\'' +
                 ", scoreNum='" + scoreNum + '\'' +

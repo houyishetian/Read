@@ -77,6 +77,11 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (!isHold) {
+                        if(isChecked){
+                            if(onRankTypeItemClickListener!=null){
+                                onRankTypeItemClickListener.onItemClick(text.getText().toString());
+                            }
+                        }
                         setCheckedStatus(text.getText().toString());
                     }
                 }
@@ -131,5 +136,27 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
             }
         }
         return null;
+    }
+
+    public String getCheckedText() {
+        if (data == null || data.size() == 0) {
+            return null;
+        }
+        for (ScanTypeInfo item : data) {
+            if (item.isChecked()) {
+                return item.getText();
+            }
+        }
+        return null;
+    }
+
+    public interface OnRankTypeItemClickListener{
+        void onItemClick(String clickText);
+    }
+
+    private OnRankTypeItemClickListener onRankTypeItemClickListener;
+
+    public void setOnRankTypeItemClickListener(OnRankTypeItemClickListener onRankTypeItemClickListener) {
+        this.onRankTypeItemClickListener = onRankTypeItemClickListener;
     }
 }

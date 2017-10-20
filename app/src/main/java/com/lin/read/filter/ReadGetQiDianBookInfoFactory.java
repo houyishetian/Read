@@ -67,7 +67,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
             SearchInfo searchInfo = params[0];
             List<String> firstPageInfo = null;
             try {
-                firstPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo.getRankType(), searchInfo.getBookType(), page);
+                firstPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo, page);
                 if (firstPageInfo != null && firstPageInfo.size() > 1) {
                     setCode(CODE_SUCC);
                 } else {
@@ -101,7 +101,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                             @Override
                             public void run() {
                                 try {
-                                    List<String> currentPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo.getRankType(), searchInfo.getBookType(), index);
+                                    List<String> currentPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo, index);
                                     synchronized (Runnable.class) {
                                         currentPageInfo.remove(0);
                                         allBookInfo.addAll(currentPageInfo);

@@ -51,8 +51,16 @@ public class QiDianHttpUtils {
 	 * get max page num and book info url from rank page
 	 * @return 0--max page num
 	 */
-	public static List<String> getMaxPageAndBookInfoFromRankPage(String rankType,String bookType,int page) throws IOException {
+	public static List<String> getMaxPageAndBookInfoFromRankPage(SearchInfo searchInfo,int page) throws IOException {
+		if(searchInfo==null){
+			return null;
+		}
+		String rankType=searchInfo.getRankType();
+		String bookType=searchInfo.getBookType();
 		String urlLink= StringUtils.getRankPageUrlByTypeAndPageString(rankType, bookType, page);
+		if(!StringUtils.isEmpty(urlLink)&&("recom".equals(rankType)||"fin".equals(rankType))){
+			urlLink=urlLink+"&dateType="+searchInfo.getDateType();
+		}
 		Log.e("Test","execute start:"+urlLink);
 		HttpURLConnection conn = getConn(urlLink,3);
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
