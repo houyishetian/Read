@@ -26,7 +26,8 @@ public class QiDianHttpUtils {
 	public static final String TOKEY_KEY="_csrfToken";
 	public static final String EXCEPTION_GET_CONN_ERROR="EXCEPTION_GET_CONN_ERROR";
 	public static String getToken() throws IOException {
-		String url = "https://book.qidian.com/";
+//		String url = "https://www.qidian.com/";
+		String url = "https://book.qidian.com/info/1004608738";
 		CookieManager manager = new CookieManager();
 		CookieHandler.setDefault(manager);
 		HttpURLConnection conn = getConn(url,3);
