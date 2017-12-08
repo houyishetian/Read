@@ -284,7 +284,15 @@ public class QiDianHttpUtils {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(20000);
 		conn.setReadTimeout(20000);
-		int code = conn.getResponseCode();
+		int code=-1;
+		try{
+			code = conn.getResponseCode();
+		}catch (Exception e){
+			e.printStackTrace();
+			if(totalNum==1){
+				throw new IOException();
+			}
+		}
 		if (code == 200) {
 			return conn;
 		} else if (code == 301 || code == 302) {
