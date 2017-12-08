@@ -107,11 +107,51 @@ public class ScanFragment extends Fragment {
     private int lastClickItem=-1;
     private int lastSortType=-1;
 
+    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener=new ViewTreeObserver.OnGlobalLayoutListener() {
+        //当键盘弹出隐藏的时候会 调用此方法。
+        @Override
+        public void onGlobalLayout() {
+            Rect r = new Rect();
+            //获取当前界面可视部分
+            getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+            //获取屏幕的高度
+            int screenHeight = getActivity().getWindow().getDecorView().getRootView().getHeight();
+            //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
+            int heightDifference = screenHeight - r.bottom;
+            if (heightDifference == 0) {
+                isSoftInputDisplay=false;
+                android.util.Log.e("Test", "hide softInput!---" + heightDifference);
+            } else {
+                isSoftInputDisplay=true;
+                android.util.Log.e("Test", "show softInput!---" + heightDifference);
+            }
+
+            //若当前height改变还未处理过
+            if (lastHeight != heightDifference) {
+                //将该height设置到tempViewForSoft
+                ViewGroup.LayoutParams params = tempViewForSoft.getLayoutParams();
+                params.height = heightDifference;
+                if(params.height!=0){
+                    params.height=200;
+                }
+                tempViewForSoft.setLayoutParams(params);
+                //若此时是键盘显示
+                if (heightDifference != 0) {
+                    ((MainActivity)getActivity()).hideBottomViews(true);
+                    scrollToEndAndRequestFocus();
+                }else{
+                    ((MainActivity)getActivity()).hideBottomViews(false);
+                }
+                //将当前高度记为已处理，否则fullScroll会requestLayout,会再次触发onGlobalLayout，这样会陷入死循环
+                lastHeight = heightDifference;
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
         initView(view);
-        setSoftInputStateListener();
         return view;
     }
 
@@ -153,6 +193,7 @@ public class ScanFragment extends Fragment {
                 Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_in);
                 scanFilterLayout.startAnimation(anim);
                 scanFilterLayout.setVisibility(View.VISIBLE);
+                setSoftInputStateListener();
             }
         });
 
@@ -274,6 +315,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 scanFilterLayout.setVisibility(View.GONE);
+                cancelSoftInputStateListener();
             }
 
             @Override
@@ -293,6 +335,7 @@ public class ScanFragment extends Fragment {
             view.clearFocus();
         }
         scanFilterLayout.setVisibility(View.GONE);
+        cancelSoftInputStateListener();
     }
 
     private void setInputFilter() {
@@ -306,46 +349,14 @@ public class ScanFragment extends Fragment {
      * 设置键盘状态的监听
      */
     private void setSoftInputStateListener() {
-        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            //当键盘弹出隐藏的时候会 调用此方法。
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                //获取当前界面可视部分
-                getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-                //获取屏幕的高度
-                int screenHeight = getActivity().getWindow().getDecorView().getRootView().getHeight();
-                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
-                int heightDifference = screenHeight - r.bottom;
-                if (heightDifference == 0) {
-                    isSoftInputDisplay=false;
-                    android.util.Log.e("Test", "hide softInput!---" + heightDifference);
-                } else {
-                    isSoftInputDisplay=true;
-                    android.util.Log.e("Test", "show softInput!---" + heightDifference);
-                }
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+    }
 
-                //若当前height改变还未处理过
-                if (lastHeight != heightDifference) {
-                    //将该height设置到tempViewForSoft
-                    ViewGroup.LayoutParams params = tempViewForSoft.getLayoutParams();
-                    params.height = heightDifference;
-                    if(params.height!=0){
-                        params.height=200;
-                    }
-                    tempViewForSoft.setLayoutParams(params);
-                    //若此时是键盘显示
-                    if (heightDifference != 0) {
-                        ((MainActivity)getActivity()).hideBottomViews(true);
-                        scrollToEndAndRequestFocus();
-                    }else{
-                        ((MainActivity)getActivity()).hideBottomViews(false);
-                    }
-                    //将当前高度记为已处理，否则fullScroll会requestLayout,会再次触发onGlobalLayout，这样会陷入死循环
-                    lastHeight = heightDifference;
-                }
-            }
-        });
+    /**
+     * 取消键盘状态的监听
+     */
+    private void cancelSoftInputStateListener() {
+        scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
     }
 
     private void scrollToEndAndRequestFocus(){
