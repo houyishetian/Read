@@ -156,7 +156,7 @@ public class ResolveUtilsFor80 {
                 if (bookIndex != null
                         && bookIndex.getIndex() == BookIndex80.TYPE_INDEX
                         && index == bookIndex.getNextLine()) {
-                    // <span class="result-game-item-info-tag-title">��������</span>
+                    // <span class="result-game-item-info-tag-title">仙侠修真</span>
                     String bookRegex = "<span class=\"result-game-item-info-tag-title\">([^\n]+)</span>";
                     List<Integer> bookGroupsList = Arrays
                             .asList(new Integer[]{1});
@@ -193,7 +193,7 @@ public class ResolveUtilsFor80 {
                         && bookIndex.getIndex() == BookIndex80.UPDATE_CONTENT_INDEX
                         && index == bookIndex.getNextLine()) {
                     // class="result-game-item-info-tag-item"
-                    // target="_blank">���顶һ�����㡷��VIP�ϼ���</a>
+                    // target="_blank">新书《一念永恒》，VIP上架啦</a>
                     String bookRegex = "class=\"result-game-item-info-tag-item\" target=\"_blank\">([^\n]+)</a>";
                     List<Integer> bookGroupsList = Arrays
                             .asList(new Integer[]{1});
