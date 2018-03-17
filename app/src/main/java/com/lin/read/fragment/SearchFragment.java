@@ -77,8 +77,8 @@ public class SearchFragment extends Fragment {
                     Toast.makeText(getActivity(), "请输入书名!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                search(bookName);
                 hideSoft();
+                search(bookName);
             }
         });
     }
