@@ -12,7 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.lin.read.R;
-import com.lin.read.filter.ScanTypeInfo;
+import com.lin.read.filter.search.ScanTypeInfo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.lin.read.download_filter.novel80;
+package com.lin.read.filter.download.novel80;
 
 public class BookIndex80 {
 

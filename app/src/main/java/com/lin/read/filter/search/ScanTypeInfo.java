@@ -1,4 +1,4 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
 /**
  * Created by lisonglin on 2017/10/12.

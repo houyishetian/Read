@@ -1,11 +1,11 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import com.lin.read.filter.qidian.QiDianHttpUtils;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.qidian.QiDianHttpUtils;
 import com.lin.read.utils.MessageUtils;
 
 import java.io.IOException;
@@ -148,7 +148,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         }
 
         Log.e("Test","开始过滤");
-        final ArrayList<QiDianBookInfo> resultBookInfo=new ArrayList<>();
+        final ArrayList<BookInfo> resultBookInfo=new ArrayList<>();
         MessageUtils.sendWhat(handler,MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START);
         scanAndFilterService = Executors.newFixedThreadPool(10);
         final List<String> completeTask = new ArrayList<String>();
@@ -162,7 +162,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         if(index>=maxSize){
                             Log.e("Test","重新扫描："+ bookInfos.get(index));
                         }
-                        QiDianBookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,bookInfos.get(index),3);
+                        BookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,bookInfos.get(index),3);
 
                         if(scoreBookInfo!=null){
                             scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, bookInfos.get(index));

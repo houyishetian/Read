@@ -1,17 +1,17 @@
-package com.lin.read.download_filter.novel80;
+package com.lin.read.filter.download.novel80;
 
-import com.lin.read.filter.StringUtils;
+import android.util.Log;
+
+import com.lin.read.download.HttpUtils;
+import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.StringUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,59 +23,12 @@ import java.util.regex.Pattern;
  */
 
 public class ResolveUtilsFor80 {
-    /**
-     * get an available connection
-     *
-     * @param urlLink
-     * @return
-     */
-    private static HttpURLConnection getConn(String urlLink, int totalNum)
-            throws IOException {
-        if (StringUtils.isEmpty(urlLink)) {
-            System.out.println("empty url:" + urlLink);
-            return null;
-        }
-        if (totalNum <= 0) {
-            return null;
-        }
-        URL url = new URL(urlLink);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(20000);
-        conn.setReadTimeout(20000);
-        int code = -1;
-        try {
-            code = conn.getResponseCode();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (totalNum == 1) {
-                throw new IOException();
-            }
-        }
-        if (code == 200) {
-            return conn;
-        } else if (code == 301 || code == 302) {
-            String location = conn.getHeaderField("Location");
-            System.out.println("location=" + location);
-            url = new URL(location);
-            conn = (HttpURLConnection) url.openConnection();
-            code = conn.getResponseCode();
-            if (code == 200) {
-                return conn;
-            }
-            System.out.println("redirect code error url:" + code + ",url="
-                    + urlLink);
-            return getConn(urlLink, totalNum - 1);
-        }
-        System.out.println("code error url:" + code + ",url=" + urlLink);
-        return getConn(urlLink, totalNum - 1);
-    }
-
     public static Map<String, List<String>> resolveDataByRegex(String url,
                                                                List<String> regexs) throws IOException {
         if (regexs == null || regexs.size() == 0) {
             return null;
         }
-        HttpURLConnection conn = getConn(url, 3);
+        HttpURLConnection conn = HttpUtils.getConn(url, 3);
         if (conn == null) {
             throw new IOException();
         }
@@ -107,26 +60,36 @@ public class ResolveUtilsFor80 {
         return result;
     }
 
-    public static List<BookInfo80> resolveSearchResultFrom80(String url)
+    public static List<BookInfo> getBooksByBookname(String bookName, int page) throws IOException {
+        if(StringUtils.isEmpty(bookName)||page<0){
+            return null;
+        }
+        String url="http://zhannei.baidu.com/cse/search?searchtype=complex&q="+bookName+"&s=18140131260432570322&p="+page;
+        Log.e("Test","search url:"+url);
+        return resolveSearchResultFrom80(url);
+    }
+    private static List<BookInfo> resolveSearchResultFrom80(String url)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
             return null;
         }
-        HttpURLConnection conn = getConn(url, 3);
+        HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
         if (conn == null) {
             throw new IOException();
         }
-        List<BookInfo80> result = new ArrayList<BookInfo80>();
+        List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), "UTF-8"));
 
         String current = null;
-        BookInfo80 bookInfo = null;
+        BookInfo bookInfo = null;
         int index = -1;
         BookIndex80 bookIndex = null;
+        Log.e("Test","开始解析...");
         while ((current = reader.readLine()) != null) {
+            Log.e("Test",current);
             if (bookIndex != null) {
                 index++;
             }
@@ -138,7 +101,7 @@ public class ResolveUtilsFor80 {
                 List<String> resolveResult = getDataByRegex(current, bookRegex,
                         bookGroupsList);
                 if (resolveResult != null && resolveResult.size() != 0) {
-                    bookInfo = new BookInfo80();
+                    bookInfo = new BookInfo();
                     bookInfo.setBookLink(resolveResult.get(0));
                     bookInfo.setBookName(resolveResult.get(1));
                 }
@@ -147,7 +110,7 @@ public class ResolveUtilsFor80 {
                 if (bookIndex != null
                         && bookIndex.getIndex() == BookIndex80.AUTHOR_INDEX
                         && index == bookIndex.getNextLine()) {
-                    bookInfo.setAuthor(current.trim());
+                    bookInfo.setAuthorName(current.trim());
                     index = -1;
                     bookIndex = null;
                     continue;
@@ -181,7 +144,7 @@ public class ResolveUtilsFor80 {
                     List<String> resolveResult = getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
-                        bookInfo.setLatestUpdate(resolveResult.get(0));
+                        bookInfo.setLastUpdate(resolveResult.get(0));
                     }
                     bookIndex = null;
                     index = -1;
@@ -200,10 +163,11 @@ public class ResolveUtilsFor80 {
                     List<String> resolveResult = getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
-                        bookInfo.setLatestContent(resolveResult.get(0));
+                        bookInfo.setLastChapter(resolveResult.get(0));
                     }
                     bookIndex = null;
                     index = -1;
+                    bookInfo.setDownloadLink(parseBookLinkToDownloadLink(bookInfo));
                     result.add(bookInfo);
                     bookInfo = null;
                     continue;
@@ -285,10 +249,10 @@ public class ResolveUtilsFor80 {
         return content.trim().equalsIgnoreCase(keyString);
     }
 
-    public static String parseBookLinkToDownloadLink(BookInfo80 bookInfo) {
+    private static String parseBookLinkToDownloadLink(BookInfo bookInfo) {
 //		http://www.80txt.com/txtml_853/ 
 //		http://www.80txt.com/txtml_853.html
-//		http://dt.80txt.com/853/�ɼ�.txt
+//		http://dt.80txt.com/853/仙及.txt
         if (bookInfo == null) {
             return null;
         }

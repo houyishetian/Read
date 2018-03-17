@@ -11,11 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.lin.read.R;
-import com.lin.read.filter.ReadGetBookInfoFactory;
-import com.lin.read.filter.ReadGetQiDianBookInfoFactory;
-import com.lin.read.filter.SearchInfo;
-import com.lin.read.filter.StringUtils;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.ReadGetBookInfoFactory;
+import com.lin.read.filter.search.ReadGetQiDianBookInfoFactory;
+import com.lin.read.filter.search.SearchInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
 
@@ -83,7 +82,7 @@ public class LoadingDialogActivity extends Activity {
                         tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE,msg.arg1));
                         break;
                     case MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END:
-                        ArrayList<QiDianBookInfo> result=msg.getData().getParcelableArrayList(MessageUtils.DATA_QIDIAN_BOOK_LIST);
+                        ArrayList<BookInfo> result=msg.getData().getParcelableArrayList(MessageUtils.DATA_QIDIAN_BOOK_LIST);
                         tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_END,result.size()));
                         break;
                 }
@@ -98,7 +97,7 @@ public class LoadingDialogActivity extends Activity {
             public void succ(Object allBookInfo) {
                 if(allBookInfo!=null){
                     Log.e("Test","共："+((List) allBookInfo).size());
-                    ArrayList<QiDianBookInfo> allBooks= (ArrayList<QiDianBookInfo>) allBookInfo;
+                    ArrayList<BookInfo> allBooks= (ArrayList<BookInfo>) allBookInfo;
                     Intent intent=new Intent();
                     Bundle bundle=new Bundle();
                     bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA,allBooks);

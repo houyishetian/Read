@@ -4,14 +4,10 @@ package com.lin.read.utils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
-import android.util.Log;
 
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.BookInfo;
 
 import java.util.ArrayList;
-
-import static android.R.id.message;
 
 /**
  * Created by lisonglin on 2017/10/15.
@@ -43,7 +39,7 @@ public class MessageUtils {
     }
 
 
-    public static void sendMessageOfArrayList(Handler handler, int what,ArrayList<QiDianBookInfo> allData){
+    public static void sendMessageOfArrayList(Handler handler, int what,ArrayList<BookInfo> allData){
         if(handler!=null){
             Message msg=handler.obtainMessage();
             msg.what=what;

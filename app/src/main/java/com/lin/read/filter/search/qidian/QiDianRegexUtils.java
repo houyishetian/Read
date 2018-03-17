@@ -1,8 +1,7 @@
-package com.lin.read.filter.qidian;
+package com.lin.read.filter.search.qidian;
 
-import com.lin.read.filter.SearchInfo;
-import com.lin.read.filter.StringUtils;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.BookInfo;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +28,7 @@ public class QiDianRegexUtils {
         return null;
     }
 
-    public static boolean getQiDianBookNameAndAuthorName(QiDianBookInfo bookInfo,String data){
+    public static boolean getQiDianBookNameAndAuthorName(BookInfo bookInfo, String data){
 //        <h1><em>火照鬼擎传</em><span><a class="writer" href="//me.qidian.com/authorIndex.aspx?id=7049455" target="_blank" data-eid="qd_G08">小韵和小云</a> 著</span></h1>
 
 //        <h1>
@@ -53,7 +52,7 @@ public class QiDianRegexUtils {
         return false;
     }
 //    <p><em>30.36</em><cite>万字</cite><i>|</i><em>28.62</em><cite>万总点击<span>&#183;</span>会员周点击6310</cite><i>|</i><em>6.08</em><cite>万总推荐<span>&#183;</span>周898</cite></p>
-    public static boolean getQiDianWordsNumVipClickRecommend(QiDianBookInfo bookInfo,String data){
+    public static boolean getQiDianWordsNumVipClickRecommend(BookInfo bookInfo, String data){
         if(bookInfo==null||StringUtils.isEmpty(data)){
             return false;
         }
@@ -69,7 +68,7 @@ public class QiDianRegexUtils {
     }
 
 //    title="第一百四十七章不甘心的乌鲁娜下" target="_blank">第一百四十七章不甘心的乌鲁娜下</a><i>&#183;</i><em class="time">今天20:50更新</em>
-    public static boolean getQiDianLastUpdateAndLastChapter(QiDianBookInfo bookInfo,String data){
+    public static boolean getQiDianLastUpdateAndLastChapter(BookInfo bookInfo, String data){
         if(bookInfo==null||StringUtils.isEmpty(data)){
             return false;
         }

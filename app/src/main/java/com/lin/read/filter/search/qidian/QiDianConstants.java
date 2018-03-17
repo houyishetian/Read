@@ -1,6 +1,6 @@
-package com.lin.read.filter.qidian;
-import com.lin.read.filter.KeyValuePair;
-import com.lin.read.filter.ScanTypeInfo;
+package com.lin.read.filter.search.qidian;
+import com.lin.read.filter.search.KeyValuePair;
+import com.lin.read.filter.search.ScanTypeInfo;
 
 import java.util.ArrayList;
 import java.util.List;

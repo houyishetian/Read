@@ -1,6 +1,6 @@
 package com.lin.read.utils;
 
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.BookInfo;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by lisonglin on 2017/10/19.
  */
 
-public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
+public class QiDianBookComparator implements Comparator<BookInfo> {
 
     public enum SortType {
         ASCEND, DESCEND
@@ -29,7 +29,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
     }
 
     @Override
-    public int compare(QiDianBookInfo bookInfo0, QiDianBookInfo bookInfo1) {
+    public int compare(BookInfo bookInfo0, BookInfo bookInfo1) {
         if (bookInfo0 == null || bookInfo1 == null || sortType == null || bookType == null) {
             return 0;
         }
@@ -42,7 +42,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
         return 0;
     }
 
-    private int sortByAscend(QiDianBookInfo bookInfo0, QiDianBookInfo bookInfo1) {
+    private int sortByAscend(BookInfo bookInfo0, BookInfo bookInfo1) {
         if (bookInfo0 == null || bookInfo1 == null || bookType == null) {
             return 0;
         }
@@ -58,7 +58,7 @@ public class QiDianBookComparator implements Comparator<QiDianBookInfo> {
         return 0;
     }
 
-    private int sortByType(QiDianBookInfo bookInfo0, QiDianBookInfo bookInfo1, BookType bookType) {
+    private int sortByType(BookInfo bookInfo0, BookInfo bookInfo1, BookType bookType) {
         if (bookInfo0 == null || bookInfo1 == null || bookType == null) {
             return 0;
         }

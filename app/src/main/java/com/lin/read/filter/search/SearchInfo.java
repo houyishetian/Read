@@ -1,4 +1,4 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
 
 import java.io.Serializable;

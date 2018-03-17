@@ -1,24 +1,22 @@
-package com.lin.read.filter.qidian;
+package com.lin.read.filter.search.qidian;
 
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
-import com.lin.read.filter.SearchInfo;
-import com.lin.read.filter.StringUtils;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
-import com.lin.read.filter.qidian.entity.ScoreJson;
+import com.lin.read.download.HttpUtils;
+import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.SearchInfo;
+import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.search.qidian.entity.ScoreJson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +28,11 @@ public class QiDianHttpUtils {
 		String url = "https://book.qidian.com/info/1004608738";
 		CookieManager manager = new CookieManager();
 		CookieHandler.setDefault(manager);
-		HttpURLConnection conn = getConn(url,3);
+		HttpURLConnection conn = HttpUtils.getConn(url,3);
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}
-		conn=getConn(url,3);
+		conn=HttpUtils.getConn(url,3);
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}
@@ -63,7 +61,7 @@ public class QiDianHttpUtils {
 			urlLink=urlLink+"&dateType="+searchInfo.getDateType();
 		}
 		Log.e("Test","execute start:"+urlLink);
-		HttpURLConnection conn = getConn(urlLink,3);
+		HttpURLConnection conn = HttpUtils.getConn(urlLink,3);
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
 		BufferedReader reader = null;
 		if(conn==null){
@@ -104,7 +102,7 @@ public class QiDianHttpUtils {
 	 * @return 0--max page num
 	 */
 	public static List<String> getLatestBookInfoFromRankPage(String urlLink) throws IOException {
-		HttpURLConnection conn = getConn(urlLink,3);
+		HttpURLConnection conn = HttpUtils.getConn(urlLink,3);
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
 		BufferedReader reader = null;
 		if(conn==null){
@@ -152,7 +150,7 @@ public class QiDianHttpUtils {
 		return null;
 	}
 
-	public static QiDianBookInfo getBookScoreInfo(SearchInfo searchInfo, String token, String bookUrl,int totalNum) throws IOException {
+	public static BookInfo getBookScoreInfo(SearchInfo searchInfo, String token, String bookUrl, int totalNum) throws IOException {
 		//book.qidian.com/info/1005263115
 		if(totalNum<=0){
 			return null;
@@ -161,7 +159,7 @@ public class QiDianHttpUtils {
 		if(StringUtils.isEmpty(url)){
 			return null;
 		}
-		HttpURLConnection conn=getConn(url,3);
+		HttpURLConnection conn=HttpUtils.getConn(url,3);
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}
@@ -208,10 +206,10 @@ public class QiDianHttpUtils {
 			int searchScoreNumi = Integer.parseInt(searchScoreNum);
 
 			if (currentScoref >= searchScoref && currentScoreNumi >= searchScoreNumi) {
-				QiDianBookInfo qiDianBookInfo = new QiDianBookInfo();
-				qiDianBookInfo.setScore(currentScore);
-				qiDianBookInfo.setScoreNum(currentScoreNum);
-				return qiDianBookInfo;
+				BookInfo bookInfo = new BookInfo();
+				bookInfo.setScore(currentScore);
+				bookInfo.setScoreNum(currentScoreNum);
+				return bookInfo;
 			}
 			return null;
 		} catch (Exception e) {
@@ -221,8 +219,8 @@ public class QiDianHttpUtils {
 		}
 	}
 
-	public static QiDianBookInfo getBookDetailsInfo(SearchInfo searchInfo, QiDianBookInfo qiDianBookInfo, String bookUrl) throws IOException {
-		if (searchInfo == null || qiDianBookInfo == null || StringUtils.isEmpty(bookUrl)) {
+	public static BookInfo getBookDetailsInfo(SearchInfo searchInfo, BookInfo bookInfo, String bookUrl) throws IOException {
+		if (searchInfo == null || bookInfo == null || StringUtils.isEmpty(bookUrl)) {
 			return null;
 		}
 		//book.qidian.com/info/1005263115
@@ -230,7 +228,7 @@ public class QiDianHttpUtils {
 		if (StringUtils.isEmpty(url)) {
 			return null;
 		}
-		HttpURLConnection conn = getConn(url,3);
+		HttpURLConnection conn = HttpUtils.getConn(url,3);
 		if (conn == null) {
 			throw new IOException();
 		}
@@ -241,14 +239,14 @@ public class QiDianHttpUtils {
 		// whether already get max page
 		boolean getMaxPage = false;
 		while ((current = reader.readLine()) != null) {
-			if (qiDianBookInfo.getBookName() == null && qiDianBookInfo.getAuthorName() == null) {
-				QiDianRegexUtils.getQiDianBookNameAndAuthorName(qiDianBookInfo, current);
+			if (bookInfo.getBookName() == null && bookInfo.getAuthorName() == null) {
+				QiDianRegexUtils.getQiDianBookNameAndAuthorName(bookInfo, current);
 			}
-			if (qiDianBookInfo.getLastChapter() == null && qiDianBookInfo.getLastUpdate() == null) {
-				QiDianRegexUtils.getQiDianLastUpdateAndLastChapter(qiDianBookInfo, current);
+			if (bookInfo.getLastChapter() == null && bookInfo.getLastUpdate() == null) {
+				QiDianRegexUtils.getQiDianLastUpdateAndLastChapter(bookInfo, current);
 			}
-			if (qiDianBookInfo.getWordsNum() == null && qiDianBookInfo.getVipClick() == null && qiDianBookInfo.getRecommend() == null) {
-				QiDianRegexUtils.getQiDianWordsNumVipClickRecommend(qiDianBookInfo, current);
+			if (bookInfo.getWordsNum() == null && bookInfo.getVipClick() == null && bookInfo.getRecommend() == null) {
+				QiDianRegexUtils.getQiDianWordsNumVipClickRecommend(bookInfo, current);
 			}
 		}
 		if (reader != null) {
@@ -258,56 +256,10 @@ public class QiDianHttpUtils {
 				e.printStackTrace();
 			}
 		}
-		if (StringUtils.isWordsNumVipClickRecommendFit(searchInfo, qiDianBookInfo)) {
-			Log.e("Test","书籍符合条件："+qiDianBookInfo.toString());
-			return qiDianBookInfo;
+		if (StringUtils.isWordsNumVipClickRecommendFit(searchInfo, bookInfo)) {
+			Log.e("Test","书籍符合条件："+ bookInfo.toString());
+			return bookInfo;
 		}
 		return null;
-	}
-
-
-	
-	/**
-	 * get an available connection
-	 * @param urlLink
-	 * @return
-	 */
-	public static HttpURLConnection getConn(String urlLink,int totalNum) throws IOException {
-		if (StringUtils.isEmpty(urlLink)) {
-			Log.e("Test","empty url:"+urlLink);
-			return null;
-		}
-		if(totalNum<=0){
-			return null;
-		}
-		URL url = new URL(urlLink);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setConnectTimeout(20000);
-		conn.setReadTimeout(20000);
-		int code=-1;
-		try{
-			code = conn.getResponseCode();
-		}catch (Exception e){
-			e.printStackTrace();
-			if(totalNum==1){
-				throw new IOException();
-			}
-		}
-		if (code == 200) {
-			return conn;
-		} else if (code == 301 || code == 302) {
-			String location = conn.getHeaderField("Location");
-			System.out.println("location=" + location);
-			url = new URL(location);
-			conn = (HttpURLConnection) url.openConnection();
-			code = conn.getResponseCode();
-			if (code == 200) {
-				return conn;
-			}
-			Log.e("Test","redirect code error url:"+code+",url="+urlLink);
-			return getConn(urlLink,totalNum-1);
-		}
-		Log.e("Test","code error url:"+code+",url="+urlLink);
-		return getConn(urlLink,totalNum-1);
 	}
 }

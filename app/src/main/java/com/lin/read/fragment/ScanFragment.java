@@ -36,10 +36,10 @@ import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
-import com.lin.read.filter.SearchInfo;
-import com.lin.read.filter.StringUtils;
-import com.lin.read.filter.qidian.QiDianConstants;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.SearchInfo;
+import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.search.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.utils.NumberInputFilter;
@@ -82,7 +82,7 @@ public class ScanFragment extends Fragment {
 
     private ScrollView scrollView;
 
-    private ArrayList<QiDianBookInfo> allBookData;
+    private ArrayList<BookInfo> allBookData;
 
     private Button scanOK;
 
@@ -451,7 +451,7 @@ public class ScanFragment extends Fragment {
                     break;
                 case Constants.SCAN_RESPONSE_SUCC:
                     if (data != null) {
-                        ArrayList<QiDianBookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
+                        ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
                         scanResultTv.setVisibility(View.VISIBLE);
                         Log.e("Test", "接收:" + allBookDataFromScan);
                         scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));

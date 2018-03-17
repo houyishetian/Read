@@ -1,9 +1,7 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
-import android.util.Log;
-
-import com.lin.read.filter.qidian.QiDianConstants;
-import com.lin.read.filter.qidian.entity.QiDianBookInfo;
+import com.lin.read.filter.search.qidian.QiDianConstants;
+import com.lin.read.filter.BookInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -149,17 +147,17 @@ public class StringUtils {
 		return result;
 	}
 
-	public static boolean isWordsNumVipClickRecommendFit(SearchInfo searchInfo, QiDianBookInfo qiDianBookInfo) {
-		if (searchInfo == null || qiDianBookInfo == null) {
+	public static boolean isWordsNumVipClickRecommendFit(SearchInfo searchInfo, BookInfo bookInfo) {
+		if (searchInfo == null || bookInfo == null) {
 			return false;
 		}
-		if (searchInfo.getWordsNum() != null && searchInfo.getRecommend() != null && qiDianBookInfo.getWordsNum() != null
-				&& qiDianBookInfo.getVipClick() != null && qiDianBookInfo.getRecommend() != null) {
+		if (searchInfo.getWordsNum() != null && searchInfo.getRecommend() != null && bookInfo.getWordsNum() != null
+				&& bookInfo.getVipClick() != null && bookInfo.getRecommend() != null) {
 			try {
-				float currentRecommend = Float.parseFloat(qiDianBookInfo.getRecommend());
+				float currentRecommend = Float.parseFloat(bookInfo.getRecommend());
 				float searchRecommend = Float.parseFloat(searchInfo.getRecommend());
 
-				float currentWordsNum = Float.parseFloat(qiDianBookInfo.getWordsNum());
+				float currentWordsNum = Float.parseFloat(bookInfo.getWordsNum());
 				float searchWordsNum = Float.parseFloat(searchInfo.getWordsNum());
 
 				return currentRecommend >= searchRecommend && currentWordsNum >= searchWordsNum;

@@ -1,4 +1,4 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
 public class KeyValuePair {
 

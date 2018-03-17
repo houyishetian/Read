@@ -1,4 +1,4 @@
-package com.lin.read.filter.qidian.entity;
+package com.lin.read.filter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by lisonglin on 2017/10/15.
  */
 
-public class QiDianBookInfo implements Parcelable{
+public class BookInfo implements Parcelable{
     private String bookName;
     private String authorName;
     private String webType;
@@ -18,6 +18,9 @@ public class QiDianBookInfo implements Parcelable{
     private String score;
     private String scoreNum;
     private String lastChapter;
+    private String bookLink;
+    private String bookType;
+    private String downloadLink;
 
     public String getBookName() {
         return bookName;
@@ -99,9 +102,33 @@ public class QiDianBookInfo implements Parcelable{
         this.lastChapter = lastChapter;
     }
 
+    public String getBookLink() {
+        return bookLink;
+    }
+
+    public void setBookLink(String bookLink) {
+        this.bookLink = bookLink;
+    }
+
+    public String getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
+
+    public String getDownloadLink() {
+        return downloadLink;
+    }
+
+    public void setDownloadLink(String downloadLink) {
+        this.downloadLink = downloadLink;
+    }
+
     @Override
     public String toString() {
-        return "QiDianBookInfo{" +
+        return "BookInfo{" +
                 "bookName='" + bookName + '\'' +
                 ", authorName='" + authorName + '\'' +
                 ", webType='" + webType + '\'' +
@@ -132,28 +159,34 @@ public class QiDianBookInfo implements Parcelable{
         dest.writeString(this.score);
         dest.writeString(this.scoreNum);
         dest.writeString(this.lastChapter);
+        dest.writeString(this.bookLink);
+        dest.writeString(this.bookType);
+        dest.writeString(this.downloadLink);
     }
 
-    public static final Creator<QiDianBookInfo> CREATOR = new Creator<QiDianBookInfo>() {
+    public static final Creator<BookInfo> CREATOR = new Creator<BookInfo>() {
         @Override
-        public QiDianBookInfo createFromParcel(Parcel in) {
-            QiDianBookInfo qiDianBookInfo=new QiDianBookInfo();
-            qiDianBookInfo.setBookName(in.readString());
-            qiDianBookInfo.setAuthorName(in.readString());
-            qiDianBookInfo.setWebType(in.readString());
-            qiDianBookInfo.setLastUpdate(in.readString());
-            qiDianBookInfo.setWordsNum(in.readString());
-            qiDianBookInfo.setRecommend(in.readString());
-            qiDianBookInfo.setVipClick(in.readString());
-            qiDianBookInfo.setScore(in.readString());
-            qiDianBookInfo.setScoreNum(in.readString());
-            qiDianBookInfo.setLastChapter(in.readString());
-            return qiDianBookInfo;
+        public BookInfo createFromParcel(Parcel in) {
+            BookInfo bookInfo =new BookInfo();
+            bookInfo.setBookName(in.readString());
+            bookInfo.setAuthorName(in.readString());
+            bookInfo.setWebType(in.readString());
+            bookInfo.setLastUpdate(in.readString());
+            bookInfo.setWordsNum(in.readString());
+            bookInfo.setRecommend(in.readString());
+            bookInfo.setVipClick(in.readString());
+            bookInfo.setScore(in.readString());
+            bookInfo.setScoreNum(in.readString());
+            bookInfo.setLastChapter(in.readString());
+            bookInfo.setBookLink(in.readString());
+            bookInfo.setBookType(in.readString());
+            bookInfo.setDownloadLink(in.readString());
+            return bookInfo;
         }
 
         @Override
-        public QiDianBookInfo[] newArray(int size) {
-            return new QiDianBookInfo[size];
+        public BookInfo[] newArray(int size) {
+            return new BookInfo[size];
         }
     };
 

@@ -1,4 +1,4 @@
-package com.lin.read.filter.qidian.entity;
+package com.lin.read.filter.search.qidian.entity;
 
 import java.util.List;
 

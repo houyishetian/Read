@@ -1,8 +1,6 @@
-package com.lin.read.filter;
+package com.lin.read.filter.search;
 
 import android.os.Handler;
-
-import java.util.List;
 
 /**
  * Created by lisonglin on 2017/10/15.
