@@ -54,6 +54,8 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
                 e.printStackTrace();
                 result(false, null);
             }
+        }else{
+            result(false, null);
         }
         return null;
     }

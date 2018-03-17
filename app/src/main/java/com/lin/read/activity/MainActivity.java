@@ -67,6 +67,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         FragmentTransaction localFragmentTransaction = getSupportFragmentManager().beginTransaction();
+        this.scanFragment.hideSoft();
+        this.searchFragment.hideSoft();
         switch (v.getId()) {
             case R.id.rl_scan:
                 localFragmentTransaction.show(this.scanFragment).hide(this.searchFragment).hide(this.downloadHistoryFragment);

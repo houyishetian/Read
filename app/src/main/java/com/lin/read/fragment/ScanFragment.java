@@ -297,7 +297,7 @@ public class ScanFragment extends Fragment {
         return scanFilterLayout.getVisibility() == View.VISIBLE;
     }
 
-    public void hideFilterLayout() {
+    public void hideSoft(){
         if(isSoftInputDisplay){
             View view=getFocusEt();
             InputMethodManager inputMethodManager =
@@ -305,6 +305,10 @@ public class ScanFragment extends Fragment {
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),0);
             view.clearFocus();
         }
+    }
+
+    public void hideFilterLayout() {
+        hideSoft();
         Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_out);
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
