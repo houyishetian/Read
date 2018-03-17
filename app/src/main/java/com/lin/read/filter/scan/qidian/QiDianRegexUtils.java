@@ -1,6 +1,6 @@
-package com.lin.read.filter.search.qidian;
+package com.lin.read.filter.scan.qidian;
 
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.BookInfo;
 
 import java.util.regex.Matcher;

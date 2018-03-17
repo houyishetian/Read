@@ -1,11 +1,11 @@
-package com.lin.read.filter.search;
+package com.lin.read.filter.scan;
 
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.qidian.QiDianHttpUtils;
+import com.lin.read.filter.scan.qidian.QiDianHttpUtils;
 import com.lin.read.utils.MessageUtils;
 
 import java.io.IOException;

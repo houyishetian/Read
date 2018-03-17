@@ -1,6 +1,6 @@
-package com.lin.read.filter.search;
+package com.lin.read.filter.scan;
 
-import com.lin.read.filter.search.qidian.QiDianConstants;
+import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.filter.BookInfo;
 
 import java.io.BufferedReader;

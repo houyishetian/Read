@@ -1,4 +1,4 @@
-package com.lin.read.filter.search;
+package com.lin.read.filter.scan;
 
 import android.os.Handler;
 

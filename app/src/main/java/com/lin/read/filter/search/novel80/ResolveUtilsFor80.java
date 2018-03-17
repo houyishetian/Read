@@ -1,10 +1,11 @@
-package com.lin.read.filter.download.novel80;
+package com.lin.read.filter.search.novel80;
 
 import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.search.ResolveUtils;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +23,9 @@ import java.util.regex.Pattern;
  * Created by lisonglin on 2018/2/24.
  */
 
-public class ResolveUtilsFor80 {
-    public static Map<String, List<String>> resolveDataByRegex(String url,
+public class ResolveUtilsFor80 extends ResolveUtils {
+
+    public Map<String, List<String>> resolveDataByRegex(String url,
                                                                List<String> regexs) throws IOException {
         if (regexs == null || regexs.size() == 0) {
             return null;
@@ -60,15 +62,27 @@ public class ResolveUtilsFor80 {
         return result;
     }
 
-    public static List<BookInfo> getBooksByBookname(String bookName, int page) throws IOException {
-        if(StringUtils.isEmpty(bookName)||page<0){
+    @Override
+    public List<BookInfo> getBooksByBookname(String... params) throws IOException {
+        if (params == null || params.length == 0) {
+            return null;
+        }
+        String bookName = params[0];
+        String pageStr = params[1];
+        int page = -1;
+        try {
+            page = Integer.parseInt(pageStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        if (StringUtils.isEmpty(bookName) || page < 0) {
             return null;
         }
         String url="http://zhannei.baidu.com/cse/search?searchtype=complex&q="+bookName+"&s=18140131260432570322&p="+page;
         Log.e("Test","search url:"+url);
         return resolveSearchResultFrom80(url);
     }
-    private static List<BookInfo> resolveSearchResultFrom80(String url)
+    private List<BookInfo> resolveSearchResultFrom80(String url)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -213,7 +227,7 @@ public class ResolveUtilsFor80 {
         return result;
     }
 
-    private static List<String> getDataByRegex(String content, String regex,
+    private List<String> getDataByRegex(String content, String regex,
                                                List<Integer> allGroup) {
         if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
                 || allGroup == null || allGroup.size() == 0) {
@@ -248,7 +262,7 @@ public class ResolveUtilsFor80 {
         return content.trim().equalsIgnoreCase(keyString);
     }
 
-    private static String parseBookLinkToDownloadLink(BookInfo bookInfo) {
+    private String parseBookLinkToDownloadLink(BookInfo bookInfo) {
 //		http://www.80txt.com/txtml_853/ 
 //		http://www.80txt.com/txtml_853.html
 //		http://dt.80txt.com/853/仙及.txt

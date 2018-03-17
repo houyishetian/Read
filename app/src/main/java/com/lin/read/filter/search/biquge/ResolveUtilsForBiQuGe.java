@@ -1,11 +1,11 @@
-package com.lin.read.filter.download.biquge;
+package com.lin.read.filter.search.biquge;
 
 import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.download.novel80.BookIndex80;
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.search.ResolveUtils;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +13,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,10 +21,14 @@ import java.util.regex.Pattern;
  * Created by lisonglin on 2018/2/24.
  */
 
-public class ResolveUtilsForBiQuGe {
-
-    public static List<BookInfo> getBooksByBookname(String bookName) throws IOException {
-        if(StringUtils.isEmpty(bookName)){
+public class ResolveUtilsForBiQuGe extends ResolveUtils{
+    @Override
+    public List<BookInfo> getBooksByBookname(String... params) throws IOException {
+        if (params == null || params.length == 0) {
+            return null;
+        }
+        String bookName = params[0];
+        if (StringUtils.isEmpty(bookName)) {
             return null;
         }
         String url="http://www.biquge5200.com/modules/article/search.php?searchkey="+bookName;
@@ -34,7 +36,7 @@ public class ResolveUtilsForBiQuGe {
         return resolveSearchResultFromBiQuGe(url);
     }
 
-    private static List<BookInfo> resolveSearchResultFromBiQuGe(String url)
+    private List<BookInfo> resolveSearchResultFromBiQuGe(String url)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -120,7 +122,7 @@ public class ResolveUtilsForBiQuGe {
         return result;
     }
 
-    private static List<String> getDataByRegex(String content, String regex,
+    private List<String> getDataByRegex(String content, String regex,
                                                List<Integer> allGroup) {
         if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
                 || allGroup == null || allGroup.size() == 0) {

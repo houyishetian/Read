@@ -3,7 +3,7 @@ package com.lin.read.download;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.FileUtils;
 
 import java.io.File;

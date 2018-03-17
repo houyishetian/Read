@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.util.ArrayList;
 

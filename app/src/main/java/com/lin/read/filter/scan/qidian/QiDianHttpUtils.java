@@ -1,13 +1,13 @@
-package com.lin.read.filter.search.qidian;
+package com.lin.read.filter.scan.qidian;
 
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.SearchInfo;
-import com.lin.read.filter.search.StringUtils;
-import com.lin.read.filter.search.qidian.entity.ScoreJson;
+import com.lin.read.filter.scan.SearchInfo;
+import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.filter.scan.qidian.entity.ScoreJson;
 
 import java.io.BufferedReader;
 import java.io.IOException;

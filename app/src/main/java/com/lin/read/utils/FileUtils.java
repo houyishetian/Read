@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.lin.read.R;
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.io.File;
 

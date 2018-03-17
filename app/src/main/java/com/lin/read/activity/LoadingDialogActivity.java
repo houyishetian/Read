@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.ReadGetBookInfoFactory;
-import com.lin.read.filter.search.ReadGetQiDianBookInfoFactory;
-import com.lin.read.filter.search.SearchInfo;
+import com.lin.read.filter.scan.ReadGetBookInfoFactory;
+import com.lin.read.filter.scan.ReadGetQiDianBookInfoFactory;
+import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
 

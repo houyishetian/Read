@@ -2,7 +2,7 @@ package com.lin.read.download;
 
 import android.util.Log;
 
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

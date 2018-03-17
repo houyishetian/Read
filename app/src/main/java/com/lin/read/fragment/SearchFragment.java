@@ -17,8 +17,9 @@ import com.lin.read.R;
 import com.lin.read.adapter.SearchBookItemAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.download.novel80.ResolveUtilsFor80;
-import com.lin.read.filter.search.StringUtils;
+import com.lin.read.filter.search.novel80.ResolveUtilsFor80;
+import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.view.DialogUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,24 +74,25 @@ public class SearchFragment extends Fragment {
             return;
         }
 
+        DialogUtil.getInstance().showLoadingDialog(this.getActivity());
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                try {
-                    final List<BookInfo> books= ResolveUtilsFor80.getBooksByBookname(bookName,0);
-                    Log.e("Test","all books:"+books);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            allbookInfo.clear();
-                            allbookInfo.addAll(books);
-                            searchBookItemadapter.notifyDataSetChanged();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    final List<BookInfo> books= ResolveUtilsFor80.getBooksByBookname(bookName,0);
+//                    Log.e("Test","all books:"+books);
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            allbookInfo.clear();
+//                            allbookInfo.addAll(books);
+//                            searchBookItemadapter.notifyDataSetChanged();
+//                        }
+//                    });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         }.start();
     }
