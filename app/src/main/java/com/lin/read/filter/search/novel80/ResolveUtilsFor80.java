@@ -1,9 +1,11 @@
 package com.lin.read.filter.search.novel80;
 
 import android.util.Log;
+import android.util.StringBuilderPrinter;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
@@ -112,11 +114,23 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                 String bookRegex = "<a cpos=\"title\" href=\"([^\"^\n]+)\" title=\"([^\"^\n]+)\"";
                 List<Integer> bookGroupsList = Arrays.asList(new Integer[]{1,
                         2});
-                List<String> resolveResult = getDataByRegex(current, bookRegex,
+                List<String> resolveResult = RegexUtils.getDataByRegex(current, bookRegex,
                         bookGroupsList);
                 if (resolveResult != null && resolveResult.size() != 0) {
                     bookInfo = new BookInfo();
-                    bookInfo.setBookLink(resolveResult.get(0));
+                    String bookLink=resolveResult.get(0);
+                    //handle book link
+                    if(bookLink.endsWith(".html")){
+                        bookInfo.setBookLink(bookLink);
+                    }else{
+                        if(bookLink.endsWith("/")){
+                            StringBuilder temp=new StringBuilder(bookLink);
+                            bookInfo.setBookLink(temp.deleteCharAt(temp.length()-1).append(".html").toString());
+                        }else{
+
+                            bookInfo.setBookLink(bookLink);
+                        }
+                    }
                     bookInfo.setBookName(resolveResult.get(1));
                 }
             } else {
@@ -137,7 +151,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                     String bookRegex = "<span class=\"result-game-item-info-tag-title\">([^\n]+)</span>";
                     List<Integer> bookGroupsList = Arrays
                             .asList(new Integer[]{1});
-                    List<String> resolveResult = getDataByRegex(current,
+                    List<String> resolveResult = RegexUtils.getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
                         bookInfo.setBookType(resolveResult.get(0));
@@ -155,7 +169,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                     String bookRegex = "<span class=\"result-game-item-info-tag-title\">([^\n]+)</span>";
                     List<Integer> bookGroupsList = Arrays
                             .asList(new Integer[]{1});
-                    List<String> resolveResult = getDataByRegex(current,
+                    List<String> resolveResult = RegexUtils.getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
                         bookInfo.setLastUpdate(resolveResult.get(0));
@@ -174,7 +188,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                     String bookRegex = "class=\"result-game-item-info-tag-item\" target=\"_blank\">([^\n]+)</a>";
                     List<Integer> bookGroupsList = Arrays
                             .asList(new Integer[]{1});
-                    List<String> resolveResult = getDataByRegex(current,
+                    List<String> resolveResult = RegexUtils.getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
                         bookInfo.setLastChapter(resolveResult.get(0));
@@ -229,29 +243,6 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         return result;
     }
 
-    private List<String> getDataByRegex(String content, String regex,
-                                               List<Integer> allGroup) {
-        if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
-                || allGroup == null || allGroup.size() == 0) {
-            return null;
-        }
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(content);
-        try {
-            if (matcher.find()) {
-                List<String> resultList = new ArrayList<String>();
-                for (Integer group : allGroup) {
-                    resultList.add(matcher.group(group));
-                }
-                return resultList;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     private static final String AUTHOR_STR = "<span class=\"result-game-item-info-tag-title preBold\">作者：</span>";
     private static final String TYPE_STR = "<span class=\"result-game-item-info-tag-title preBold\">类型：</span>";
     private static final String UPDATE_TIME_STR = "<span class=\"result-game-item-info-tag-title preBold\">更新时间：</span>";
@@ -274,7 +265,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         String bookRegex = "http://www.80txt.com/txtml_(\\d+)\\D";
         List<Integer> bookGroupsList = Arrays
                 .asList(new Integer[]{1});
-        List<String> resolveResult = getDataByRegex(bookInfo.getBookLink(),
+        List<String> resolveResult = RegexUtils.getDataByRegex(bookInfo.getBookLink(),
                 bookRegex, bookGroupsList);
         if (resolveResult != null && resolveResult.size() != 0) {
             String bookId = resolveResult.get(0);

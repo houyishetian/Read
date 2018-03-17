@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/chapter_current_chapter"
+            android:id="@+id/chapter_name"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginLeft="20dp"
@@ -60,6 +60,6 @@
     <include
         android:id="@+id/layout_chapters"
         layout="@layout/layout_book_chapter"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </FrameLayout>

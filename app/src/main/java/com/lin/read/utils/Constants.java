@@ -25,4 +25,6 @@ public class Constants {
     public static final String RESOLVE_FROM_NOVEL80 = "RESOLVE_FROM_NOVEL80";
     public static final String RESOLVE_FROM_BIQUGE = "RESOLVE_FROM_BIQUGE";
 
+    public static final String UNICODE_NOVEL_80="UTF-8";
+    public static final String UNICODE_BIQUGE="GBK";
 }

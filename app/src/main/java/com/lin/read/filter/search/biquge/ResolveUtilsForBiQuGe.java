@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
@@ -74,7 +75,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                 if(bookInfo==null){
                     //bookname & booklink
                     //<td class="odd"><a href="http://www.biquge5200.com/70_70322/">仙宸</a></td>
-                    List<String> resolveBookNameResult=getDataByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{1,2}));
+                    List<String> resolveBookNameResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{1,2}));
                     if (resolveBookNameResult != null && resolveBookNameResult.size() == 2) {
                         bookInfo = new BookInfo();
                         bookInfo.setBookLink(resolveBookNameResult.get(0));
@@ -86,7 +87,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                 }else{
                     //lastChapter
                     //    <td class="even"><a href="http://www.biquge5200.com/70_70322/144888240.html" target="_blank"> 第九十九章：大结局〔完〕</a></td>
-                    List<String> resolveLastChapterResult=getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{2}));
+                    List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{2}));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() == 1) {
                         bookInfo.setLastChapter(resolveLastChapterResult.get(0));
                         continue;
@@ -94,7 +95,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
                     //authorname
                     //<td class="odd">仙宸</td>
-                    List<String> resolveAuthorResult=getDataByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
+                    List<String> resolveAuthorResult= RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
                     if (resolveAuthorResult != null && resolveAuthorResult.size() == 1) {
                         bookInfo.setAuthorName(resolveAuthorResult.get(0));
                         continue;
@@ -102,7 +103,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
                     //lastUpdate
                     //<td class="odd" align="center">2017-05-26</td>
-                    List<String> resolveLastUpdateResult=getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
+                    List<String> resolveLastUpdateResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() == 1) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                         bookInfo.setWebType(Constants.RESOLVE_FROM_BIQUGE);
@@ -124,26 +125,4 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
         return result;
     }
 
-    private List<String> getDataByRegex(String content, String regex,
-                                               List<Integer> allGroup) {
-        if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
-                || allGroup == null || allGroup.size() == 0) {
-            return null;
-        }
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(content);
-        try {
-            if (matcher.find()) {
-                List<String> resultList = new ArrayList<String>();
-                for (Integer group : allGroup) {
-                    resultList.add(matcher.group(group));
-                }
-                return resultList;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 }
