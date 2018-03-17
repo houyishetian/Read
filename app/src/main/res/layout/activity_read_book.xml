@@ -9,19 +9,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/chapter_name"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_marginTop="15dp"
-            android:ellipsize="middle"
-            android:gravity="center"
-            android:maxLines="1"
-            android:text=""
-            android:textSize="18sp" />
+            android:layout_height="30dp">
 
+            <ImageView
+                android:id="@+id/chapter_menu"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/chapter" />
+
+            <TextView
+                android:id="@+id/chapter_name"
+                android:layout_width="300dp"
+                android:layout_height="30dp"
+                android:ellipsize="middle"
+                android:gravity="center"
+                android:maxLines="1"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textSize="18sp" />
+        </RelativeLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -60,6 +71,6 @@
     <include
         android:id="@+id/layout_chapters"
         layout="@layout/layout_book_chapter"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </FrameLayout>

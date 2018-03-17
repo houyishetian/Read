@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lin.read.R;
@@ -29,6 +33,9 @@ public class ReadBookActivity extends Activity {
 
     private BookInfo bookInfo;
 
+    private ImageView chapterMenu;
+    private View layoutMenu;
+    private View layoutMenuBlank;
     private TextView bookNameTv;
     private TextView previousPageTv;
     private TextView nexePageTv;
@@ -56,6 +63,9 @@ public class ReadBookActivity extends Activity {
 
     private void initView() {
         currentDisplayInfo = new ArrayList<>();
+        chapterMenu= (ImageView) findViewById(R.id.chapter_menu);
+        layoutMenu=findViewById(R.id.layout_chapters);
+        layoutMenuBlank=findViewById(R.id.chapter_blank_view);
         bookNameTv = (TextView) findViewById(R.id.chapter_bookName);
         previousPageTv = (TextView) findViewById(R.id.chapter_previous_page);
         nexePageTv = (TextView) findViewById(R.id.chapter_next_page);
@@ -69,6 +79,40 @@ public class ReadBookActivity extends Activity {
         chaptersRcv.setLayoutManager(new LinearLayoutManager(this));
         chaptersRcv.addItemDecoration(new ScanBooksItemDecoration(this));
         chaptersRcv.setAdapter(readBookChapterItemAdapter);
+
+        bookNameTv.setText(bookInfo.getBookName());
+
+        chapterMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation anim = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_scan_filter_menu_in);
+                layoutMenu.startAnimation(anim);
+                layoutMenu.setVisibility(View.VISIBLE);
+            }
+        });
+        layoutMenuBlank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation anim = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_scan_filter_menu_out);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        layoutMenu.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                layoutMenu.startAnimation(anim);
+            }
+        });
     }
 
     private void getChapterInfo() {
