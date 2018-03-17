@@ -9,6 +9,6 @@ import java.util.List;
  * Created by lisonglin on 2018/3/17.
  */
 
-public abstract class ResolveUtils {
+public abstract class ResolveUtilsFactory {
     public abstract List<BookInfo> getBooksByBookname(String... params) throws IOException;
 }

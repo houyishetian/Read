@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.ResolveUtils;
+import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
 
 import java.io.BufferedReader;
@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * Created by lisonglin on 2018/2/24.
  */
 
-public class ResolveUtilsForBiQuGe extends ResolveUtils{
+public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
     @Override
     public List<BookInfo> getBooksByBookname(String... params) throws IOException {
         if (params == null || params.length == 0) {

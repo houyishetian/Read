@@ -17,6 +17,7 @@ import com.lin.read.R;
 import com.lin.read.adapter.SearchBookItemAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.GetDownloadInfoTask;
 import com.lin.read.filter.search.novel80.ResolveUtilsFor80;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.view.DialogUtil;
@@ -75,25 +76,22 @@ public class SearchFragment extends Fragment {
         }
 
         DialogUtil.getInstance().showLoadingDialog(this.getActivity());
-        new Thread(){
+        GetDownloadInfoTask task=new GetDownloadInfoTask(this.getActivity(), GetDownloadInfoTask.RESOLVE_FROM_NOVEL80, new GetDownloadInfoTask.OnTaskListener() {
             @Override
-            public void run() {
-                super.run();
-//                try {
-//                    final List<BookInfo> books= ResolveUtilsFor80.getBooksByBookname(bookName,0);
-//                    Log.e("Test","all books:"+books);
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            allbookInfo.clear();
-//                            allbookInfo.addAll(books);
-//                            searchBookItemadapter.notifyDataSetChanged();
-//                        }
-//                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+            public void onSucc(List<BookInfo> allBooks) {
+                DialogUtil.getInstance().hideLoadingView();
+                if(allBooks!=null){
+                    allbookInfo.clear();
+                    allbookInfo.addAll(allBooks);
+                    searchBookItemadapter.notifyDataSetChanged();
+                }
             }
-        }.start();
+
+            @Override
+            public void onFailed() {
+                DialogUtil.getInstance().hideLoadingView();
+            }
+        });
+        task.execute(new String[]{bookName,"0"});
     }
 }
