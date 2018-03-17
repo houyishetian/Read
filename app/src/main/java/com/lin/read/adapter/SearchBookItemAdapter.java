@@ -1,12 +1,16 @@
 package com.lin.read.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
@@ -41,14 +45,22 @@ public class SearchBookItemAdapter extends RecyclerView.Adapter<SearchBookItemAd
         holder.bookType.setText(bookInfo.getBookType());
         holder.lastUpdate.setText(bookInfo.getLastUpdate());
         holder.lastContent.setText(bookInfo.getLastChapter());
+        holder.download.setEnabled(!TextUtils.isEmpty(bookInfo.getDownloadLink()));
 
-        holder.download.setOnClickListener(this.downloadClickListener);
-    }
-
-    private View.OnClickListener downloadClickListener;
-
-    public void setDownloadClickListener(View.OnClickListener downloadClickListener) {
-        this.downloadClickListener = downloadClickListener;
+        holder.download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(TextUtils.isEmpty(bookInfo.getDownloadLink())){
+                    Toast.makeText(context,"未找到下载资源",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse(bookInfo.getDownloadLink());
+                    intent.setData(content_url);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
