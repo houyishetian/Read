@@ -13,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lin.read.R;
+import com.lin.read.activity.ReadBookActivity;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -61,6 +63,14 @@ public class SearchBookItemAdapter extends RecyclerView.Adapter<SearchBookItemAd
                 }
             }
         });
+        holder.read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReadBookActivity.class);
+                intent.putExtra(Constants.KEY_SKIP_TO_READ, bookInfo);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -76,6 +86,8 @@ public class SearchBookItemAdapter extends RecyclerView.Adapter<SearchBookItemAd
         private TextView lastUpdate;
         private TextView lastContent;
         private Button download;
+        private Button read;
+
         public ViewHolder(View itemView) {
             super(itemView);
             bookName= (TextView) itemView.findViewById(R.id.book_item_bookname);
@@ -84,6 +96,7 @@ public class SearchBookItemAdapter extends RecyclerView.Adapter<SearchBookItemAd
             lastUpdate= (TextView) itemView.findViewById(R.id.book_item_lastupdate);
             lastContent= (TextView) itemView.findViewById(R.id.book_item_lastcontent);
             download= (Button) itemView.findViewById(R.id.book_item_download);
+            read= (Button) itemView.findViewById(R.id.book_item_read);
         }
     }
 }

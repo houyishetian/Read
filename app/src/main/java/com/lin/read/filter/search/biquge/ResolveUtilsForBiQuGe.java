@@ -6,6 +6,7 @@ import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,6 +105,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                     List<String> resolveLastUpdateResult=getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() == 1) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
+                        bookInfo.setWebType(Constants.RESOLVE_FROM_BIQUGE);
                         result.add(bookInfo);
                         bookInfo=null;
                         startIndex=-1;

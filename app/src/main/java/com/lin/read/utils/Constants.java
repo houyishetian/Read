@@ -20,4 +20,9 @@ public class Constants {
     public static final int SCAN_RESPONSE_SUCC=13;
     public static final int SCAN_RESPONSE_FAILED=14;
 
+    public static final String KEY_SKIP_TO_READ="KEY_SKIP_TO_READ";
+
+    public static final String RESOLVE_FROM_NOVEL80 = "RESOLVE_FROM_NOVEL80";
+    public static final String RESOLVE_FROM_BIQUGE = "RESOLVE_FROM_BIQUGE";
+
 }

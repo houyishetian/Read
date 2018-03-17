@@ -23,6 +23,7 @@ import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.GetDownloadInfoTask;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.view.DialogUtil;
 
@@ -41,7 +42,7 @@ public class SearchFragment extends Fragment {
     private ArrayList<BookInfo> allbookInfo;
     private SearchBookItemAdapter searchBookItemadapter;
     private TextView selectTypeTv;
-    private int currentSelectWeb = GetDownloadInfoTask.RESOLVE_FROM_BIQUGE;
+    private String currentSelectWeb = Constants.RESOLVE_FROM_BIQUGE;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = (View)inflater.inflate(R.layout.fragment_search, null);
@@ -102,9 +103,9 @@ public class SearchFragment extends Fragment {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         selectWebDialog.setContentView(viewDialog, layoutParams);
         View webNovel80=viewDialog.findViewById(R.id.web_novel_80);
-        webNovel80.setTag(GetDownloadInfoTask.RESOLVE_FROM_NOVEL80);
+        webNovel80.setTag(Constants.RESOLVE_FROM_NOVEL80);
         View webBiQuGe=viewDialog.findViewById(R.id.web_biquge);
-        webBiQuGe.setTag(GetDownloadInfoTask.RESOLVE_FROM_BIQUGE);
+        webBiQuGe.setTag(Constants.RESOLVE_FROM_BIQUGE);
         webNovel80.setOnClickListener(new WebSelectItemsClickListener());
         webBiQuGe.setOnClickListener(new WebSelectItemsClickListener());
     }
@@ -115,7 +116,7 @@ public class SearchFragment extends Fragment {
             Object o=v.getTag();
             if(o!=null){
                 try {
-                    int currentItem= (int) o;
+                    String currentItem= (String) o;
                     currentSelectWeb = currentItem;
                     selectTypeTv.setText(((TextView) v).getText().toString());
                     if (selectWebDialog != null && selectWebDialog.isShowing()) {

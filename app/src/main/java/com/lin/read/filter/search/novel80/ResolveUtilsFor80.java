@@ -6,6 +6,7 @@ import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -181,6 +182,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                     bookIndex = null;
                     index = -1;
                     bookInfo.setDownloadLink(parseBookLinkToDownloadLink(bookInfo));
+                    bookInfo.setWebType(Constants.RESOLVE_FROM_NOVEL80);
                     result.add(bookInfo);
                     bookInfo = null;
                     continue;

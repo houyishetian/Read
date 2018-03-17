@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.biquge.ResolveUtilsForBiQuGe;
 import com.lin.read.filter.search.novel80.ResolveUtilsFor80;
+import com.lin.read.utils.Constants;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,19 +17,17 @@ import java.util.List;
 
 public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
 
-    public static final int RESOLVE_FROM_NOVEL80 = 0;
-    public static final int RESOLVE_FROM_BIQUGE = 1;
     private ResolveUtilsFactory resolveUtilsFactory;
     private Activity activity;
 
-    public GetDownloadInfoTask(Activity activity, int currentResolveType, OnTaskListener onTaskListener) {
+    public GetDownloadInfoTask(Activity activity, String currentResolveType, OnTaskListener onTaskListener) {
         this.onTaskListener = onTaskListener;
         this.activity=activity;
         switch (currentResolveType) {
-            case RESOLVE_FROM_NOVEL80:
+            case Constants.RESOLVE_FROM_NOVEL80:
                 resolveUtilsFactory = new ResolveUtilsFor80();
                 break;
-            case RESOLVE_FROM_BIQUGE:
+            case Constants.RESOLVE_FROM_BIQUGE:
                 resolveUtilsFactory = new ResolveUtilsForBiQuGe();
                 break;
             default:
