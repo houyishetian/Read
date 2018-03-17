@@ -89,7 +89,6 @@ public class ResolveUtilsFor80 {
         BookIndex80 bookIndex = null;
         Log.e("Test","开始解析...");
         while ((current = reader.readLine()) != null) {
-            Log.e("Test",current);
             if (bookIndex != null) {
                 index++;
             }
