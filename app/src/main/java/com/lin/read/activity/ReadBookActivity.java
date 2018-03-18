@@ -60,6 +60,11 @@ public class ReadBookActivity extends Activity {
     private ScrollView readScroll;
 
     private BookChapterInfo currentChapter;
+
+    private boolean hasPreviousPage = false;
+    private boolean hasNextPage = false;
+    private boolean hasPreviousChapter = false;
+    private boolean hasNextChapter = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,13 +114,21 @@ public class ReadBookActivity extends Activity {
         previousPageTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                goToPriviousPage();
+                if(hasPreviousPage){
+                    goToPriviousPage();
+                }else{
+                    Toast.makeText(ReadBookActivity.this, "已经是第一页！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         nextPageTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                goToNextPage();
+                if(hasNextPage){
+                    goToNextPage();
+                }else{
+                    Toast.makeText(ReadBookActivity.this, "已经是最后一页！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         readBookChapterItemAdapter.setOnChapterClickListener(new ReadBookChapterItemAdapter.OnChapterClickListener() {
@@ -129,13 +142,21 @@ public class ReadBookActivity extends Activity {
         previousChapterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                goToPriviousChapter();
+                if(hasPreviousChapter){
+                    goToPriviousChapter();
+                }else{
+                    Toast.makeText(ReadBookActivity.this, "已经是第一章！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         nextChapterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                goToNextChapter();
+                if(hasNextChapter){
+                    goToNextChapter();
+                }else{
+                    Toast.makeText(ReadBookActivity.this, "已经是最后一章！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -172,6 +193,7 @@ public class ReadBookActivity extends Activity {
         GetChapterInfoTask getChapterInfoTask = new GetChapterInfoTask(this, bookInfo, new GetChapterInfoTask.OnTaskListener() {
             @Override
             public void onSucc(List<BookChapterInfo> allInfo,List<ArrayList<BookChapterInfo>> splitInfos) {
+                setDisplay();
                 if (splitInfos != null && splitInfos.size() > 0) {
                     ReadBookActivity.this.allInfo = allInfo;
                     splitAllInfo = splitInfos;
@@ -179,19 +201,20 @@ public class ReadBookActivity extends Activity {
                     currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
                     readBookChapterItemAdapter.notifyDataSetChanged();
                     if(splitInfos.size()<2){
-                        previousPageTv.setEnabled(false);
-                        nextPageTv.setEnabled(false);
+                        hasPreviousPage=false;
+                        hasNextPage=false;
                     }else{
-                        previousPageTv.setEnabled(false);
-                        nextPageTv.setEnabled(true);
+                        hasPreviousPage=false;
+                        hasNextPage=true;
                     }
                     if (allInfo == null || allInfo.size() < 2) {
-                        previousChapterTv.setEnabled(false);
-                        nextChapterTv.setEnabled(false);
+                        hasPreviousChapter=false;
+                        hasNextChapter=false;
                     } else {
-                        previousChapterTv.setEnabled(false);
-                        nextChapterTv.setEnabled(true);
+                        hasPreviousChapter=false;
+                        hasNextChapter=true;
                     }
+                    setDisplay();
                     currentChapter = currentDisplayInfo.get(0);
                     getChapterContent(currentDisplayInfo.get(0));
                 }
@@ -214,7 +237,6 @@ public class ReadBookActivity extends Activity {
                 DialogUtil.getInstance().hideLoadingView();
                 chapterNameTv.setText(chapter);
                 chapterContentTv.setText(Html.fromHtml(content));
-                Log.e("Test","content:"+content);
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -234,21 +256,28 @@ public class ReadBookActivity extends Activity {
     private boolean goToNextPage() {
         if (splitAllInfo == null || splitAllInfo.size() == 0) {
             Toast.makeText(this, "无数据可显示！", Toast.LENGTH_SHORT).show();
+            hasPreviousPage=false;
+            hasPreviousChapter=false;
+            hasNextPage=false;
+            hasNextChapter=false;
+            setDisplay();
             return false;
         } else {
-            previousPageTv.setEnabled(true);
+            hasPreviousPage=true;
             if (currentPage == splitAllInfo.size() - 1) {
                 Toast.makeText(this, "已经是最后一页！", Toast.LENGTH_SHORT).show();
+                setDisplay();
                 return false;
             } else {
                 currentPage++;
             }
             if(currentPage== splitAllInfo.size() - 1){
-                nextPageTv.setEnabled(false);
+                hasNextPage=false;
             }
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
             readBookChapterItemAdapter.notifyDataSetChanged();
+            setDisplay();
             return true;
         }
     }
@@ -257,17 +286,23 @@ public class ReadBookActivity extends Activity {
     private boolean goToNextChapter(){
         if (splitAllInfo == null || splitAllInfo.size() == 0) {
             Toast.makeText(this, "无数据可显示！", Toast.LENGTH_SHORT).show();
+            hasPreviousPage=false;
+            hasPreviousChapter=false;
+            hasNextPage=false;
+            hasNextChapter=false;
+            setDisplay();
             return false;
         }else{
-            previousChapterTv.setEnabled(true);
+            hasPreviousChapter=true;
             if(currentChapter.getIndex()==allInfo.size()-1){
                 Toast.makeText(this, "已经是最后一章！", Toast.LENGTH_SHORT).show();
+                setDisplay();
                 return false;
             }else{
                 currentChapter=allInfo.get(currentChapter.getIndex()+1);
             }
             if(currentChapter.getIndex()==allInfo.size()-1){
-                nextChapterTv.setEnabled(false);
+                hasNextChapter=false;
             }
             if(currentChapter.getPage()!=currentPage){
                 currentPage=currentChapter.getPage();
@@ -275,16 +310,17 @@ public class ReadBookActivity extends Activity {
                 currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
                 readBookChapterItemAdapter.notifyDataSetChanged();
                 if(currentPage == 0){
-                    previousPageTv.setEnabled(false);
+                    hasPreviousPage=false;
                 }else{
-                    previousPageTv.setEnabled(true);
+                    hasPreviousPage=true;
                 }
                 if(currentPage== splitAllInfo.size() - 1){
-                    nextPageTv.setEnabled(false);
+                    hasNextPage=false;
                 }else{
-                    nextPageTv.setEnabled(true);
+                    hasNextPage=true;
                 }
             }
+            setDisplay();
             getChapterContent(currentChapter);
             return true;
         }
@@ -293,21 +329,28 @@ public class ReadBookActivity extends Activity {
     private boolean goToPriviousPage() {
         if (splitAllInfo == null || splitAllInfo.size() == 0) {
             Toast.makeText(this, "无数据可显示！", Toast.LENGTH_SHORT).show();
+            hasPreviousPage=false;
+            hasPreviousChapter=false;
+            hasNextPage=false;
+            hasNextChapter=false;
+            setDisplay();
             return false;
         } else {
-            nextPageTv.setEnabled(true);
+            hasNextPage=true;
             if (currentPage == 0) {
                 Toast.makeText(this, "已经是第一页！", Toast.LENGTH_SHORT).show();
+                setDisplay();
                 return false;
             } else {
                 currentPage--;
             }
             if(currentPage== 0){
-                previousPageTv.setEnabled(false);
+                hasPreviousPage=false;
             }
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
             readBookChapterItemAdapter.notifyDataSetChanged();
+            setDisplay();
             return true;
         }
     }
@@ -315,17 +358,23 @@ public class ReadBookActivity extends Activity {
     private boolean goToPriviousChapter(){
         if (splitAllInfo == null || splitAllInfo.size() == 0) {
             Toast.makeText(this, "无数据可显示！", Toast.LENGTH_SHORT).show();
+            hasPreviousPage=false;
+            hasPreviousChapter=false;
+            hasNextPage=false;
+            hasNextChapter=false;
+            setDisplay();
             return false;
         }else{
-            nextChapterTv.setEnabled(true);
+            hasNextChapter=true;
             if(currentChapter.getIndex()==0){
                 Toast.makeText(this, "已经是第一章！", Toast.LENGTH_SHORT).show();
+                setDisplay();
                 return false;
             }else{
                 currentChapter = allInfo.get(currentChapter.getIndex()-1);
             }
             if(currentChapter.getIndex()==0){
-                previousChapterTv.setEnabled(false);
+                hasPreviousChapter=false;
             }
             if(currentChapter.getPage()!=currentPage){
                 currentPage=currentChapter.getPage();
@@ -333,18 +382,33 @@ public class ReadBookActivity extends Activity {
                 currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
                 readBookChapterItemAdapter.notifyDataSetChanged();
                 if(currentPage == 0){
-                    previousPageTv.setEnabled(false);
+                    hasPreviousPage=false;
                 }else{
-                    previousPageTv.setEnabled(true);
+                    hasPreviousPage=true;
                 }
                 if(currentPage== splitAllInfo.size() - 1){
-                    nextPageTv.setEnabled(false);
+                    hasNextPage=false;
                 }else{
-                    nextPageTv.setEnabled(true);
+                    hasNextPage=true;
                 }
             }
+            setDisplay();
             getChapterContent(currentChapter);
             return true;
+        }
+    }
+
+    private void setDisplay(){
+        setDisplayIml(previousChapterTv,hasPreviousChapter);
+        setDisplayIml(nextChapterTv,hasNextChapter);
+        setDisplayIml(previousPageTv,hasPreviousPage);
+        setDisplayIml(nextPageTv,hasNextPage);
+    }
+    private void setDisplayIml(TextView displayView,boolean isEnable){
+        if(isEnable){
+            displayView.setTextColor(getResources().getColor(android.R.color.black));
+        }else{
+            displayView.setTextColor(getResources().getColor(android.R.color.darker_gray));
         }
     }
 }
