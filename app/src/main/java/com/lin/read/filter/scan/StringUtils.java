@@ -1,5 +1,7 @@
 package com.lin.read.filter.scan;
 
+import android.util.Log;
+
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.filter.BookInfo;
 
@@ -135,8 +137,10 @@ public class StringUtils {
 			return null;
 		}
 		InputStream input=conn.getInputStream();
+		String unicodeType=StringUtils.getCharSet(conn.getContentType());
+		Log.e("Test","unicodeType:"+unicodeType);
 		BufferedReader reader=new BufferedReader(new InputStreamReader(
-				input, "UTF-8"));
+				input, unicodeType));
 		String current=null;
 		String result="";
 		while((current=reader.readLine())!=null){
@@ -204,5 +208,18 @@ public class StringUtils {
 			}
 		}
 		return null;
+	}
+
+	public static String getCharSet(String contentType){
+		//contentType:text/html; charset=gbk
+		if(isEmpty(contentType)){
+			return "UTF-8";
+		}
+		Pattern pattern=Pattern.compile("charset=([\\S]+)");
+		Matcher matcher=pattern.matcher(contentType);
+		if(matcher.find()){
+			return matcher.group(1).toUpperCase();
+		}
+		return "UTF-8";
 	}
 }

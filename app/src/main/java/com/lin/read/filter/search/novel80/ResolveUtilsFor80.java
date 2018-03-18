@@ -42,8 +42,10 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
             result.put(regex, new ArrayList<String>());
         }
         BufferedReader reader = null;
+        String unicodeType=StringUtils.getCharSet(conn.getContentType());
+        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
-                conn.getInputStream(), "UTF-8"));
+                conn.getInputStream(), unicodeType));
         String current = null;
         while ((current = reader.readLine()) != null) {
             for (String regex : regexs) {
@@ -97,8 +99,10 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         }
         List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
+        String unicodeType=StringUtils.getCharSet(conn.getContentType());
+        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
-                conn.getInputStream(), "UTF-8"));
+                conn.getInputStream(), unicodeType));
 
         String current = null;
         BookInfo bookInfo = null;

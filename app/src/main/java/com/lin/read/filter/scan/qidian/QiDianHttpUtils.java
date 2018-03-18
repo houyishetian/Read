@@ -67,8 +67,10 @@ public class QiDianHttpUtils {
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}else{
+			String unicodeType=StringUtils.getCharSet(conn.getContentType());
+			Log.e("Test","unicodeType:"+unicodeType);
 			reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), "UTF-8"));
+					conn.getInputStream(), unicodeType));
 			String current = null;
 			// whether already get max page
 			boolean getMaxPage = false;
@@ -109,8 +111,10 @@ public class QiDianHttpUtils {
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}else {
 			try {
+				String unicodeType=StringUtils.getCharSet(conn.getContentType());
+				Log.e("Test","unicodeType:"+unicodeType);
 				reader = new BufferedReader(new InputStreamReader(
-						conn.getInputStream(), "UTF-8"));
+						conn.getInputStream(), unicodeType));
 				String current = null;
 				// whether already get max page
 				boolean getMaxPage = false;
@@ -233,8 +237,10 @@ public class QiDianHttpUtils {
 			throw new IOException();
 		}
 		BufferedReader reader = null;
+		String unicodeType=StringUtils.getCharSet(conn.getContentType());
+		Log.e("Test","unicodeType:"+unicodeType);
 		reader = new BufferedReader(new InputStreamReader(
-				conn.getInputStream(), "UTF-8"));
+				conn.getInputStream(), unicodeType));
 		String current = null;
 		// whether already get max page
 		boolean getMaxPage = false;

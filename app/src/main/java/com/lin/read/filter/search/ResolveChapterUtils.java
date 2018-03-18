@@ -35,17 +35,16 @@ public class ResolveChapterUtils {
         }
         String regex = null;
         List<Integer> allGroups = Arrays.asList(new Integer[]{1, 2});
-        String uniCodeType;
+        String uniCodeType=StringUtils.getCharSet(conn.getContentType());
+        Log.e("Test","unicodeType:"+uniCodeType);
         switch (bookInfo.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
                 //<li><a rel="nofollow" href="http://www.qiushu.cc/t/67053/17977700.html">第1章 脱去球衣，换上西服</a></li>
                 regex = "<li><a rel=\"nofollow\" href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>";
-                uniCodeType = Constants.UNICODE_NOVEL_80;
                 break;
             case Constants.RESOLVE_FROM_BIQUGE:
                 //<dd><a href="http://www.biquge5200.com/51_51647/19645389.html">第一章 十六年</a></dd>
                 regex = "<dd><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
-                uniCodeType = Constants.UNICODE_BIQUGE;
                 break;
             default:
                 return null;
@@ -91,17 +90,8 @@ public class ResolveChapterUtils {
             throw new IOException();
         }
 
-        String uniCodeType;
-        switch (bookChapterInfo.getWebType()) {
-            case Constants.RESOLVE_FROM_NOVEL80:
-                uniCodeType = Constants.UNICODE_BIQUGE;
-                break;
-            case Constants.RESOLVE_FROM_BIQUGE:
-                uniCodeType = Constants.UNICODE_BIQUGE;
-                break;
-            default:
-                return null;
-        }
+        String uniCodeType = StringUtils.getCharSet(conn.getContentType());
+        Log.e("Test", "uniCodeType:" + uniCodeType);
         List<BookChapterInfo> result = new ArrayList<BookChapterInfo>();
         BufferedReader reader = null;
         reader = new BufferedReader(new InputStreamReader(

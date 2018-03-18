@@ -50,8 +50,10 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
         }
         List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
+        String unicodeType=StringUtils.getCharSet(conn.getContentType());
+        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
-                conn.getInputStream(), "GBK"));
+                conn.getInputStream(), unicodeType));
 
         String current = null;
         BookInfo bookInfo = null;
