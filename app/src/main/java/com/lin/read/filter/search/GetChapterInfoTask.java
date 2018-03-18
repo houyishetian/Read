@@ -27,7 +27,7 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     private OnTaskListener onTaskListener;
 
     public interface OnTaskListener {
-        void onSucc(List<ArrayList<BookChapterInfo>> allInfo);
+        void onSucc(List<BookChapterInfo> allInfo,List<ArrayList<BookChapterInfo>> splitInfos);
 
         void onFailed();
     }
@@ -36,15 +36,15 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         try {
             List<BookChapterInfo> allInfo = ResolveChapterUtils.getChapterInfo(bookInfo);
-            result(true, splitList(allInfo));
+            result(true, allInfo,splitList(allInfo));
         } catch (IOException e) {
             e.printStackTrace();
-            result(false, null);
+            result(false, null,null);
         }
         return null;
     }
 
-    private void result(final boolean isSuccessful, final List<ArrayList<BookChapterInfo>> allInfo) {
+    private void result(final boolean isSuccessful, final List<BookChapterInfo> allInfo,final List<ArrayList<BookChapterInfo>> splitInfos) {
         if (onTaskListener == null) {
             return;
         }
@@ -52,7 +52,7 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
             @Override
             public void run() {
                 if (isSuccessful) {
-                    onTaskListener.onSucc(allInfo);
+                    onTaskListener.onSucc(allInfo,splitInfos);
                 } else {
                     onTaskListener.onFailed();
                 }
@@ -76,7 +76,10 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
             ArrayList<BookChapterInfo> subList = new ArrayList<>();
             int maxLen = ((i + 1) * eachLen) > allInfo.size() ? allInfo.size() : ((i + 1) * eachLen);
             for (int j = i * eachLen; j < maxLen; j++) {
-                subList.add(allInfo.get(j));
+                BookChapterInfo current=allInfo.get(j);
+                current.setPage(i);
+                current.setIndex(j);
+                subList.add(current);
             }
             result.add(subList);
         }
