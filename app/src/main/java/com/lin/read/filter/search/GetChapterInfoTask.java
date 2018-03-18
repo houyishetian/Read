@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.lin.read.filter.BookInfo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ import java.util.List;
 public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     private Activity activity;
     private BookInfo bookInfo;
+    private final int eachLen = 30;
 
     public GetChapterInfoTask(Activity activity, BookInfo bookInfo, OnTaskListener onTaskListener) {
         this.activity = activity;
@@ -25,7 +27,7 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     private OnTaskListener onTaskListener;
 
     public interface OnTaskListener {
-        void onSucc(List<BookChapterInfo> allInfo);
+        void onSucc(List<ArrayList<BookChapterInfo>> allInfo);
 
         void onFailed();
     }
@@ -34,7 +36,7 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         try {
             List<BookChapterInfo> allInfo = ResolveChapterUtils.getChapterInfo(bookInfo);
-            result(true, allInfo);
+            result(true, splitList(allInfo));
         } catch (IOException e) {
             e.printStackTrace();
             result(false, null);
@@ -42,7 +44,7 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
         return null;
     }
 
-    private void result(final boolean isSuccessful, final List<BookChapterInfo> allInfo) {
+    private void result(final boolean isSuccessful, final List<ArrayList<BookChapterInfo>> allInfo) {
         if (onTaskListener == null) {
             return;
         }
@@ -56,5 +58,28 @@ public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
                 }
             }
         });
+    }
+
+    private List<ArrayList<BookChapterInfo>> splitList(List<BookChapterInfo> allInfo) {
+        if (allInfo == null || allInfo.size() == 0) {
+            return null;
+        }
+        List<ArrayList<BookChapterInfo>> result = new ArrayList<>();
+        int minPage = 0;
+        int maxPage;
+        if (allInfo.size() % eachLen == 0) {
+            maxPage = allInfo.size() / eachLen;
+        } else {
+            maxPage = allInfo.size() / eachLen + 1;
+        }
+        for (int i = minPage; i < maxPage; i++) {
+            ArrayList<BookChapterInfo> subList = new ArrayList<>();
+            int maxLen = ((i + 1) * eachLen) > allInfo.size() ? allInfo.size() : ((i + 1) * eachLen);
+            for (int j = i * eachLen; j < maxLen; j++) {
+                subList.add(allInfo.get(j));
+            }
+            result.add(subList);
+        }
+        return result;
     }
 }
