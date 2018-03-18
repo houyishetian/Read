@@ -10,6 +10,7 @@ public class BookChapterInfo implements Serializable {
 
     private String chapterName;
     private String chapterLink;
+    private String webType;
 
     public String getChapterName() {
         return chapterName;
@@ -27,11 +28,20 @@ public class BookChapterInfo implements Serializable {
         this.chapterLink = chapterLink;
     }
 
+    public String getWebType() {
+        return webType;
+    }
+
+    public void setWebType(String webType) {
+        this.webType = webType;
+    }
+
     @Override
     public String toString() {
         return "BookChapterInfo{" +
                 "chapterName='" + chapterName + '\'' +
                 ", chapterLink='" + chapterLink + '\'' +
+                ", webType='" + webType + '\'' +
                 '}';
     }
 }

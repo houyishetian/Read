@@ -31,16 +31,19 @@
                 android:maxLines="1"
                 android:layout_centerInParent="true"
                 android:text=""
-                android:textSize="18sp" />
+                android:textSize="20sp" />
         </RelativeLayout>
         <ScrollView
+            android:id="@+id/read_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:padding="10dp"
             android:layout_weight="1">
 
             <TextView
                 android:id="@+id/chapter_content"
                 android:layout_width="match_parent"
+                android:textSize="18sp"
                 android:layout_height="match_parent" />
         </ScrollView>
 

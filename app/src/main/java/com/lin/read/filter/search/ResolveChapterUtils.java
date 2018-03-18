@@ -61,6 +61,7 @@ public class ResolveChapterUtils {
             List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
             if (currentResult != null && currentResult.size() == allGroups.size()) {
                 BookChapterInfo bookChapterInfo=new BookChapterInfo();
+                bookChapterInfo.setWebType(bookInfo.getWebType());
                 bookChapterInfo.setChapterLink(currentResult.get(0));
                 bookChapterInfo.setChapterName(currentResult.get(1));
                 result.add(bookChapterInfo);
@@ -74,5 +75,77 @@ public class ResolveChapterUtils {
             }
         }
         return result;
+    }
+
+    public static String getChapterContent(BookChapterInfo bookChapterInfo)
+            throws IOException {
+        if (bookChapterInfo == null) {
+            return null;
+        }
+        String url = bookChapterInfo.getChapterLink();
+        if (StringUtils.isEmpty(url)) {
+            return null;
+        }
+        HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
+        if (conn == null) {
+            throw new IOException();
+        }
+
+        String uniCodeType;
+        switch (bookChapterInfo.getWebType()) {
+            case Constants.RESOLVE_FROM_NOVEL80:
+                uniCodeType = Constants.UNICODE_BIQUGE;
+                break;
+            case Constants.RESOLVE_FROM_BIQUGE:
+                uniCodeType = Constants.UNICODE_BIQUGE;
+                break;
+            default:
+                return null;
+        }
+        List<BookChapterInfo> result = new ArrayList<BookChapterInfo>();
+        BufferedReader reader = null;
+        reader = new BufferedReader(new InputStreamReader(
+                conn.getInputStream(), uniCodeType));
+
+        String current = null;
+        Log.e("Test", "开始解析...");
+
+        String resultContent="";
+
+        boolean isStart=false;
+
+        while ((current = reader.readLine()) != null) {
+            if(Constants.RESOLVE_FROM_BIQUGE.equals(bookChapterInfo.getWebType())){
+                String biqugeRegex = "<div id=\"content\">([^\n]{1,})";;
+                List<Integer> biqugeGroups = Arrays.asList(new Integer[]{1});
+                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), biqugeRegex, biqugeGroups);
+                if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
+                    resultContent=currentResult.get(0);
+                    break;
+                }
+            } else if (Constants.RESOLVE_FROM_NOVEL80.equals(bookChapterInfo.getWebType())) {
+                if ("<div class=\"book_content\" id=\"content\">".equals(current.trim())) {
+                    isStart = true;
+                    continue;
+                }
+                if (isStart && current.contains("<div class=\"con_l\"><script>read_di()")) {
+                    isStart = false;
+                    continue;
+                }
+                if (isStart) {
+                    resultContent += current;
+                }
+            }else{
+                break;
+            }
+        }
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return resultContent;
     }
 }

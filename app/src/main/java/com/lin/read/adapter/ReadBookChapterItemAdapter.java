@@ -2,6 +2,7 @@ package com.lin.read.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,21 @@ public class ReadBookChapterItemAdapter extends RecyclerView.Adapter<ReadBookCha
         holder.chapterName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(onChapterClickListener!=null){
+                    onChapterClickListener.onChapterClick(info);
+                }
             }
         });
+    }
+
+    public interface OnChapterClickListener{
+        void onChapterClick(BookChapterInfo bookChapterInfo);
+    }
+
+    private OnChapterClickListener onChapterClickListener;
+
+    public void setOnChapterClickListener(OnChapterClickListener onChapterClickListener) {
+        this.onChapterClickListener = onChapterClickListener;
     }
 
     @Override
