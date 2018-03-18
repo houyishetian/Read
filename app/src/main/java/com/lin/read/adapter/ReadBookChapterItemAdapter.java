@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.lin.read.R;
 import com.lin.read.filter.search.BookChapterInfo;
+import com.lin.read.utils.NoDoubleClickListener;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,9 @@ public class ReadBookChapterItemAdapter extends RecyclerView.Adapter<ReadBookCha
         final BookChapterInfo info = allInfo.get(position);
         holder.chapterName.setText(info.getChapterName());
 
-        holder.chapterName.setOnClickListener(new View.OnClickListener() {
+        holder.chapterName.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onNoDoubleClick(View v) {
                 if(onChapterClickListener!=null){
                     onChapterClickListener.onChapterClick(info);
                 }
