@@ -531,6 +531,8 @@ public class ReadBookActivity extends Activity {
         } else {
             int index = page - 1;
             if (index == currentPage) {
+                int positon=bookChapterAdapter.getCurrentPosition(currentPage,currentChapter);
+                chapterLv.smoothScrollToPosition(positon);
                 return false;
             }
             if (index == 0) {
