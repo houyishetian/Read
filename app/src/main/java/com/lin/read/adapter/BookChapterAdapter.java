@@ -1,6 +1,7 @@
 package com.lin.read.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.lin.read.R;
 import com.lin.read.filter.search.BookChapterInfo;
+import com.lin.read.filter.search.GetChapterInfoTask;
 import com.lin.read.utils.NoDoubleClickListener;
 
 import java.util.ArrayList;
@@ -58,6 +60,11 @@ public class BookChapterAdapter extends BaseAdapter {
         } else {
             holder.chapterDivider.setVisibility(View.VISIBLE);
         }
+        if(info.isCurrentReading()){
+            holder.chapterName.setTextColor(context.getResources().getColor(android.R.color.holo_blue_light));
+        }else{
+            holder.chapterName.setTextColor(context.getResources().getColor(android.R.color.black));
+        }
         holder.chapterName.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
@@ -87,5 +94,34 @@ public class BookChapterAdapter extends BaseAdapter {
             chapterName = (TextView) itemView.findViewById(R.id.item_chapter_name);
             chapterDivider = itemView.findViewById(R.id.item_chapter_divider);
         }
+    }
+
+    public void notifyData(int currentPage, BookChapterInfo currentChapterInfo){
+        setCurrentReading(currentPage, currentChapterInfo);
+        notifyDataSetChanged();
+    }
+
+    private void setCurrentReading(int currentPage, BookChapterInfo currentChapterInfo) {
+        if (currentChapterInfo == null || currentChapterInfo.getIndex() < 0 || currentChapterInfo.getPage() < 0 || currentPage != currentChapterInfo.getPage()) {
+            for (int i = 0; i < allInfo.size(); i++) {
+                allInfo.get(i).setCurrentReading(false);
+            }
+            return;
+        }
+        int readingPositon = currentChapterInfo.getIndex() - currentChapterInfo.getPage() * GetChapterInfoTask.eachLen;
+        for (int i = 0; i < allInfo.size(); i++) {
+            if (i == readingPositon) {
+                allInfo.get(i).setCurrentReading(true);
+            } else {
+                allInfo.get(i).setCurrentReading(false);
+            }
+        }
+    }
+
+    public int getCurrentPosition(int currentPage, BookChapterInfo currentChapterInfo) {
+        if (currentChapterInfo == null || currentChapterInfo.getIndex() < 0 || currentChapterInfo.getPage() < 0 || currentPage != currentChapterInfo.getPage()) {
+            return 0;
+        }
+        return currentChapterInfo.getIndex() - currentChapterInfo.getPage() * GetChapterInfoTask.eachLen;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 public class GetChapterInfoTask extends AsyncTask<String, Void, Void> {
     private Activity activity;
     private BookInfo bookInfo;
-    private final int eachLen = 30;
+    public static final int eachLen = 30;
 
     public GetChapterInfoTask(Activity activity, BookInfo bookInfo, OnTaskListener onTaskListener) {
         this.activity = activity;

@@ -158,6 +158,7 @@ public class ReadBookActivity extends Activity {
             @Override
             public void onChapterClick(BookChapterInfo bookChapterInfo) {
                 currentChapter = bookChapterInfo;
+                bookChapterAdapter.notifyData(currentPage,currentChapter);
                 hideSoft();
                 clearInput();
                 hideMenu();
@@ -271,25 +272,41 @@ public class ReadBookActivity extends Activity {
                     ReadBookActivity.this.allInfo = allInfo;
                     splitAllInfo = splitInfos;
                     currentPage = markPage;
+                    currentChapter = allInfo.get(markIndex);
                     currentDisplayInfo.clear();
                     currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                    bookChapterAdapter.notifyDataSetChanged();
                     if (splitInfos.size() < 2) {
                         hasPreviousPage = false;
                         hasNextPage = false;
                     } else {
-                        hasPreviousPage = false;
-                        hasNextPage = true;
+                        if (currentPage == 0) {
+                            hasPreviousPage = false;
+                        } else {
+                            hasPreviousPage = true;
+                        }
+                        if (currentPage == splitInfos.size() - 1) {
+                            hasNextPage = false;
+                        } else {
+                            hasNextPage = true;
+                        }
                     }
                     if (allInfo == null || allInfo.size() < 2) {
                         hasPreviousChapter = false;
                         hasNextChapter = false;
                     } else {
-                        hasPreviousChapter = false;
-                        hasNextChapter = true;
+                        if (markIndex == 0) {
+                            hasPreviousChapter = false;
+                        } else {
+                            hasPreviousChapter = true;
+                        }
+                        if (markIndex == allInfo.size() - 1) {
+                            hasNextChapter = false;
+                        } else {
+                            hasNextChapter = true;
+                        }
                     }
                     setDisplay();
-                    currentChapter = allInfo.get(markIndex);
+                    bookChapterAdapter.notifyData(currentPage,currentChapter);
                     getChapterContent(currentChapter);
                 } else {
                     totalPageTv.setText("0");
@@ -371,7 +388,8 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            bookChapterAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyData(currentPage,currentChapter);
+            chapterLv.smoothScrollToPosition(bookChapterAdapter.getCurrentPosition(currentPage,currentChapter));
             setDisplay();
             return true;
         }
@@ -403,9 +421,6 @@ public class ReadBookActivity extends Activity {
                 currentPage = currentChapter.getPage();
                 skipPageEt.setText("");
                 skipPageEt.setHint((currentPage + 1) + "");
-                currentDisplayInfo.clear();
-                currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                bookChapterAdapter.notifyDataSetChanged();
                 if (currentPage == 0) {
                     hasPreviousPage = false;
                 } else {
@@ -417,6 +432,9 @@ public class ReadBookActivity extends Activity {
                     hasNextPage = true;
                 }
             }
+            currentDisplayInfo.clear();
+            currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
+            bookChapterAdapter.notifyData(currentPage,currentChapter);
             setDisplay();
             getChapterContent(currentChapter);
             return true;
@@ -448,7 +466,8 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            bookChapterAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyData(currentPage,currentChapter);
+            chapterLv.smoothScrollToPosition(bookChapterAdapter.getCurrentPosition(currentPage,currentChapter));
             setDisplay();
             return true;
         }
@@ -479,9 +498,7 @@ public class ReadBookActivity extends Activity {
                 skipPageEt.setText("");
                 skipPageEt.setHint((currentPage + 1) + "");
                 currentPage = currentChapter.getPage();
-                currentDisplayInfo.clear();
-                currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                bookChapterAdapter.notifyDataSetChanged();
+
                 if (currentPage == 0) {
                     hasPreviousPage = false;
                 } else {
@@ -493,6 +510,9 @@ public class ReadBookActivity extends Activity {
                     hasNextPage = true;
                 }
             }
+            currentDisplayInfo.clear();
+            currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
+            bookChapterAdapter.notifyData(currentPage,currentChapter);
             setDisplay();
             getChapterContent(currentChapter);
             return true;
@@ -529,7 +549,9 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            bookChapterAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyData(currentPage,currentChapter);
+            int positon=bookChapterAdapter.getCurrentPosition(currentPage,currentChapter);
+            chapterLv.smoothScrollToPosition(positon);
             setDisplay();
             return true;
         }

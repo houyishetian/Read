@@ -63,7 +63,9 @@ public class ResolveChapterUtils {
                 BookChapterInfo bookChapterInfo=new BookChapterInfo();
                 bookChapterInfo.setWebType(bookInfo.getWebType());
                 bookChapterInfo.setChapterLink(currentResult.get(0));
-                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(currentResult.get(1)));
+                String oriChapterName = currentResult.get(1);
+                bookChapterInfo.setChapterNameOri(oriChapterName);
+                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
                 result.add(bookChapterInfo);
             }
         }

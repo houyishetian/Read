@@ -9,10 +9,28 @@ import java.io.Serializable;
 public class BookChapterInfo implements Serializable {
 
     private String chapterName;
+    private String chapterNameOri;
     private String chapterLink;
     private String webType;
+    private boolean isCurrentReading=false;
     private int page=-1;
     private int index=-1;
+
+    public String getChapterNameOri() {
+        return chapterNameOri;
+    }
+
+    public void setChapterNameOri(String chapterNameOri) {
+        this.chapterNameOri = chapterNameOri;
+    }
+
+    public boolean isCurrentReading() {
+        return isCurrentReading;
+    }
+
+    public void setCurrentReading(boolean currentReading) {
+        isCurrentReading = currentReading;
+    }
 
     public int getPage() {
         return page;
