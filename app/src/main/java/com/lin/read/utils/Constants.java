@@ -22,6 +22,6 @@ public class Constants {
 
     public static final String KEY_SKIP_TO_READ="KEY_SKIP_TO_READ";
 
-    public static final String RESOLVE_FROM_NOVEL80 = "RESOLVE_FROM_NOVEL80";
-    public static final String RESOLVE_FROM_BIQUGE = "RESOLVE_FROM_BIQUGE";
+    public static final String RESOLVE_FROM_NOVEL80 = "NOVEL80";
+    public static final String RESOLVE_FROM_BIQUGE = "BIQUGE";
 }
