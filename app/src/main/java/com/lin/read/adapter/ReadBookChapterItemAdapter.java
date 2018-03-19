@@ -2,6 +2,7 @@ package com.lin.read.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,16 +38,21 @@ public class ReadBookChapterItemAdapter extends RecyclerView.Adapter<ReadBookCha
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final BookChapterInfo info = allInfo.get(position);
-        holder.chapterName.setText(info.getChapterName());
-
-        holder.chapterName.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                if(onChapterClickListener!=null){
-                    onChapterClickListener.onChapterClick(info);
+        String chapterName = info == null ? null : info.getChapterName();
+        Log.e("Test","chapterName:"+position+"="+chapterName);
+        if (TextUtils.isEmpty(chapterName)) {
+            holder.chapterName.setText("");
+        } else {
+            holder.chapterName.setText(info.getChapterName());
+            holder.chapterName.setOnClickListener(new NoDoubleClickListener() {
+                @Override
+                public void onNoDoubleClick(View v) {
+                    if (onChapterClickListener != null) {
+                        onChapterClickListener.onChapterClick(info);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public interface OnChapterClickListener{

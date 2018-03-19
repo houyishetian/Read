@@ -16,13 +16,13 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lin.read.R;
-import com.lin.read.adapter.ReadBookChapterItemAdapter;
-import com.lin.read.decoration.ScanBooksItemDecoration;
+import com.lin.read.adapter.BookChapterAdapter;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.BookChapterInfo;
 import com.lin.read.filter.search.GetChapterContentTask;
@@ -48,12 +48,14 @@ public class ReadBookActivity extends Activity {
     private TextView bookNameTv;
     private TextView previousPageTv;
     private TextView nextPageTv;
-    private RecyclerView chaptersRcv;
     private TextView chapterNameTv;
     private TextView chapterContentTv;
     private TextView previousChapterTv;
     private TextView nextChapterTv;
-    private ReadBookChapterItemAdapter readBookChapterItemAdapter;
+
+    private ListView chapterLv;
+    private BookChapterAdapter bookChapterAdapter;
+
     private ArrayList<BookChapterInfo> currentDisplayInfo;
     private List<BookChapterInfo> allInfo;
     private List<ArrayList<BookChapterInfo>> splitAllInfo;
@@ -94,7 +96,7 @@ public class ReadBookActivity extends Activity {
         bookNameTv = (TextView) findViewById(R.id.chapter_bookName);
         previousPageTv = (TextView) findViewById(R.id.chapter_previous_page);
         nextPageTv = (TextView) findViewById(R.id.chapter_next_page);
-        chaptersRcv = (RecyclerView) findViewById(R.id.rcv_chapters);
+        chapterLv= (ListView) findViewById(R.id.lv_chapters);
         chapterNameTv = (TextView) findViewById(R.id.chapter_name);
         chapterContentTv = (TextView) findViewById(R.id.chapter_content);
         previousChapterTv = (TextView) findViewById(R.id.chapter_previous_chapter);
@@ -104,17 +106,16 @@ public class ReadBookActivity extends Activity {
         skipTv= (TextView) findViewById(R.id.chapter_skip);
         totalPageTv= (TextView) findViewById(R.id.chapter_total_page);
 
-        readBookChapterItemAdapter = new ReadBookChapterItemAdapter(this, currentDisplayInfo);
-        chaptersRcv.setLayoutManager(new LinearLayoutManager(this));
-        chaptersRcv.addItemDecoration(new ScanBooksItemDecoration(this));
-        chaptersRcv.setAdapter(readBookChapterItemAdapter);
+        bookChapterAdapter=new BookChapterAdapter(this,currentDisplayInfo);
+        chapterLv.setAdapter(bookChapterAdapter);
 
         bookNameTv.setText(bookInfo.getBookName());
 
         chapterMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            showMenu();
+                showMenu();
+                bookChapterAdapter.notifyDataSetChanged();
             }
         });
         layoutMenuBlank.setOnClickListener(new NoDoubleClickListener(){
@@ -149,7 +150,7 @@ public class ReadBookActivity extends Activity {
                 }
             }
         });
-        readBookChapterItemAdapter.setOnChapterClickListener(new ReadBookChapterItemAdapter.OnChapterClickListener() {
+        bookChapterAdapter.setOnChapterClickListener(new BookChapterAdapter.OnChapterClickListener() {
             @Override
             public void onChapterClick(BookChapterInfo bookChapterInfo) {
                 currentChapter=bookChapterInfo;
@@ -259,7 +260,6 @@ public class ReadBookActivity extends Activity {
                     splitAllInfo = splitInfos;
                     currentDisplayInfo.clear();
                     currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                    readBookChapterItemAdapter.notifyDataSetChanged();
                     if(splitInfos.size()<2){
                         hasPreviousPage=false;
                         hasNextPage=false;
@@ -353,7 +353,7 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            readBookChapterItemAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyDataSetChanged();
             setDisplay();
             return true;
         }
@@ -387,7 +387,7 @@ public class ReadBookActivity extends Activity {
                 skipPageEt.setHint((currentPage + 1) + "");
                 currentDisplayInfo.clear();
                 currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                readBookChapterItemAdapter.notifyDataSetChanged();
+                bookChapterAdapter.notifyDataSetChanged();
                 if(currentPage == 0){
                     hasPreviousPage=false;
                 }else{
@@ -430,7 +430,7 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            readBookChapterItemAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyDataSetChanged();
             setDisplay();
             return true;
         }
@@ -463,7 +463,7 @@ public class ReadBookActivity extends Activity {
                 currentPage=currentChapter.getPage();
                 currentDisplayInfo.clear();
                 currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-                readBookChapterItemAdapter.notifyDataSetChanged();
+                bookChapterAdapter.notifyDataSetChanged();
                 if(currentPage == 0){
                     hasPreviousPage=false;
                 }else{
@@ -511,7 +511,7 @@ public class ReadBookActivity extends Activity {
             skipPageEt.setHint((currentPage + 1) + "");
             currentDisplayInfo.clear();
             currentDisplayInfo.addAll(splitAllInfo.get(currentPage));
-            readBookChapterItemAdapter.notifyDataSetChanged();
+            bookChapterAdapter.notifyDataSetChanged();
             setDisplay();
             return true;
         }

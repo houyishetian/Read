@@ -93,11 +93,17 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rcv_chapters"
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/rcv_chapters"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:scrollbars="vertical" />-->
+
+            <ListView
+                android:cacheColorHint="@null"
+                android:id="@+id/lv_chapters"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
