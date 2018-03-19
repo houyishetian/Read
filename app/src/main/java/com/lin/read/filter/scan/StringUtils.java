@@ -10,12 +10,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import info.monitorenter.cpdetector.io.ASCIIDetector;
+import info.monitorenter.cpdetector.io.ByteOrderMarkDetector;
+import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
+import info.monitorenter.cpdetector.io.JChardetFacade;
+import info.monitorenter.cpdetector.io.ParsingDetector;
+import info.monitorenter.cpdetector.io.UnicodeDetector;
 
 public class StringUtils {
 
@@ -137,7 +149,7 @@ public class StringUtils {
 			return null;
 		}
 		InputStream input=conn.getInputStream();
-		String unicodeType=StringUtils.getCharSet(conn.getContentType());
+		String unicodeType=StringUtils.getCharSet(conn);
 		Log.e("Test","unicodeType:"+unicodeType);
 		BufferedReader reader=new BufferedReader(new InputStreamReader(
 				input, unicodeType));
@@ -210,16 +222,37 @@ public class StringUtils {
 		return null;
 	}
 
-	public static String getCharSet(String contentType){
+	public static String getCharSet(HttpURLConnection conn){
+		if(conn==null){
+			Log.e("Test","conn is null,cannot get charset");
+			return null;
+		}
+		String contentType = conn.getContentType();
 		//contentType:text/html; charset=gbk
-		if(isEmpty(contentType)){
-			return "UTF-8";
+		if(!isEmpty(contentType)){
+			Pattern pattern=Pattern.compile("charset=([\\S]+)");
+			Matcher matcher=pattern.matcher(contentType);
+			if(matcher.find()){
+				return matcher.group(1).toUpperCase();
+			}
 		}
-		Pattern pattern=Pattern.compile("charset=([\\S]+)");
-		Matcher matcher=pattern.matcher(contentType);
-		if(matcher.find()){
-			return matcher.group(1).toUpperCase();
+		String url = conn.getURL().toString();
+		//如果相应头里面没有编码格式,用下面这种
+		CodepageDetectorProxy codepageDetectorProxy = CodepageDetectorProxy.getInstance();
+		codepageDetectorProxy.add(JChardetFacade.getInstance());
+		codepageDetectorProxy.add(ASCIIDetector.getInstance());
+		codepageDetectorProxy.add(UnicodeDetector.getInstance());
+		codepageDetectorProxy.add(new ParsingDetector(false));
+		codepageDetectorProxy.add(new ByteOrderMarkDetector());
+		try {
+			Charset charset = codepageDetectorProxy.detectCodepage(new URL(url));
+			String charsetName=charset.name();
+			Log.e("Test","get charset with  CodepageDetectorProxy:"+charsetName);
+			return charsetName;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		Log.e("Test","cannot get charset , use UTF-8");
 		return "UTF-8";
 	}
 }

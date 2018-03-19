@@ -36,7 +36,7 @@ public class ResolveChapterUtils {
         }
         String regex = null;
         List<Integer> allGroups = Arrays.asList(new Integer[]{1, 2});
-        String uniCodeType=StringUtils.getCharSet(conn.getContentType());
+        String uniCodeType=StringUtils.getCharSet(conn);
         Log.e("Test","unicodeType:"+uniCodeType);
         switch (bookInfo.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
@@ -93,7 +93,7 @@ public class ResolveChapterUtils {
             throw new IOException();
         }
 
-        String uniCodeType = StringUtils.getCharSet(conn.getContentType());
+        String uniCodeType = StringUtils.getCharSet(conn);
         Log.e("Test", "uniCodeType:" + uniCodeType);
         List<BookChapterInfo> result = new ArrayList<BookChapterInfo>();
         BufferedReader reader = null;

@@ -42,7 +42,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
             result.put(regex, new ArrayList<String>());
         }
         BufferedReader reader = null;
-        String unicodeType=StringUtils.getCharSet(conn.getContentType());
+        String unicodeType=StringUtils.getCharSet(conn);
         Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
@@ -99,7 +99,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         }
         List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
-        String unicodeType=StringUtils.getCharSet(conn.getContentType());
+        String unicodeType=StringUtils.getCharSet(conn);
         Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
