@@ -157,12 +157,14 @@ public class ReadBookActivity extends Activity {
         bookChapterAdapter.setOnChapterClickListener(new BookChapterAdapter.OnChapterClickListener() {
             @Override
             public void onChapterClick(BookChapterInfo bookChapterInfo) {
-                currentChapter = bookChapterInfo;
-                bookChapterAdapter.notifyData(currentPage,currentChapter);
                 hideSoft();
                 clearInput();
                 hideMenu();
-                getChapterContent(bookChapterInfo);
+                if(!bookChapterInfo.isCurrentReading()){
+                    currentChapter = bookChapterInfo;
+                    bookChapterAdapter.notifyData(currentPage,currentChapter);
+                    getChapterContent(bookChapterInfo);
+                }
             }
         });
         previousChapterTv.setOnClickListener(new NoDoubleClickListener() {
