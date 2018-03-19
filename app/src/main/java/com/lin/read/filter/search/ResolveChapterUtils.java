@@ -5,6 +5,7 @@ import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
@@ -62,7 +63,7 @@ public class ResolveChapterUtils {
                 BookChapterInfo bookChapterInfo=new BookChapterInfo();
                 bookChapterInfo.setWebType(bookInfo.getWebType());
                 bookChapterInfo.setChapterLink(currentResult.get(0));
-                bookChapterInfo.setChapterName(currentResult.get(1));
+                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(currentResult.get(1)));
                 result.add(bookChapterInfo);
             }
         }

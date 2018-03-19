@@ -12,7 +12,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_marginTop="15dp"
-            android:layout_height="30dp">
+            android:minHeight="30dp"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/chapter_menu"
@@ -25,12 +26,13 @@
             <TextView
                 android:id="@+id/chapter_name"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginRight="100dp"
-                android:ellipsize="middle"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:ellipsize="start"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
+                android:layout_centerVertical="true"
                 android:layout_centerInParent="true"
                 android:text=""
                 android:textSize="20sp" />
