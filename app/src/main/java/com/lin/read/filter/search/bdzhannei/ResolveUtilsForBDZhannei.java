@@ -1,7 +1,6 @@
-package com.lin.read.filter.search.novel80;
+package com.lin.read.filter.search.bdzhannei;
 
 import android.util.Log;
-import android.util.StringBuilderPrinter;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
@@ -26,7 +25,7 @@ import java.util.regex.Pattern;
  * Created by lisonglin on 2018/2/24.
  */
 
-public class ResolveUtilsFor80 extends ResolveUtilsFactory {
+public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
 
     public Map<String, List<String>> resolveDataByRegex(String url,
                                                                List<String> regexs) throws IOException {
@@ -67,6 +66,12 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         return result;
     }
 
+    String tag = null;
+
+    public void setTag(String tag) {
+        this.tag=tag;
+    }
+
     @Override
     public List<BookInfo> getBooksByBookname(String... params) throws IOException {
         if (params == null || params.length == 0) {
@@ -83,7 +88,19 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         if (StringUtils.isEmpty(bookName) || page < 0) {
             return null;
         }
-        String url="http://zhannei.baidu.com/cse/search?searchtype=complex&q="+bookName+"&s=18140131260432570322&p="+page;
+        String url = null;
+        switch (tag) {
+            case Constants.RESOLVE_FROM_NOVEL80:
+                url = "http://zhannei.baidu.com/cse/search?searchtype=complex&q="+bookName+"&s=18140131260432570322&p="+page;
+                break;
+            case Constants.RESOLVE_FROM_DINGDIAN:
+                url = "http://zhannei.baidu.com/cse/search?s=8053757951023821596&q="+bookName+"&p="+page;
+                break;
+            default:
+                url = null;
+                break;
+        }
+
         Log.e("Test","search url:"+url);
         return resolveSearchResultFrom80(url);
     }
@@ -107,7 +124,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
         String current = null;
         BookInfo bookInfo = null;
         int index = -1;
-        BookIndex80 bookIndex = null;
+        BookIndex bookIndex = null;
         Log.e("Test","开始解析...");
         while ((current = reader.readLine()) != null) {
             if (bookIndex != null) {
@@ -140,7 +157,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
             } else {
                 // get author
                 if (bookIndex != null
-                        && bookIndex.getIndex() == BookIndex80.AUTHOR_INDEX
+                        && bookIndex.getIndex() == BookIndex.AUTHOR_INDEX
                         && index == bookIndex.getNextLine()) {
                     bookInfo.setAuthorName(current.trim());
                     index = -1;
@@ -149,7 +166,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                 }
                 // get book type
                 if (bookIndex != null
-                        && bookIndex.getIndex() == BookIndex80.TYPE_INDEX
+                        && bookIndex.getIndex() == BookIndex.TYPE_INDEX
                         && index == bookIndex.getNextLine()) {
                     // <span class="result-game-item-info-tag-title">仙侠修真</span>
                     String bookRegex = "<span class=\"result-game-item-info-tag-title\">([^\n]+)</span>";
@@ -166,7 +183,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                 }
                 // get latest update time
                 if (bookIndex != null
-                        && bookIndex.getIndex() == BookIndex80.UPDATE_TIME_INDEX
+                        && bookIndex.getIndex() == BookIndex.UPDATE_TIME_INDEX
                         && index == bookIndex.getNextLine()) {
                     // <span
                     // class="result-game-item-info-tag-title">2017-07-27</span>
@@ -185,7 +202,7 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
 
                 // get latest update content
                 if (bookIndex != null
-                        && bookIndex.getIndex() == BookIndex80.UPDATE_CONTENT_INDEX
+                        && bookIndex.getIndex() == BookIndex.UPDATE_CONTENT_INDEX
                         && index == bookIndex.getNextLine()) {
                     // class="result-game-item-info-tag-item"
                     // target="_blank">新书《一念永恒》，VIP上架啦</a>
@@ -209,30 +226,30 @@ public class ResolveUtilsFor80 extends ResolveUtilsFactory {
                 boolean isGetAuthor = isGetKey(current, AUTHOR_STR);
                 if (isGetAuthor) {
                     index = 0;
-                    bookIndex = new BookIndex80();
-                    bookIndex.setIndex(BookIndex80.AUTHOR_INDEX);
+                    bookIndex = new BookIndex();
+                    bookIndex.setIndex(BookIndex.AUTHOR_INDEX);
                     continue;
                 }
                 boolean isGetType = isGetKey(current, TYPE_STR);
                 if (isGetType) {
                     index = 0;
-                    bookIndex = new BookIndex80();
-                    bookIndex.setIndex(BookIndex80.TYPE_INDEX);
+                    bookIndex = new BookIndex();
+                    bookIndex.setIndex(BookIndex.TYPE_INDEX);
                     continue;
                 }
                 boolean isGetUpdateTime = isGetKey(current, UPDATE_TIME_STR);
                 if (isGetUpdateTime) {
                     index = 0;
-                    bookIndex = new BookIndex80();
-                    bookIndex.setIndex(BookIndex80.UPDATE_TIME_INDEX);
+                    bookIndex = new BookIndex();
+                    bookIndex.setIndex(BookIndex.UPDATE_TIME_INDEX);
                     continue;
                 }
                 boolean isGetUpdateContent = isGetKey(current,
                         UPDATE_CONTENT_STR);
                 if (isGetUpdateContent) {
                     index = 0;
-                    bookIndex = new BookIndex80();
-                    bookIndex.setIndex(BookIndex80.UPDATE_CONTENT_INDEX);
+                    bookIndex = new BookIndex();
+                    bookIndex.setIndex(BookIndex.UPDATE_CONTENT_INDEX);
                     continue;
                 }
             }

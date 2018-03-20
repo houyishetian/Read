@@ -1,6 +1,6 @@
-package com.lin.read.filter.search.novel80;
+package com.lin.read.filter.search.bdzhannei;
 
-public class BookIndex80 {
+public class BookIndex {
 
 	public static final int TYPE_INDEX = 1;
 	public static final int AUTHOR_INDEX = 2;

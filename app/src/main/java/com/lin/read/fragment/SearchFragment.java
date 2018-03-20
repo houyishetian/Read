@@ -161,6 +161,11 @@ public class SearchFragment extends Fragment {
         webTypeBean1.setTag(Constants.RESOLVE_FROM_NOVEL80);
         webTypeBeenList.add(webTypeBean1);
 
+        WebTypeBean webTypeBean2=new WebTypeBean();
+        webTypeBean2.setWebName("顶点");
+        webTypeBean2.setTag(Constants.RESOLVE_FROM_DINGDIAN);
+        webTypeBeenList.add(webTypeBean2);
+
         return  webTypeBeenList;
     }
 }

@@ -24,4 +24,5 @@ public class Constants {
 
     public static final String RESOLVE_FROM_NOVEL80 = "NOVEL80";
     public static final String RESOLVE_FROM_BIQUGE = "BIQUGE";
+    public static final String RESOLVE_FROM_DINGDIAN = "DINGDIAN";
 }
