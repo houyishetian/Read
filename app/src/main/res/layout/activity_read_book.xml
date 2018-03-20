@@ -41,7 +41,10 @@
             android:id="@+id/read_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:scrollbarThumbVertical="@drawable/shape_scroll_view_reading_page"
             android:layout_weight="1">
 
             <TextView
