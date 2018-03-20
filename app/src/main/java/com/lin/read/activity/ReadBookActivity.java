@@ -549,6 +549,7 @@ public class ReadBookActivity extends Activity {
         markBean.setBookName(bookInfo.getBookName());
         markBean.setAuthorName(bookInfo.getAuthorName());
         markBean.setWebType(bookInfo.getWebType());
+        markBean.setBookLink(bookInfo.getBookLink());
         markBean.setPage(currentReadInfo.getCurrentChapter().getPage());
         markBean.setIndex(currentReadInfo.getCurrentChapter().getIndex());
         String key = markBean.getKey();
@@ -562,6 +563,7 @@ public class ReadBookActivity extends Activity {
         markBean.setBookName(bookInfo.getBookName());
         markBean.setAuthorName(bookInfo.getAuthorName());
         markBean.setWebType(bookInfo.getWebType());
+        markBean.setBookLink(bookInfo.getBookLink());
         String key = markBean.getKey();
         String value=BookMarkSharePres.getBookMark(this,key);
         try{

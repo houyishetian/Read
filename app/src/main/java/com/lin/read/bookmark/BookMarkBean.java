@@ -14,6 +14,15 @@ public class BookMarkBean implements Serializable {
     private String webType;
     private String bookName;
     private String authorName;
+    private String bookLink;
+
+    public String getBookLink() {
+        return bookLink;
+    }
+
+    public void setBookLink(String bookLink) {
+        this.bookLink = bookLink;
+    }
 
     public String getBookName() {
         return bookName;
@@ -56,9 +65,9 @@ public class BookMarkBean implements Serializable {
     }
 
     public String getKey() {
-        if (StringUtils.isEmpty(webType) || StringUtils.isEmpty(bookName) || StringUtils.isEmpty(authorName)) {
+        if (StringUtils.isEmpty(bookLink) || StringUtils.isEmpty(webType) || StringUtils.isEmpty(bookName) || StringUtils.isEmpty(authorName)) {
             return null;
         }
-        return webType + "_" + bookName + "_" + authorName;
+        return webType + "_" + bookName + "_" + authorName + "_" + bookLink;
     }
 }
