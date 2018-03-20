@@ -102,9 +102,9 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         }
 
         Log.e("Test","search url:"+url);
-        return resolveSearchResultFrom80(url);
+        return resolveSearchResultFrom80(url,tag);
     }
-    private List<BookInfo> resolveSearchResultFrom80(String url)
+    private List<BookInfo> resolveSearchResultFrom80(String url,String webType)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -217,7 +217,7 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
                     bookIndex = null;
                     index = -1;
                     bookInfo.setDownloadLink(parseBookLinkToDownloadLink(bookInfo));
-                    bookInfo.setWebType(Constants.RESOLVE_FROM_NOVEL80);
+                    bookInfo.setWebType(webType);
                     result.add(bookInfo);
                     bookInfo = null;
                     continue;

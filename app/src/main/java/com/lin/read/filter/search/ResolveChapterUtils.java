@@ -47,6 +47,10 @@ public class ResolveChapterUtils {
                 //<dd><a href="http://www.biquge5200.com/51_51647/19645389.html">第一章 十六年</a></dd>
                 regex = "<dd><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
                 break;
+            case Constants.RESOLVE_FROM_DINGDIAN:
+                //<td class="L"><a href="http://www.23us.so/files/article/html/10/10674/7219354.html">新书《一念永恒》，VIP上架啦</a></td>
+                regex = "<td class=\"L\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>";
+                break;
             default:
                 return null;
         }
@@ -58,15 +62,33 @@ public class ResolveChapterUtils {
         String current = null;
         Log.e("Test", "开始解析...");
         while ((current = reader.readLine()) != null) {
-            List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
-            if (currentResult != null && currentResult.size() == allGroups.size()) {
-                BookChapterInfo bookChapterInfo=new BookChapterInfo();
-                bookChapterInfo.setWebType(bookInfo.getWebType());
-                bookChapterInfo.setChapterLink(currentResult.get(0));
-                String oriChapterName = currentResult.get(1);
-                bookChapterInfo.setChapterNameOri(oriChapterName);
-                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
-                result.add(bookChapterInfo);
+            if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
+                List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
+                if (currentResult != null && currentResult.size() > 0) {
+                    for (List<String> item : currentResult) {
+                        if (item != null && item.size() == allGroups.size()) {
+                            BookChapterInfo bookChapterInfo = new BookChapterInfo();
+                            bookChapterInfo.setWebType(bookInfo.getWebType());
+                            bookChapterInfo.setChapterLink(item.get(0));
+                            String oriChapterName = item.get(1);
+                            bookChapterInfo.setChapterNameOri(oriChapterName);
+                            bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                            result.add(bookChapterInfo);
+                        }
+                    }
+                    break;
+                }
+            }else{
+                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
+                if (currentResult != null && currentResult.size() == allGroups.size()) {
+                    BookChapterInfo bookChapterInfo=new BookChapterInfo();
+                    bookChapterInfo.setWebType(bookInfo.getWebType());
+                    bookChapterInfo.setChapterLink(currentResult.get(0));
+                    String oriChapterName = currentResult.get(1);
+                    bookChapterInfo.setChapterNameOri(oriChapterName);
+                    bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                    result.add(bookChapterInfo);
+                }
             }
         }
         if (reader != null) {
@@ -122,6 +144,18 @@ public class ResolveChapterUtils {
                     continue;
                 }
                 if (isStart && current.contains("<div class=\"con_l\"><script>read_di()")) {
+                    isStart = false;
+                    continue;
+                }
+                if (isStart) {
+                    resultContent += current;
+                }
+            }else if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookChapterInfo.getWebType())){
+                if ("<dd id=\"contents\">".equals(current.trim())) {
+                    isStart = true;
+                    continue;
+                }
+                if (isStart && current.trim().equals("<div class=\"adhtml\"><script>show_htm3();</script></div>")) {
                     isStart = false;
                     continue;
                 }
