@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +33,7 @@ import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.view.DialogUtil;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +55,7 @@ public class ReadBookActivity extends Activity {
     private TextView chapterContentTv;
     private TextView previousChapterTv;
     private TextView nextChapterTv;
+    private TextView readProgressTv;
 
     private ListView chapterLv;
     private BookChapterAdapter bookChapterAdapter;
@@ -103,6 +103,7 @@ public class ReadBookActivity extends Activity {
         skipPageEt = (EditText) findViewById(R.id.chapter_skip_page);
         skipTv = (TextView) findViewById(R.id.chapter_skip);
         totalPageTv = (TextView) findViewById(R.id.chapter_total_page);
+        readProgressTv = (TextView) findViewById(R.id.read_progress);
 
         bookChapterAdapter = new BookChapterAdapter(this, currentDisplayInfo);
         chapterLv.setAdapter(bookChapterAdapter);
@@ -357,6 +358,7 @@ public class ReadBookActivity extends Activity {
                 bookChapterAdapter.notifyData(currentReadInfo.getCurrentPage(), currentReadInfo.getCurrentChapter());
                 setDisplay();
                 saveBookMark();
+                readProgressTv.setText(getProgress());
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -586,5 +588,17 @@ public class ReadBookActivity extends Activity {
         toInfo.setHasPreviousChapter(fromInfo.isHasPreviousChapter());
         toInfo.setHasNextChapter(fromInfo.isHasNextChapter());
         toInfo.setCurrentChapter(fromInfo.getCurrentChapter());
+    }
+
+    private String getProgress(){
+        int total = allInfo.size();
+        int current = currentReadInfo.getCurrentChapter().getIndex() + 1;
+        if (total == 0 || current > total) {
+            return "";
+        }
+        float num= (float)current/total;
+        NumberFormat format= NumberFormat.getPercentInstance();
+        format.setMinimumFractionDigits(2);
+        return format.format(num);
     }
 }
