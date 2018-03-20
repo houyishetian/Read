@@ -40,13 +40,19 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
+    private final int INDEX_BIQUGE = 0;
+    private final int INDEX_NOVEL_80 = 1;
+    private final int INDEX_DING_DIAN = 2;
+
+    private final int INDEX_DEFAULT = 2;
+
     private EditText bookNameEt;
     private Button searchBt;
     private RecyclerView searchResultRcv;
     private ArrayList<BookInfo> allbookInfo;
     private SearchBookItemAdapter searchBookItemadapter;
     private TextView selectTypeTv;
-    private String currentSelectWeb = Constants.RESOLVE_FROM_BIQUGE;
+    private String currentSelectWeb;
 
     private List<WebTypeBean> webTypeList;
     @Override
@@ -72,6 +78,8 @@ public class SearchFragment extends Fragment {
 
         allbookInfo=new ArrayList<>();
         webTypeList=getAllWebTypes();
+        selectTypeTv.setText(webTypeList.get(INDEX_DEFAULT).getWebName());
+        currentSelectWeb = webTypeList.get(INDEX_DEFAULT).getTag();
         searchBookItemadapter=new SearchBookItemAdapter(getActivity(),allbookInfo);
         searchResultRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchResultRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
