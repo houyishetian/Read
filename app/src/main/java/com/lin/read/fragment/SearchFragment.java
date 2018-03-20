@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
@@ -14,15 +15,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lin.read.R;
+import com.lin.read.adapter.DialogWebTypeAdapter;
 import com.lin.read.adapter.SearchBookItemAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.GetDownloadInfoTask;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.filter.search.WebTypeBean;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.view.DialogUtil;
@@ -43,6 +47,8 @@ public class SearchFragment extends Fragment {
     private SearchBookItemAdapter searchBookItemadapter;
     private TextView selectTypeTv;
     private String currentSelectWeb = Constants.RESOLVE_FROM_BIQUGE;
+
+    private List<WebTypeBean> webTypeList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = (View)inflater.inflate(R.layout.fragment_search, null);
@@ -65,6 +71,7 @@ public class SearchFragment extends Fragment {
         });
 
         allbookInfo=new ArrayList<>();
+        webTypeList=getAllWebTypes();
         searchBookItemadapter=new SearchBookItemAdapter(getActivity(),allbookInfo);
         searchResultRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchResultRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
@@ -102,31 +109,19 @@ public class SearchFragment extends Fragment {
         //设置dialog的宽高为屏幕的宽高
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         selectWebDialog.setContentView(viewDialog, layoutParams);
-        View webNovel80=viewDialog.findViewById(R.id.web_novel_80);
-        webNovel80.setTag(Constants.RESOLVE_FROM_NOVEL80);
-        View webBiQuGe=viewDialog.findViewById(R.id.web_biquge);
-        webBiQuGe.setTag(Constants.RESOLVE_FROM_BIQUGE);
-        webNovel80.setOnClickListener(new WebSelectItemsClickListener());
-        webBiQuGe.setOnClickListener(new WebSelectItemsClickListener());
-    }
-
-    class WebSelectItemsClickListener extends NoDoubleClickListener {
-        @Override
-        public void onNoDoubleClick(View v) {
-            Object o=v.getTag();
-            if(o!=null){
-                try {
-                    String currentItem= (String) o;
-                    currentSelectWeb = currentItem;
-                    selectTypeTv.setText(((TextView) v).getText().toString());
-                    if (selectWebDialog != null && selectWebDialog.isShowing()) {
-                        selectWebDialog.dismiss();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
+        ListView webTypeLv= (ListView) viewDialog.findViewById(R.id.dialog_select_web_lv);
+        DialogWebTypeAdapter adapter=new DialogWebTypeAdapter(getActivity(),webTypeList);
+        webTypeLv.setAdapter(adapter);
+        adapter.setOnItemWebClickListener(new DialogWebTypeAdapter.OnItemWebClickListener() {
+            @Override
+            public void onItemClick(WebTypeBean info) {
+                currentSelectWeb = info.getTag();
+                selectTypeTv.setText(info.getWebName());
+                if (selectWebDialog != null && selectWebDialog.isShowing()) {
+                    selectWebDialog.dismiss();
                 }
             }
-        }
+        });
     }
 
     private void search(final String bookName){
@@ -152,5 +147,20 @@ public class SearchFragment extends Fragment {
             }
         });
         task.execute(new String[]{bookName,"0"});
+    }
+
+    private List<WebTypeBean> getAllWebTypes(){
+        List<WebTypeBean> webTypeBeenList=new ArrayList<>();
+        WebTypeBean webTypeBean0=new WebTypeBean();
+        webTypeBean0.setWebName("笔趣阁");
+        webTypeBean0.setTag(Constants.RESOLVE_FROM_BIQUGE);
+        webTypeBeenList.add(webTypeBean0);
+
+        WebTypeBean webTypeBean1=new WebTypeBean();
+        webTypeBean1.setWebName("80小说");
+        webTypeBean1.setTag(Constants.RESOLVE_FROM_NOVEL80);
+        webTypeBeenList.add(webTypeBean1);
+
+        return  webTypeBeenList;
     }
 }
