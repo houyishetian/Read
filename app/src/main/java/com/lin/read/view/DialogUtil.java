@@ -39,6 +39,8 @@ public class DialogUtil {
     public void showLoadingDialog(Context context) {
         hideLoadingView();
         loadingDialog = new Dialog(context, R.style.Dialog_Fullscreen);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
         loadingDialog.show();
         LayoutInflater inflater = LayoutInflater.from(context);
         View viewDialog = inflater.inflate(R.layout.dialog_loading, null);

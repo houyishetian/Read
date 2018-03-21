@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
@@ -146,11 +145,14 @@ public class SearchFragment extends Fragment {
                     allbookInfo.clear();
                     allbookInfo.addAll(allBooks);
                     searchBookItemadapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(getActivity(),"未获取到数据!",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailed() {
+                Toast.makeText(getActivity(),"网络请求失败!",Toast.LENGTH_SHORT).show();
                 DialogUtil.getInstance().hideLoadingView();
             }
         });
