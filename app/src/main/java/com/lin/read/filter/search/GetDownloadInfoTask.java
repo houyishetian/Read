@@ -35,6 +35,10 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
                 resolveUtilsFactory = new ResolveUtilsForBDZhannei();
                 ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType);
                 break;
+            case Constants.RESOLVE_FROM_BIXIA:
+                resolveUtilsFactory = new ResolveUtilsForBDZhannei();
+                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType);
+                break;
             default:
                 resolveUtilsFactory = null;
         }

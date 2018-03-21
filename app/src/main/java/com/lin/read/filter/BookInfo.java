@@ -139,6 +139,9 @@ public class BookInfo implements Parcelable{
                 ", score='" + score + '\'' +
                 ", scoreNum='" + scoreNum + '\'' +
                 ", lastChapter='" + lastChapter + '\'' +
+                ", bookLink='" + bookLink + '\'' +
+                ", bookType='" + bookType + '\'' +
+                ", downloadLink='" + downloadLink + '\'' +
                 '}';
     }
 

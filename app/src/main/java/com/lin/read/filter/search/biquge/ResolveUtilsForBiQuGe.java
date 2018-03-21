@@ -57,7 +57,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
         String current = null;
         BookInfo bookInfo = null;
-        Log.e("Test","开始解析...");
+        Log.e("Test","笔趣阁开始搜索："+url);
 //  <tr>
 //    <td class="odd"><a href="http://www.biquge5200.com/70_70322/">仙宸</a></td>
 //    <td class="even"><a href="http://www.biquge5200.com/70_70322/144888240.html" target="_blank"> 第九十九章：大结局〔完〕</a></td>

@@ -1,5 +1,6 @@
 package com.lin.read.filter.search;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
@@ -51,6 +52,10 @@ public class ResolveChapterUtils {
                 //<td class="L"><a href="http://www.23us.so/files/article/html/10/10674/7219354.html">新书《一念永恒》，VIP上架啦</a></td>
                 regex = "<td class=\"L\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>";
                 break;
+            case Constants.RESOLVE_FROM_BIXIA:
+                //<dd> <a style="" href="/0_743/5168336.html">第1814章 安检环节?</a></dd>
+                regex = "<dd> <a style=\"\" href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
+                break;
             default:
                 return null;
         }
@@ -60,7 +65,9 @@ public class ResolveChapterUtils {
                 conn.getInputStream(), uniCodeType));
 
         String current = null;
-        Log.e("Test", "开始解析...");
+        Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
+        boolean isFirstDtAlreadyFind = false;
+        boolean isSecondDtAlreadyFind = false;
         while ((current = reader.readLine()) != null) {
             if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
                 List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
@@ -77,6 +84,37 @@ public class ResolveChapterUtils {
                         }
                     }
                     break;
+                }
+            }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookInfo.getWebType())){
+                if (!isFirstDtAlreadyFind) {
+                    if (current.trim().contains("<dt>")) {
+                        isFirstDtAlreadyFind = true;
+                    }
+                    continue;
+                } else {
+                    if(!isSecondDtAlreadyFind){
+                        if (current.trim().contains("<dt>")) {
+                            isSecondDtAlreadyFind = true;
+                        }
+                        continue;
+                    }
+                }
+                if (current.trim().equals("</dl>")) {
+                    break;
+                }
+                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
+                if (currentResult != null && currentResult.size() == allGroups.size()) {
+                    BookChapterInfo bookChapterInfo=new BookChapterInfo();
+                    bookChapterInfo.setWebType(bookInfo.getWebType());
+                    String bookLinkOri=currentResult.get(0);
+                    if (!TextUtils.isEmpty(bookLinkOri) && !bookLinkOri.startsWith("https://") && !bookLinkOri.startsWith("http://")) {
+                        bookLinkOri="https://www.bixia.org/"+bookLinkOri;
+                    }
+                    bookChapterInfo.setChapterLink(bookLinkOri);
+                    String oriChapterName = currentResult.get(1);
+                    bookChapterInfo.setChapterNameOri(oriChapterName);
+                    bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                    result.add(bookChapterInfo);
                 }
             }else{
                 List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
@@ -123,7 +161,7 @@ public class ResolveChapterUtils {
                 conn.getInputStream(), uniCodeType));
 
         String current = null;
-        Log.e("Test", "开始解析...");
+        Log.e("Test", "开始解析章节内容："+bookChapterInfo.getChapterLink());
 
         String resultContent="";
 
@@ -156,6 +194,18 @@ public class ResolveChapterUtils {
                     continue;
                 }
                 if (isStart && current.trim().equals("<div class=\"adhtml\"><script>show_htm3();</script></div>")) {
+                    isStart = false;
+                    continue;
+                }
+                if (isStart) {
+                    resultContent += current;
+                }
+            }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookChapterInfo.getWebType())){
+                if ("<div id=\"content\">".equals(current.trim())) {
+                    isStart = true;
+                    continue;
+                }
+                if (isStart && current.trim().equals("<script>chaptererror();</script>")) {
                     isStart = false;
                     continue;
                 }

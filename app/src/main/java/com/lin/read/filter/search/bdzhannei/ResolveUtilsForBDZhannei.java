@@ -96,15 +96,18 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
             case Constants.RESOLVE_FROM_DINGDIAN:
                 url = "http://zhannei.baidu.com/cse/search?s=8053757951023821596&q="+bookName+"&p="+page;
                 break;
+            case Constants.RESOLVE_FROM_BIXIA:
+                url="http://zhannei.baidu.com/cse/search?s=3677118700255927857&q="+bookName+"&p="+page;;
+                break;
             default:
                 url = null;
                 break;
         }
 
         Log.e("Test","search url:"+url);
-        return resolveSearchResultFrom80(url,tag);
+        return resolveSearchResultFromBDZhanNei(url,tag);
     }
-    private List<BookInfo> resolveSearchResultFrom80(String url,String webType)
+    private List<BookInfo> resolveSearchResultFromBDZhanNei(String url, String webType)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -125,7 +128,7 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         BookInfo bookInfo = null;
         int index = -1;
         BookIndex bookIndex = null;
-        Log.e("Test","开始解析...");
+        Log.e("Test", "百度站内开始搜索:" + webType + "-->" + url);
         while ((current = reader.readLine()) != null) {
             if (bookIndex != null) {
                 index++;
@@ -140,18 +143,23 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
                 if (resolveResult != null && resolveResult.size() != 0) {
                     bookInfo = new BookInfo();
                     String bookLink=resolveResult.get(0);
-                    //handle book link
-                    if(bookLink.endsWith(".html")){
-                        bookInfo.setBookLink(bookLink);
-                    }else{
-                        if(bookLink.endsWith("/")){
-                            StringBuilder temp=new StringBuilder(bookLink);
-                            bookInfo.setBookLink(temp.deleteCharAt(temp.length()-1).append(".html").toString());
-                        }else{
-
+                    if(Constants.RESOLVE_FROM_NOVEL80.equals(tag)){
+                        //handle book link
+                        if(bookLink.endsWith(".html")){
                             bookInfo.setBookLink(bookLink);
+                        }else{
+                            if(bookLink.endsWith("/")){
+                                StringBuilder temp=new StringBuilder(bookLink);
+                                bookInfo.setBookLink(temp.deleteCharAt(temp.length()-1).append(".html").toString());
+                            }else{
+
+                                bookInfo.setBookLink(bookLink);
+                            }
                         }
+                    }else{
+                        bookInfo.setBookLink(bookLink);
                     }
+
                     bookInfo.setBookName(resolveResult.get(1));
                 }
             } else {
