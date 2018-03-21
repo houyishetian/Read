@@ -177,37 +177,37 @@ public class ResolveChapterUtils {
                     break;
                 }
             } else if (Constants.RESOLVE_FROM_NOVEL80.equals(bookChapterInfo.getWebType())) {
-                if ("<div class=\"book_content\" id=\"content\">".equals(current.trim())) {
+                if (!isStart && "<div class=\"book_content\" id=\"content\">".equals(current.trim())) {
                     isStart = true;
                     continue;
                 }
                 if (isStart && current.contains("<div class=\"con_l\"><script>read_di()")) {
                     isStart = false;
-                    continue;
+                    break;
                 }
                 if (isStart) {
                     resultContent += current;
                 }
             }else if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookChapterInfo.getWebType())){
-                if ("<dd id=\"contents\">".equals(current.trim())) {
+                if (!isStart && "<dd id=\"contents\">".equals(current.trim())) {
                     isStart = true;
                     continue;
                 }
                 if (isStart && current.trim().equals("<div class=\"adhtml\"><script>show_htm3();</script></div>")) {
                     isStart = false;
-                    continue;
+                    break;
                 }
                 if (isStart) {
                     resultContent += current;
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookChapterInfo.getWebType())){
-                if ("<div id=\"content\">".equals(current.trim())) {
+                if (!isStart && "<div id=\"content\">".equals(current.trim())) {
                     isStart = true;
                     continue;
                 }
                 if (isStart && current.trim().equals("<script>chaptererror();</script>")) {
                     isStart = false;
-                    continue;
+                    break;
                 }
                 if (isStart) {
                     resultContent += current;
