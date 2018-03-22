@@ -149,7 +149,7 @@ public class StringUtils {
 			return null;
 		}
 		InputStream input=conn.getInputStream();
-		String unicodeType=StringUtils.getCharSet(conn);
+		String unicodeType="UTF-8";
 		Log.e("Test","unicodeType:"+unicodeType);
 		BufferedReader reader=new BufferedReader(new InputStreamReader(
 				input, unicodeType));
@@ -219,7 +219,7 @@ public class StringUtils {
 				return m.group(1)+"更新";
 			}
 		}
-		return null;
+		return srcDate;
 	}
 
 	public static String getCharSet(HttpURLConnection conn){

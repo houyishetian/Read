@@ -67,7 +67,7 @@ public class QiDianHttpUtils {
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}else{
-			String unicodeType=StringUtils.getCharSet(conn);
+			String unicodeType="UTF-8";
 			Log.e("Test","unicodeType:"+unicodeType);
 			reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream(), unicodeType));
@@ -237,7 +237,7 @@ public class QiDianHttpUtils {
 			throw new IOException();
 		}
 		BufferedReader reader = null;
-		String unicodeType=StringUtils.getCharSet(conn);
+		String unicodeType="UTF-8";
 		Log.e("Test","unicodeType:"+unicodeType);
 		reader = new BufferedReader(new InputStreamReader(
 				conn.getInputStream(), unicodeType));
