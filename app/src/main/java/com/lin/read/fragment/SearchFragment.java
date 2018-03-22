@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,6 +85,22 @@ public class SearchFragment extends Fragment {
         searchResultRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchResultRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
         searchResultRcv.setAdapter(searchBookItemadapter);
+
+        bookNameEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String bookName=bookNameEt.getText().toString();
+                    if(StringUtils.isEmpty(bookName)){
+                        Toast.makeText(getActivity(), "请输入书名!", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    hideSoft();
+                    search(bookName);
+                }
+                return false;
+            }
+        });
 
         searchBt.setOnClickListener(new View.OnClickListener() {
             @Override
