@@ -80,6 +80,8 @@ public class ScanFragment extends Fragment {
     private EditText wordsNumEt;
     private EditText recommendEt;
 
+    private TextView emptyTv;
+
     private ScrollView scrollView;
 
     private ArrayList<BookInfo> allBookData;
@@ -168,6 +170,8 @@ public class ScanFragment extends Fragment {
         scanBookTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_booktype);
         scanDateTypeRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_date);
         allBooksRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_all_books);
+
+        emptyTv = (TextView) view.findViewById(R.id.empty_view);
 
         scoreEt = (EditText) view.findViewById(R.id.et_socre);
         scoreNumEt = (EditText) view.findViewById(R.id.et_socre_num);
@@ -450,11 +454,15 @@ public class ScanFragment extends Fragment {
                     scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0));
                     allBookData.clear();
                     allBookAdapter.notifyDataSetChanged();
+                    emptyTv.setVisibility(View.VISIBLE);
+                    allBooksRcv.setVisibility(View.GONE);
                     lastClickItem=-1;
                     Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.SCAN_RESPONSE_SUCC:
                     if (data != null) {
+                        emptyTv.setVisibility(View.GONE);
+                        allBooksRcv.setVisibility(View.VISIBLE);
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
                         scanResultTv.setVisibility(View.VISIBLE);
                         Log.e("Test", "接收:" + allBookDataFromScan);
@@ -466,6 +474,9 @@ public class ScanFragment extends Fragment {
                         allBooksRcv.smoothScrollToPosition(0);
                         lastClickItem=-1;
                         Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
+                    }else{
+                        emptyTv.setVisibility(View.VISIBLE);
+                        allBooksRcv.setVisibility(View.GONE);
                     }
                     break;
             }

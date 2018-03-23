@@ -48,10 +48,9 @@
         android:layout_marginTop="5dp"
         android:background="#CFCFCF" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
         android:layout_weight="1">
 
         <ListView
@@ -60,7 +59,18 @@
             android:layout_height="wrap_content"
             android:cacheColorHint="@null"
             android:listSelector="#00000000"
+            android:visibility="gone"
             android:scrollbars="vertical" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="没有书签"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="center"/>
+
+    </RelativeLayout>
 </LinearLayout>

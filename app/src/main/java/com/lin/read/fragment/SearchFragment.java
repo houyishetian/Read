@@ -55,6 +55,7 @@ public class SearchFragment extends Fragment {
     private SearchBookItemAdapter searchBookItemadapter;
     private TextView selectTypeTv;
     private WebTypeBean currentSelectWeb;
+    private TextView emptyTv;
 
     private List<WebTypeBean> webTypeList;
     @Override
@@ -71,6 +72,7 @@ public class SearchFragment extends Fragment {
         searchBt= (Button) view.findViewById(R.id.btn_search);
         searchResultRcv= (RecyclerView) view.findViewById(R.id.rcv_search_result);
         selectTypeTv = (TextView) view.findViewById(R.id.select_web);
+        emptyTv= (TextView) view.findViewById(R.id.empty_view);
         selectTypeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,17 +162,23 @@ public class SearchFragment extends Fragment {
             @Override
             public void onSucc(List<BookInfo> allBooks) {
                 DialogUtil.getInstance().hideLoadingView();
-                if(allBooks!=null){
+                if (allBooks != null && allBooks.size() > 0) {
+                    emptyTv.setVisibility(View.GONE);
+                    searchResultRcv.setVisibility(View.VISIBLE);
                     allbookInfo.clear();
                     allbookInfo.addAll(allBooks);
                     searchBookItemadapter.notifyDataSetChanged();
                 }else{
+                    emptyTv.setVisibility(View.VISIBLE);
+                    searchResultRcv.setVisibility(View.GONE);
                     Toast.makeText(getActivity(),"未获取到数据!",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailed() {
+                emptyTv.setVisibility(View.VISIBLE);
+                searchResultRcv.setVisibility(View.GONE);
                 Toast.makeText(getActivity(),"网络请求失败!",Toast.LENGTH_SHORT).show();
                 DialogUtil.getInstance().hideLoadingView();
             }

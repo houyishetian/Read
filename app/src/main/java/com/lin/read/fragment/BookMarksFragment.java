@@ -30,6 +30,7 @@ public class BookMarksFragment extends Fragment {
     private TextView deleteTv;
     private TextView totalNumTv;
     private ListView bookMarksLv;
+    private TextView emptyTv;
     private List<BookMarkBean> allBookMarks;
     private BookMarksAdapter bookMarksAdapter;
     private final int CLICK_SELECT_ALL=0;
@@ -48,6 +49,7 @@ public class BookMarksFragment extends Fragment {
         deleteTv = (TextView) view.findViewById(R.id.book_marks_delete);
         totalNumTv = (TextView) view.findViewById(R.id.book_marks_total_num);
         bookMarksLv = (ListView) view.findViewById(R.id.book_marks_lv);
+        emptyTv= (TextView) view.findViewById(R.id.empty_view);
         deleteTv.setEnabled(false);
 
         allBookMarks=new ArrayList<>();
@@ -122,13 +124,18 @@ public class BookMarksFragment extends Fragment {
                     @Override
                     public void run() {
                         DialogUtil.getInstance().hideLoadingView();
-                        if(booksMarkList!=null){
+                        if (booksMarkList != null && booksMarkList.size() > 0) {
+                            emptyTv.setVisibility(View.GONE);
+                            bookMarksLv.setVisibility(View.VISIBLE);
                             totalNumTv.setText(String.format("共%s条书签",""+booksMarkList.size()));
                             allBookMarks.clear();
                             allBookMarks.addAll(booksMarkList);
                             bookMarksAdapter.notifyDataSetChanged();
                             selectAllTv.setVisibility(View.GONE);
                             deleteTv.setVisibility(View.GONE);
+                        }else{
+                            emptyTv.setVisibility(View.VISIBLE);
+                            bookMarksLv.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -163,13 +170,18 @@ public class BookMarksFragment extends Fragment {
                     @Override
                     public void run() {
                         DialogUtil.getInstance().hideLoadingView();
-                        if(booksMarkList!=null){
+                        if (booksMarkList != null && booksMarkList.size() > 0) {
+                            emptyTv.setVisibility(View.GONE);
+                            bookMarksLv.setVisibility(View.VISIBLE);
                             totalNumTv.setText(String.format("共%s条书签",""+booksMarkList.size()));
                             allBookMarks.clear();
                             allBookMarks.addAll(booksMarkList);
                             bookMarksAdapter.notifyDataSetChanged();
                             selectAllTv.setVisibility(View.GONE);
                             deleteTv.setVisibility(View.GONE);
+                        }else{
+                            emptyTv.setVisibility(View.VISIBLE);
+                            bookMarksLv.setVisibility(View.GONE);
                         }
                     }
                 });
