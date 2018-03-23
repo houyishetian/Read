@@ -15,6 +15,8 @@ public class BookMarkBean implements Serializable {
     private BookInfo bookInfo;
     private long lastReadTime;
     private String lastReadChapter;
+    private boolean isChecked;
+    private boolean showCheckBox;
 
     @Override
     public String toString() {
@@ -24,7 +26,25 @@ public class BookMarkBean implements Serializable {
                 ", bookInfo=" + bookInfo +
                 ", lastReadTime=" + lastReadTime +
                 ", lastReadChapter='" + lastReadChapter + '\'' +
+                ", isChecked=" + isChecked +
+                ", showCheckBox=" + showCheckBox +
                 '}';
+    }
+
+    public boolean isShowCheckBox() {
+        return showCheckBox;
+    }
+
+    public void setShowCheckBox(boolean showCheckBox) {
+        this.showCheckBox = showCheckBox;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public String getLastReadChapter() {

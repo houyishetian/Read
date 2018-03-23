@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.lin.read.R;
-import com.lin.read.fragment.DownloadHistoryFragment;
+import com.lin.read.fragment.BookMarksFragment;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.fragment.SearchFragment;
 
@@ -19,7 +19,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private ScanFragment scanFragment;
     private SearchFragment searchFragment;
-    private DownloadHistoryFragment downloadHistoryFragment;
+    private BookMarksFragment bookMarksFragment;
 
     private View scanView;
     private View searchView;
@@ -52,11 +52,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         scanFragment = new ScanFragment();
         searchFragment = new SearchFragment();
-        downloadHistoryFragment = new DownloadHistoryFragment();
+        bookMarksFragment = new BookMarksFragment();
 
         FragmentTransaction localFragmentTransaction = getSupportFragmentManager().beginTransaction();
-        localFragmentTransaction.add(R.id.fragment_container, this.scanFragment).add(R.id.fragment_container, this.searchFragment).add(R.id.fragment_container, this.downloadHistoryFragment);
-        localFragmentTransaction.show(this.scanFragment).hide(this.searchFragment).hide(this.downloadHistoryFragment);
+        localFragmentTransaction.add(R.id.fragment_container, this.scanFragment).add(R.id.fragment_container, this.searchFragment).add(R.id.fragment_container, this.bookMarksFragment);
+        localFragmentTransaction.show(this.scanFragment).hide(this.searchFragment).hide(this.bookMarksFragment);
         localFragmentTransaction.commit();
 
         scanView.setOnClickListener(this);
@@ -71,17 +71,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         this.searchFragment.hideSoft();
         switch (v.getId()) {
             case R.id.rl_scan:
-                localFragmentTransaction.show(this.scanFragment).hide(this.searchFragment).hide(this.downloadHistoryFragment);
+                localFragmentTransaction.show(this.scanFragment).hide(this.searchFragment).hide(this.bookMarksFragment);
                 setSelectBackground(0);
                 break;
             case R.id.rl_search:
                 scanFragment.hideFilterLayoutWithoutAnimation();
-                localFragmentTransaction.show(this.searchFragment).hide(this.scanFragment).hide(this.downloadHistoryFragment);
+                localFragmentTransaction.show(this.searchFragment).hide(this.scanFragment).hide(this.bookMarksFragment);
                 setSelectBackground(1);
                 break;
             case R.id.rl_history:
                 scanFragment.hideFilterLayoutWithoutAnimation();
-                localFragmentTransaction.show(this.downloadHistoryFragment).hide(this.searchFragment).hide(this.scanFragment);
+                localFragmentTransaction.show(this.bookMarksFragment).hide(this.searchFragment).hide(this.scanFragment);
                 setSelectBackground(2);
                 break;
             default:
@@ -108,6 +108,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     {
         if(scanFragment.isFilterLayoutVisble()){
             scanFragment.hideFilterLayout();
+            return;
+        }
+        if(bookMarksFragment.isEditMode()){
+            bookMarksFragment.exitEditMode();
             return;
         }
         long current = System.currentTimeMillis();

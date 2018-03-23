@@ -13,6 +13,7 @@ public class Constants {
     public static final String TEXT_SCAN_BOOK_INFO_BY_CONDITION_END="扫描书籍结束，共扫描到%d本！";
     public static final String TEXT_SCAN_BOOK_INFO_RESULT="共找到%d本";
     public static final int SCAN_REQUEST_CODE=12;
+    public static final int READ_REQUEST_CODE=15;
 
     public static final String KEY_BUNDLE_FOR_BOOK_DATA="KEY_BUNDLE_FOR_BOOK_DATA";
     public static final String KEY_INTENT_FOR_BOOK_DATA="KEY_INTENT_FOR_BOOK_DATA";
