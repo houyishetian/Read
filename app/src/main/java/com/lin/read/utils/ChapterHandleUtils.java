@@ -31,7 +31,11 @@ public class ChapterHandleUtils {
             while (matcher.find()) {
                 String findString=matcher.group(0);
                 if(!StringUtils.isEmpty(findString)){
-                    currentResult = currentResult.replace(findString, "");
+                    Pattern patternReal = Pattern.compile("[0-9一二三四五六七八九十零终末上中下]+");
+                    Matcher matcherReal = patternReal.matcher(findString.substring(1, findString.length() - 1));
+                    if (!matcherReal.matches()) {
+                        currentResult = currentResult.replace(findString, "");
+                    }
                 }
             }
         }
