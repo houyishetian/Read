@@ -2,6 +2,7 @@ package com.lin.read.filter.scan.qidian;
 
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.utils.ChapterHandleUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,7 +76,7 @@ public class QiDianRegexUtils {
         Pattern pattern=Pattern.compile("title=\"([^\"^\n]{1,})\"[^\n]{1,}\"time\">([^\"^\n]{1,})</em>");
         Matcher matcher=pattern.matcher(data);
         if(matcher.find()){
-            bookInfo.setLastChapter(matcher.group(1));
+            bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(matcher.group(1)));
             bookInfo.setLastUpdate(matcher.group(2));
             return true;
         }

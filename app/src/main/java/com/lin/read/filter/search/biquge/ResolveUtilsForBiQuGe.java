@@ -7,6 +7,7 @@ import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
@@ -16,8 +17,6 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by lisonglin on 2018/2/24.
@@ -30,15 +29,16 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
             return null;
         }
         String bookName = params[0];
+        String webName = params[1];
         if (StringUtils.isEmpty(bookName)) {
             return null;
         }
         String url="http://www.biquge5200.com/modules/article/search.php?searchkey="+bookName;
         Log.e("Test","search url:"+url);
-        return resolveSearchResultFromBiQuGe(url);
+        return resolveSearchResultFromBiQuGe(url,webName);
     }
 
-    private List<BookInfo> resolveSearchResultFromBiQuGe(String url)
+    private List<BookInfo> resolveSearchResultFromBiQuGe(String url,String webName)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -91,7 +91,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                     //    <td class="even"><a href="http://www.biquge5200.com/70_70322/144888240.html" target="_blank"> 第九十九章：大结局〔完〕</a></td>
                     List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{2}));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() == 1) {
-                        bookInfo.setLastChapter(resolveLastChapterResult.get(0));
+                        bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(resolveLastChapterResult.get(0)));
                         continue;
                     }
 
@@ -109,6 +109,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() == 1) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                         bookInfo.setWebType(Constants.RESOLVE_FROM_BIQUGE);
+                        bookInfo.setWebName(webName);
                         result.add(bookInfo);
                         bookInfo=null;
                         startIndex=-1;

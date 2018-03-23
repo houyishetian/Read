@@ -548,12 +548,11 @@ public class ReadBookActivity extends Activity {
 
     private void saveBookMark() {
         BookMarkBean markBean = new BookMarkBean();
-        markBean.setBookName(bookInfo.getBookName());
-        markBean.setAuthorName(bookInfo.getAuthorName());
-        markBean.setWebType(bookInfo.getWebType());
-        markBean.setBookLink(bookInfo.getBookLink());
+        markBean.setBookInfo(bookInfo);
+        markBean.setLastReadTime(System.currentTimeMillis());
         markBean.setPage(currentReadInfo.getCurrentChapter().getPage());
         markBean.setIndex(currentReadInfo.getCurrentChapter().getIndex());
+        markBean.setLastReadChapter(currentReadInfo.getCurrentChapter().getChapterName());
         String key = markBean.getKey();
         String value = new GsonBuilder().create().toJson(markBean);
         Log.e("Test", "save book mark-->" + key + "=" + value);
@@ -562,10 +561,7 @@ public class ReadBookActivity extends Activity {
 
     private BookMarkBean getBookMark() {
         BookMarkBean markBean = new BookMarkBean();
-        markBean.setBookName(bookInfo.getBookName());
-        markBean.setAuthorName(bookInfo.getAuthorName());
-        markBean.setWebType(bookInfo.getWebType());
-        markBean.setBookLink(bookInfo.getBookLink());
+        markBean.setBookInfo(bookInfo);
         String key = markBean.getKey();
         String value=BookMarkSharePres.getBookMark(this,key);
         try{

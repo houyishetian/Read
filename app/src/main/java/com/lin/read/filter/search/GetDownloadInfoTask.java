@@ -19,25 +19,27 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
 
     private ResolveUtilsFactory resolveUtilsFactory;
     private Activity activity;
+    private String webName;
 
-    public GetDownloadInfoTask(Activity activity, String currentResolveType, OnTaskListener onTaskListener) {
+    public GetDownloadInfoTask(Activity activity, WebTypeBean currentResolveType, OnTaskListener onTaskListener) {
         this.onTaskListener = onTaskListener;
         this.activity=activity;
-        switch (currentResolveType) {
+        this.webName=currentResolveType.getWebName();
+        switch (currentResolveType.getTag()) {
             case Constants.RESOLVE_FROM_NOVEL80:
                 resolveUtilsFactory = new ResolveUtilsForBDZhannei();
-                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType);
+                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
                 break;
             case Constants.RESOLVE_FROM_BIQUGE:
                 resolveUtilsFactory = new ResolveUtilsForBiQuGe();
                 break;
             case Constants.RESOLVE_FROM_DINGDIAN:
                 resolveUtilsFactory = new ResolveUtilsForBDZhannei();
-                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType);
+                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
                 break;
             case Constants.RESOLVE_FROM_BIXIA:
                 resolveUtilsFactory = new ResolveUtilsForBDZhannei();
-                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType);
+                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
                 break;
             default:
                 resolveUtilsFactory = null;
@@ -56,7 +58,12 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         if (resolveUtilsFactory != null) {
             try {
-                List<BookInfo> resultData = resolveUtilsFactory.getBooksByBookname(params);
+                String[] addParams = new String[params.length + 1];
+                for (int i = 0; i < params.length; i++) {
+                    addParams[i] = params[i];
+                }
+                addParams[params.length] = webName;
+                List<BookInfo> resultData = resolveUtilsFactory.getBooksByBookname(addParams);
                 result(true, resultData);
             } catch (IOException e) {
                 e.printStackTrace();

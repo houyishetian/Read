@@ -44,6 +44,7 @@ public class SearchFragment extends Fragment {
     private final int INDEX_BIQUGE = 0;
     private final int INDEX_NOVEL_80 = 1;
     private final int INDEX_DING_DIAN = 2;
+    private final int INDEX_BIXIA = 3;
 
     private final int INDEX_DEFAULT = 2;
 
@@ -53,7 +54,7 @@ public class SearchFragment extends Fragment {
     private ArrayList<BookInfo> allbookInfo;
     private SearchBookItemAdapter searchBookItemadapter;
     private TextView selectTypeTv;
-    private String currentSelectWeb;
+    private WebTypeBean currentSelectWeb;
 
     private List<WebTypeBean> webTypeList;
     @Override
@@ -80,7 +81,7 @@ public class SearchFragment extends Fragment {
         allbookInfo=new ArrayList<>();
         webTypeList=getAllWebTypes();
         selectTypeTv.setText(webTypeList.get(INDEX_DEFAULT).getWebName());
-        currentSelectWeb = webTypeList.get(INDEX_DEFAULT).getTag();
+        currentSelectWeb = webTypeList.get(INDEX_DEFAULT);
         searchBookItemadapter=new SearchBookItemAdapter(getActivity(),allbookInfo);
         searchResultRcv.setLayoutManager(new LinearLayoutManager(getActivity()));
         searchResultRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
@@ -140,7 +141,7 @@ public class SearchFragment extends Fragment {
         adapter.setOnItemWebClickListener(new DialogWebTypeAdapter.OnItemWebClickListener() {
             @Override
             public void onItemClick(WebTypeBean info) {
-                currentSelectWeb = info.getTag();
+                currentSelectWeb = info;
                 selectTypeTv.setText(info.getWebName());
                 if (selectWebDialog != null && selectWebDialog.isShowing()) {
                     selectWebDialog.dismiss();

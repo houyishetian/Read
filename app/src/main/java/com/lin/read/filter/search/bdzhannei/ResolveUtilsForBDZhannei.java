@@ -7,6 +7,7 @@ import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
@@ -79,6 +80,7 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         }
         String bookName = params[0];
         String pageStr = params[1];
+        String webName = params[2];
         int page = -1;
         try {
             page = Integer.parseInt(pageStr);
@@ -105,9 +107,9 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         }
 
         Log.e("Test","search url:"+url);
-        return resolveSearchResultFromBDZhanNei(url,tag);
+        return resolveSearchResultFromBDZhanNei(url,tag,webName);
     }
-    private List<BookInfo> resolveSearchResultFromBDZhanNei(String url, String webType)
+    private List<BookInfo> resolveSearchResultFromBDZhanNei(String url, String webType,String webName)
             throws IOException {
 
         if (StringUtils.isEmpty(url)) {
@@ -220,12 +222,13 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
                     List<String> resolveResult = RegexUtils.getDataByRegex(current,
                             bookRegex, bookGroupsList);
                     if (resolveResult != null && resolveResult.size() != 0) {
-                        bookInfo.setLastChapter(resolveResult.get(0));
+                        bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(resolveResult.get(0)));
                     }
                     bookIndex = null;
                     index = -1;
                     bookInfo.setDownloadLink(parseBookLinkToDownloadLink(bookInfo));
                     bookInfo.setWebType(webType);
+                    bookInfo.setWebName(webName);
                     result.add(bookInfo);
                     bookInfo = null;
                     continue;

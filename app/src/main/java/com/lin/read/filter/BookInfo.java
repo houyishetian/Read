@@ -21,6 +21,35 @@ public class BookInfo implements Parcelable{
     private String bookLink;
     private String bookType;
     private String downloadLink;
+    private String webName;
+
+    public String getWebName() {
+        return webName;
+    }
+
+    public void setWebName(String webName) {
+        this.webName = webName;
+    }
+
+    @Override
+    public String toString() {
+        return "BookInfo{" +
+                "bookName='" + bookName + '\'' +
+                ", authorName='" + authorName + '\'' +
+                ", webType='" + webType + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", wordsNum='" + wordsNum + '\'' +
+                ", recommend='" + recommend + '\'' +
+                ", vipClick='" + vipClick + '\'' +
+                ", score='" + score + '\'' +
+                ", scoreNum='" + scoreNum + '\'' +
+                ", lastChapter='" + lastChapter + '\'' +
+                ", bookLink='" + bookLink + '\'' +
+                ", bookType='" + bookType + '\'' +
+                ", downloadLink='" + downloadLink + '\'' +
+                ", webName='" + webName + '\'' +
+                '}';
+    }
 
     public String getBookName() {
         return bookName;
@@ -127,25 +156,6 @@ public class BookInfo implements Parcelable{
     }
 
     @Override
-    public String toString() {
-        return "BookInfo{" +
-                "bookName='" + bookName + '\'' +
-                ", authorName='" + authorName + '\'' +
-                ", webType='" + webType + '\'' +
-                ", lastUpdate='" + lastUpdate + '\'' +
-                ", wordsNum='" + wordsNum + '\'' +
-                ", recommend='" + recommend + '\'' +
-                ", vipClick='" + vipClick + '\'' +
-                ", score='" + score + '\'' +
-                ", scoreNum='" + scoreNum + '\'' +
-                ", lastChapter='" + lastChapter + '\'' +
-                ", bookLink='" + bookLink + '\'' +
-                ", bookType='" + bookType + '\'' +
-                ", downloadLink='" + downloadLink + '\'' +
-                '}';
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -165,6 +175,7 @@ public class BookInfo implements Parcelable{
         dest.writeString(this.bookLink);
         dest.writeString(this.bookType);
         dest.writeString(this.downloadLink);
+        dest.writeString(this.webName);
     }
 
     public static final Creator<BookInfo> CREATOR = new Creator<BookInfo>() {
@@ -184,6 +195,7 @@ public class BookInfo implements Parcelable{
             bookInfo.setBookLink(in.readString());
             bookInfo.setBookType(in.readString());
             bookInfo.setDownloadLink(in.readString());
+            bookInfo.setWebName(in.readString());
             return bookInfo;
         }
 

@@ -1,5 +1,6 @@
 package com.lin.read.bookmark;
 
+import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
 
 import java.io.Serializable;
@@ -11,33 +12,43 @@ import java.io.Serializable;
 public class BookMarkBean implements Serializable {
     private int page;
     private int index;
-    private String webType;
-    private String bookName;
-    private String authorName;
-    private String bookLink;
+    private BookInfo bookInfo;
+    private long lastReadTime;
+    private String lastReadChapter;
 
-    public String getBookLink() {
-        return bookLink;
+    @Override
+    public String toString() {
+        return "BookMarkBean{" +
+                "page=" + page +
+                ", index=" + index +
+                ", bookInfo=" + bookInfo +
+                ", lastReadTime=" + lastReadTime +
+                ", lastReadChapter='" + lastReadChapter + '\'' +
+                '}';
     }
 
-    public void setBookLink(String bookLink) {
-        this.bookLink = bookLink;
+    public String getLastReadChapter() {
+        return lastReadChapter;
     }
 
-    public String getBookName() {
-        return bookName;
+    public void setLastReadChapter(String lastReadChapter) {
+        this.lastReadChapter = lastReadChapter;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public BookInfo getBookInfo() {
+        return bookInfo;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public void setBookInfo(BookInfo bookInfo) {
+        this.bookInfo = bookInfo;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public long getLastReadTime() {
+        return lastReadTime;
+    }
+
+    public void setLastReadTime(long lastReadTime) {
+        this.lastReadTime = lastReadTime;
     }
 
     public int getPage() {
@@ -56,18 +67,12 @@ public class BookMarkBean implements Serializable {
         this.index = index;
     }
 
-    public String getWebType() {
-        return webType;
-    }
-
-    public void setWebType(String webType) {
-        this.webType = webType;
-    }
-
     public String getKey() {
-        if (StringUtils.isEmpty(bookLink) || StringUtils.isEmpty(webType) || StringUtils.isEmpty(bookName) || StringUtils.isEmpty(authorName)) {
+        if (bookInfo == null || StringUtils.isEmpty(bookInfo.getBookLink()) || StringUtils.isEmpty(bookInfo.getWebType())
+                || StringUtils.isEmpty(bookInfo.getBookName()) || StringUtils.isEmpty(bookInfo.getAuthorName())) {
             return null;
         }
-        return webType + "_" + bookName + "_" + authorName + "_" + bookLink;
+        return bookInfo.getWebType() + "_" + bookInfo.getBookName() + "_" + bookInfo.getAuthorName() + "_" + bookInfo.getBookLink();
     }
+
 }
