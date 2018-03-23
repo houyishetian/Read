@@ -20,6 +20,8 @@ import com.lin.read.utils.Constants;
 import com.lin.read.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -143,6 +145,29 @@ public class BookMarksAdapter extends BaseAdapter {
             }
             notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        if (allInfo != null) {
+            Collections.sort(allInfo, new Comparator<BookMarkBean>() {
+                @Override
+                public int compare(BookMarkBean bean0, BookMarkBean bean1) {
+                    if (bean0 == null || bean1 == null) {
+                        return 0;
+                    }
+                    long time0 = bean0.getLastReadTime();
+                    long time1 = bean1.getLastReadTime();
+                    if (time0 > time1) {
+                        return -1;
+                    } else if (time0 < time1) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+        }
+        super.notifyDataSetChanged();
     }
 
     class ViewHolder {
