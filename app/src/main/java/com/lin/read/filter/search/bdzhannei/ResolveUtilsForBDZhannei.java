@@ -167,7 +167,7 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
                 if (bookIndex != null
                         && bookIndex.getIndex() == BookIndex.AUTHOR_INDEX
                         && index == bookIndex.getNextLine()) {
-                    bookInfo.setAuthorName(current.trim());
+                    bookInfo.setAuthorName(current.trim().replaceAll("<em>","").replaceAll("</em>",""));
                     index = -1;
                     bookIndex = null;
                     continue;
