@@ -6,6 +6,7 @@ import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.filter.search.aishuwang.AiShuWangParseLinkUtils;
 import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
 
@@ -56,6 +57,10 @@ public class ResolveChapterUtils {
                 //<dd> <a style="" href="/0_743/5168336.html">第1814章 安检环节?</a></dd>
                 regex = "<dd> <a style=\"\" href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
                 break;
+            case Constants.RESOLVE_FROM_AISHU:
+                //<div class="clc"><a href="/xs/180445/20519569/">第一章 黄山真君和九洲一号群</a></div>
+                regex = "<div class=\"clc\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></div>";
+                break;
             default:
                 return null;
         }
@@ -66,8 +71,14 @@ public class ResolveChapterUtils {
 
         String current = null;
         Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
+        //for BiXia start
         boolean isFirstDtAlreadyFind = false;
         boolean isSecondDtAlreadyFind = false;
+        //for BiXia end
+
+        //for Ai Shu Wang start
+        boolean isResolveAiShuStart=false;
+        //for Ai Shu Wang end
         while ((current = reader.readLine()) != null) {
             if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
                 List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
@@ -84,6 +95,32 @@ public class ResolveChapterUtils {
                         }
                     }
                     break;
+                }
+            } else if (Constants.RESOLVE_FROM_AISHU.equals(bookInfo.getWebType())) {
+                if(isResolveAiShuStart){
+                    if (current.trim().equals("<div class=\"clear\"></div>")) {
+                        isResolveAiShuStart = false;
+                        break;
+                    }
+                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
+                    if (currentResult != null && currentResult.size() > 0) {
+                        for (List<String> item : currentResult) {
+                            if (item != null && item.size() == allGroups.size()) {
+                                BookChapterInfo bookChapterInfo = new BookChapterInfo();
+                                bookChapterInfo.setWebType(bookInfo.getWebType());
+                                bookChapterInfo.setChapterLink(AiShuWangParseLinkUtils.parseLink(item.get(0)));
+                                String oriChapterName = item.get(1);
+                                bookChapterInfo.setChapterNameOri(oriChapterName);
+                                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                                result.add(bookChapterInfo);
+                            }
+                        }
+                        break;
+                    }
+                }else{
+                    if(current.trim().equals("<div class=\"neirong\">")){
+                        isResolveAiShuStart=true;
+                    }
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookInfo.getWebType())){
                 if (!isFirstDtAlreadyFind) {
@@ -211,6 +248,12 @@ public class ResolveChapterUtils {
                 }
                 if (isStart) {
                     resultContent += current;
+                }
+            } else if(Constants.RESOLVE_FROM_AISHU.equals(bookChapterInfo.getWebType())){
+                if(current.trim().startsWith("<div id=\"chapter_content\">")){
+                    resultContent = current.trim().replace("<div id=\"chapter_content\">","")
+                            .replace("<script language=\"javascript\">setFontSize();</script>","");
+                    break;
                 }
             }else{
                 break;

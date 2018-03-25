@@ -208,6 +208,11 @@ public class SearchFragment extends Fragment {
         webTypeBean3.setTag(Constants.RESOLVE_FROM_BIXIA);
         webTypeBeenList.add(webTypeBean3);
 
+        WebTypeBean webTypeBean4=new WebTypeBean();
+        webTypeBean4.setWebName("爱书网");
+        webTypeBean4.setTag(Constants.RESOLVE_FROM_AISHU);
+        webTypeBeenList.add(webTypeBean4);
+
         return  webTypeBeenList;
     }
 }

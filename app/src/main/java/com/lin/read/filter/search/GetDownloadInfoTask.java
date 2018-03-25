@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.search.aishuwang.ResolveUtilsForAiShuWang;
 import com.lin.read.filter.search.biquge.ResolveUtilsForBiQuGe;
 import com.lin.read.filter.search.bdzhannei.ResolveUtilsForBDZhannei;
 import com.lin.read.utils.Constants;
@@ -40,6 +41,9 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
             case Constants.RESOLVE_FROM_BIXIA:
                 resolveUtilsFactory = new ResolveUtilsForBDZhannei();
                 ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
+                break;
+            case Constants.RESOLVE_FROM_AISHU:
+                resolveUtilsFactory = new ResolveUtilsForAiShuWang();
                 break;
             default:
                 resolveUtilsFactory = null;
