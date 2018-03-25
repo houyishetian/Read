@@ -44,6 +44,7 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
         isHold = true;
         final ScanTypeInfo typeInfo = data.get(position);
         holder.text.setText(typeInfo.getText());
+        holder.text.setTag(position);
         holder.checkBox.setChecked(typeInfo.isChecked());
         isHold = false;
     }
@@ -76,10 +77,11 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int position = (int) text.getTag();
                     if (!isHold) {
                         if(isChecked){
-                            if(onRankTypeItemClickListener!=null){
-                                onRankTypeItemClickListener.onItemClick(text.getText().toString());
+                            if(onScanItemClickListener !=null){
+                                onScanItemClickListener.onItemClick(position,text.getText().toString());
                             }
                         }
                         setCheckedStatus(text.getText().toString());
@@ -150,13 +152,13 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
         return null;
     }
 
-    public interface OnRankTypeItemClickListener{
-        void onItemClick(String clickText);
+    public interface OnScanItemClickListener {
+        void onItemClick(int position,String clickText);
     }
 
-    private OnRankTypeItemClickListener onRankTypeItemClickListener;
+    private OnScanItemClickListener onScanItemClickListener;
 
-    public void setOnRankTypeItemClickListener(OnRankTypeItemClickListener onRankTypeItemClickListener) {
-        this.onRankTypeItemClickListener = onRankTypeItemClickListener;
+    public void setOnScanItemClickListener(OnScanItemClickListener onScanItemClickListener) {
+        this.onScanItemClickListener = onScanItemClickListener;
     }
 }

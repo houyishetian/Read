@@ -73,6 +73,14 @@ public class ScanFragment extends Fragment {
     private ScanTypeAdapter scanDateTypeAdapter;
     private ScanBookItemAdapter allBookAdapter;
 
+    private View layoutScanQiDian;
+    private View layoutScanZongHeng;
+    private View layoutScan17k;
+    private View[] allScanLayouts;
+    private final int LAYOUT_INDEX_QIDIAN=0;
+    private final int LAYOUT_INDEX_ZONGHENG=1;
+    private final int LAYOUT_INDEX_17K=2;
+
     private LinearLayout scanDateLinearLayout;
 
     private EditText scoreEt;
@@ -173,6 +181,11 @@ public class ScanFragment extends Fragment {
 
         emptyTv = (TextView) view.findViewById(R.id.empty_view);
 
+        layoutScan17k=view.findViewById(R.id.layout_scan_17k);
+        layoutScanZongHeng=view.findViewById(R.id.layout_scan_zongheng);
+        layoutScanQiDian=view.findViewById(R.id.layout_scan_qidian);
+        allScanLayouts=new View[]{layoutScanQiDian,layoutScanZongHeng,layoutScan17k};
+
         scoreEt = (EditText) view.findViewById(R.id.et_socre);
         scoreNumEt = (EditText) view.findViewById(R.id.et_socre_num);
         wordsNumEt = (EditText) view.findViewById(R.id.et_words_num);
@@ -265,25 +278,30 @@ public class ScanFragment extends Fragment {
         allBooksRcv.addItemDecoration(new ScanBooksItemDecoration(getActivity()));
         allBooksRcv.setAdapter(allBookAdapter);
 
-        scanWebTypeAdapter.setOnRankTypeItemClickListener(new ScanTypeAdapter.OnRankTypeItemClickListener() {
+        scanWebTypeAdapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
             @Override
-            public void onItemClick(String clickText) {
+            public void onItemClick(int position,String clickText) {
+                Log.e("Test", "current position:" + position);
                 if(!StringUtils.isEmpty(clickText)){
-                    String rankType=scanRankTypeAdapter.getCheckedText();
-                    if (QiDianConstants.WEB_QIDIAN.equals(clickText) && (rankType.equals(QiDianConstants.RANK_RECOMMEND) || rankType.equals(QiDianConstants.RANK_FINAL))) {
-                        scanDateLinearLayout.setVisibility(View.VISIBLE);
-                        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
-                        scanDateTypeAdapter.notifyDataSetChanged();
-                    }else{
-                        scanDateLinearLayout.setVisibility(View.GONE);
+                    showScanLayout(position);
+                    if (position == LAYOUT_INDEX_QIDIAN) {
+                        String rankType=scanRankTypeAdapter.getCheckedText();
+                        if (rankType.equals(QiDianConstants.RANK_RECOMMEND) || rankType.equals(QiDianConstants.RANK_FINAL)) {
+                            scanDateLinearLayout.setVisibility(View.VISIBLE);
+                            scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+                            scanDateTypeAdapter.notifyDataSetChanged();
+                        }else{
+                            scanDateLinearLayout.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
         });
 
-        scanRankTypeAdapter.setOnRankTypeItemClickListener(new ScanTypeAdapter.OnRankTypeItemClickListener() {
+        scanRankTypeAdapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
             @Override
-            public void onItemClick(String clickText) {
+            public void onItemClick(int position,String clickText) {
+                Log.e("Test", "current position:" + position);
                 if(!StringUtils.isEmpty(clickText)){
                     if (QiDianConstants.WEB_QIDIAN.equals(scanWebTypeAdapter.getCheckedText()) && (clickText.equals(QiDianConstants.RANK_RECOMMEND) || clickText.equals(QiDianConstants.RANK_FINAL))) {
                         scanDateLinearLayout.setVisibility(View.VISIBLE);
@@ -578,5 +596,18 @@ public class ScanFragment extends Fragment {
                 break;
         }
         return bookType;
+    }
+
+    private void showScanLayout(int layoutIndex) {
+        if (layoutIndex < 0 || allScanLayouts == null || layoutIndex >= allScanLayouts.length) {
+            return;
+        }
+        for (int i = 0; i < allScanLayouts.length; i++) {
+            if (i == layoutIndex) {
+                allScanLayouts[i].setVisibility(View.VISIBLE);
+            } else {
+                allScanLayouts[i].setVisibility(View.GONE);
+            }
+        }
     }
 }
