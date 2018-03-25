@@ -7,6 +7,15 @@ package com.lin.read.filter.search;
 public class WebTypeBean {
     private String webName;
     private String tag;
+    private boolean canDownload;
+
+    public boolean isCanDownload() {
+        return canDownload;
+    }
+
+    public void setCanDownload(boolean canDownload) {
+        this.canDownload = canDownload;
+    }
 
     public String getTag() {
         return tag;
@@ -29,6 +38,7 @@ public class WebTypeBean {
         return "WebTypeBean{" +
                 "webName='" + webName + '\'' +
                 ", tag='" + tag + '\'' +
+                ", canDownload=" + canDownload +
                 '}';
     }
 }

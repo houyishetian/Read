@@ -59,6 +59,11 @@ public class DialogWebTypeAdapter extends BaseAdapter {
         } else {
             holder.divider.setVisibility(View.VISIBLE);
         }
+        if(info.isCanDownload()){
+            holder.downloadText.setVisibility(View.VISIBLE);
+        }else{
+            holder.downloadText.setVisibility(View.INVISIBLE);
+        }
         holder.name.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
@@ -82,10 +87,12 @@ public class DialogWebTypeAdapter extends BaseAdapter {
 
     class ViewHolder {
         private TextView name;
+        private TextView downloadText;
         private View divider;
 
         public ViewHolder(View itemView) {
             name = (TextView) itemView.findViewById(R.id.dialog_web_name);
+            downloadText = (TextView) itemView.findViewById(R.id.dialog_download_text);
             divider = itemView.findViewById(R.id.dialog_web_divider);
         }
     }

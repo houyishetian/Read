@@ -191,26 +191,31 @@ public class SearchFragment extends Fragment {
         WebTypeBean webTypeBean0=new WebTypeBean();
         webTypeBean0.setWebName("笔趣阁");
         webTypeBean0.setTag(Constants.RESOLVE_FROM_BIQUGE);
+        webTypeBean0.setCanDownload(false);
         webTypeBeenList.add(webTypeBean0);
 
         WebTypeBean webTypeBean1=new WebTypeBean();
         webTypeBean1.setWebName("80小说");
         webTypeBean1.setTag(Constants.RESOLVE_FROM_NOVEL80);
+        webTypeBean1.setCanDownload(true);
         webTypeBeenList.add(webTypeBean1);
 
         WebTypeBean webTypeBean2=new WebTypeBean();
         webTypeBean2.setWebName("顶点");
         webTypeBean2.setTag(Constants.RESOLVE_FROM_DINGDIAN);
+        webTypeBean2.setCanDownload(false);
         webTypeBeenList.add(webTypeBean2);
 
         WebTypeBean webTypeBean3=new WebTypeBean();
         webTypeBean3.setWebName("笔下");
         webTypeBean3.setTag(Constants.RESOLVE_FROM_BIXIA);
+        webTypeBean3.setCanDownload(false);
         webTypeBeenList.add(webTypeBean3);
 
         WebTypeBean webTypeBean4=new WebTypeBean();
         webTypeBean4.setWebName("爱书网");
         webTypeBean4.setTag(Constants.RESOLVE_FROM_AISHU);
+        webTypeBean4.setCanDownload(true);
         webTypeBeenList.add(webTypeBean4);
 
         return  webTypeBeenList;
