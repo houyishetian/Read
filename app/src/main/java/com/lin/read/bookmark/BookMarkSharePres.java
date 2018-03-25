@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
+import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
 
 import java.util.ArrayList;
@@ -19,12 +20,25 @@ public class BookMarkSharePres {
     private final static String BOOK_MARK_PREFS = "BOOK_MARK_PREFS";
     private final static String BOOK_MARK_LIST = "BOOK_MARK_LIST";
 
-    public static void saveBookMark(Context context, String key, String value) {
-        if (StringUtils.isEmpty(key) || StringUtils.isEmpty(value)) {
+    public static void saveBookMark(Context context, BookMarkBean markBean) {
+        if (markBean == null) {
+            return;
+        }
+        String key = markBean.getKey();
+        if (key == null) {
+            Log.e("Test", "cannot save book mark by a \"null\" key!");
             return;
         }
         SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
+        BookMarkBean existBean = getBookMark(context, markBean.getBookInfo());
+        if (existBean != null && existBean.getIndex() == markBean.getIndex() && existBean.getPage() == markBean.getPage()) {
+            Log.e("Test", "the book mark does not update,no need to save!");
+            return;
+        }
+
         SharedPreferences.Editor editor = preferences.edit();
+        String value = new GsonBuilder().create().toJson(markBean);
+        Log.e("Test", "save book mark-->" + key + "=" + value);
         editor.putString(key, value);
 
         List<String> currentItems=getBookMarkList(context,preferences);
@@ -37,6 +51,24 @@ public class BookMarkSharePres {
             editor.putString(BOOK_MARK_LIST, valueAfterAdd);
         }
         editor.commit();
+    }
+
+    public static BookMarkBean getBookMark(Context context, BookInfo bookInfo) {
+        String key = BookMarkBean.getKeyByBookInfo(bookInfo);
+        if (key == null) {
+            Log.e("Test", "cannot get book mark by a \"null\" key!");
+            return null;
+        }
+        SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
+        String value = preferences.getString(key, null);
+        try{
+            Log.e("Test", "get book mark-->" + key + "=" + value);
+            BookMarkBean markBean=new GsonBuilder().create().fromJson(value,BookMarkBean.class);
+            return  markBean;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String getBookMark(Context context, String key) {

@@ -95,4 +95,11 @@ public class BookMarkBean implements Serializable {
         return bookInfo.getWebType() + "_" + bookInfo.getBookName() + "_" + bookInfo.getAuthorName() + "_" + bookInfo.getBookLink();
     }
 
+    public static String getKeyByBookInfo(BookInfo bookInfo){
+        if (bookInfo == null || StringUtils.isEmpty(bookInfo.getBookLink()) || StringUtils.isEmpty(bookInfo.getWebType())
+                || StringUtils.isEmpty(bookInfo.getBookName()) || StringUtils.isEmpty(bookInfo.getAuthorName())) {
+            return null;
+        }
+        return bookInfo.getWebType() + "_" + bookInfo.getBookName() + "_" + bookInfo.getAuthorName() + "_" + bookInfo.getBookLink();
+    }
 }
