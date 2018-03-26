@@ -701,6 +701,8 @@ public class ReadBookActivity extends Activity {
         DialogUtil.getInstance().hideLoadingView();
         if(result.size()>0){
             showSearchResultDialog(result);
+        }else{
+            Toast.makeText(this,"未找到相应章节，请更换关键字!",Toast.LENGTH_SHORT).show();
         }
     }
 
