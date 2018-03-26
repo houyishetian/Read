@@ -748,6 +748,7 @@ public class ReadBookActivity extends Activity {
                 displayResultInfo.clear();
                 displayResultInfo.addAll(splitSearchResult.get(page));
                 adapter.notifyDataSetChanged();
+                searchChapterLv.smoothScrollToPosition(0);
                 searchNextPage.setEnabled(true);
                 if(page==0){
                     searchPrePage.setEnabled(false);
@@ -762,6 +763,7 @@ public class ReadBookActivity extends Activity {
                 displayResultInfo.clear();
                 displayResultInfo.addAll(splitSearchResult.get(page));
                 adapter.notifyDataSetChanged();
+                searchChapterLv.smoothScrollToPosition(0);
                 searchPrePage.setEnabled(true);
                 if(page==splitSearchResult.size()-1){
                     searchNextPage.setEnabled(false);

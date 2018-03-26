@@ -30,6 +30,7 @@
             android:id="@+id/dialog_select_web_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@null"
             android:cacheColorHint="@null">
 
         </ListView>
