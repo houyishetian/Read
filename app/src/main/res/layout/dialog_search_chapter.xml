@@ -46,6 +46,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/dialog_search_chapter_pre_page"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -53,6 +54,7 @@
                 android:text="上一页" />
 
             <TextView
+                android:id="@+id/dialog_search_chapter_next_page"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

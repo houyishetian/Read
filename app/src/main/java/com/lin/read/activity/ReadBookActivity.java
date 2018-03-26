@@ -705,6 +705,9 @@ public class ReadBookActivity extends Activity {
     }
 
     private void showSearchResultDialog(List<BookChapterInfo> searchResult){
+        final List<ArrayList<BookChapterInfo>> splitSearchResult = splitList(searchResult);
+        final int KEY_TAG=R.id.dialog_search_chapter_lv;
+        final List<BookChapterInfo> displayResultInfo = new ArrayList<>();
         final Dialog searchChapterDialog = new Dialog(this, R.style.Dialog_Fullscreen);
         searchChapterDialog.show();
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -716,8 +719,19 @@ public class ReadBookActivity extends Activity {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         searchChapterDialog.setContentView(viewDialog, layoutParams);
         searchChapterDialog.setCanceledOnTouchOutside(false);
-        ListView searchChapterLv= (ListView) viewDialog.findViewById(R.id.dialog_search_chapter_lv);
-        DialogSearchChapterAdapter adapter=new DialogSearchChapterAdapter(this,searchResult);
+        final ListView searchChapterLv= (ListView) viewDialog.findViewById(R.id.dialog_search_chapter_lv);
+        final TextView searchPrePage = (TextView) viewDialog.findViewById(R.id.dialog_search_chapter_pre_page);
+        final TextView searchNextPage = (TextView) viewDialog.findViewById(R.id.dialog_search_chapter_next_page);
+        if(splitSearchResult.size()<2){
+            searchPrePage.setEnabled(false);
+            searchNextPage.setEnabled(false);
+        }else{
+            searchPrePage.setEnabled(false);
+            searchNextPage.setEnabled(true);
+        }
+        displayResultInfo.addAll(splitSearchResult.get(0));
+        searchChapterLv.setTag(KEY_TAG,0);
+        final DialogSearchChapterAdapter adapter=new DialogSearchChapterAdapter(this,displayResultInfo);
         searchChapterLv.setAdapter(adapter);
         adapter.setOnItemChapterClickListener(new DialogSearchChapterAdapter.OnItemChapterClickListener() {
             @Override
@@ -726,5 +740,58 @@ public class ReadBookActivity extends Activity {
                 searchChapterDialog.hide();
             }
         });
+        searchPrePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int page = (int) searchChapterLv.getTag(KEY_TAG) - 1;
+                searchChapterLv.setTag(KEY_TAG,page);
+                displayResultInfo.clear();
+                displayResultInfo.addAll(splitSearchResult.get(page));
+                adapter.notifyDataSetChanged();
+                searchNextPage.setEnabled(true);
+                if(page==0){
+                    searchPrePage.setEnabled(false);
+                }
+            }
+        });
+        searchNextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int page = (int) searchChapterLv.getTag(KEY_TAG) + 1;
+                searchChapterLv.setTag(KEY_TAG,page);
+                displayResultInfo.clear();
+                displayResultInfo.addAll(splitSearchResult.get(page));
+                adapter.notifyDataSetChanged();
+                searchPrePage.setEnabled(true);
+                if(page==splitSearchResult.size()-1){
+                    searchNextPage.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    private List<ArrayList<BookChapterInfo>> splitList(List<BookChapterInfo> allInfo) {
+        int eachLen = 20;
+        if (allInfo == null || allInfo.size() == 0) {
+            return null;
+        }
+        List<ArrayList<BookChapterInfo>> result = new ArrayList<>();
+        int minPage = 0;
+        int maxPage;
+        if (allInfo.size() % eachLen == 0) {
+            maxPage = allInfo.size() / eachLen;
+        } else {
+            maxPage = allInfo.size() / eachLen + 1;
+        }
+        for (int i = minPage; i < maxPage; i++) {
+            ArrayList<BookChapterInfo> subList = new ArrayList<>();
+            int maxLen = ((i + 1) * eachLen) > allInfo.size() ? allInfo.size() : ((i + 1) * eachLen);
+            for (int j = i * eachLen; j < maxLen; j++) {
+                BookChapterInfo current=allInfo.get(j);
+                subList.add(current);
+            }
+            result.add(subList);
+        }
+        return result;
     }
 }
