@@ -61,4 +61,16 @@ public class ReadInfo {
     public void setCurrentChapter(BookChapterInfo currentChapter) {
         this.currentChapter = currentChapter;
     }
+
+    @Override
+    public String toString() {
+        return "ReadInfo{" +
+                "hasPreviousPage=" + hasPreviousPage +
+                ", hasNextPage=" + hasNextPage +
+                ", hasPreviousChapter=" + hasPreviousChapter +
+                ", hasNextChapter=" + hasNextChapter +
+                ", currentPage=" + currentPage +
+                ", currentChapter=" + currentChapter +
+                '}';
+    }
 }

@@ -1,17 +1,23 @@
 package com.lin.read.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,10 +28,12 @@ import android.widget.Toast;
 import com.google.gson.GsonBuilder;
 import com.lin.read.R;
 import com.lin.read.adapter.BookChapterAdapter;
+import com.lin.read.adapter.DialogSearchChapterAdapter;
 import com.lin.read.bookmark.BookMarkBean;
 import com.lin.read.bookmark.BookMarkSharePres;
 import com.lin.read.bookmark.ReadInfo;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.BookChapterInfo;
 import com.lin.read.filter.search.GetChapterContentTask;
 import com.lin.read.filter.search.GetChapterInfoTask;
@@ -56,6 +64,11 @@ public class ReadBookActivity extends Activity {
     private TextView previousChapterTv;
     private TextView nextChapterTv;
     private TextView readProgressTv;
+
+    private View chapterSearchLayout;
+    private EditText chapterSearchEt;
+    private Button chapterSearchBtn;
+    private ImageView chapterSearchIv;
 
     private ListView chapterLv;
     private BookChapterAdapter bookChapterAdapter;
@@ -104,6 +117,11 @@ public class ReadBookActivity extends Activity {
         skipTv = (TextView) findViewById(R.id.chapter_skip);
         totalPageTv = (TextView) findViewById(R.id.chapter_total_page);
         readProgressTv = (TextView) findViewById(R.id.read_progress);
+
+        chapterSearchLayout=findViewById(R.id.chapter_search_layout);
+        chapterSearchBtn= (Button) findViewById(R.id.chapter_search_btn);
+        chapterSearchEt= (EditText) findViewById(R.id.chapter_search_et);
+        chapterSearchIv= (ImageView) findViewById(R.id.chapter_search_iv);
 
         bookChapterAdapter = new BookChapterAdapter(this, currentDisplayInfo);
         chapterLv.setAdapter(bookChapterAdapter);
@@ -168,6 +186,8 @@ public class ReadBookActivity extends Activity {
         previousChapterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
+                hideSoft();
+                hideSearchLayout();
                 if (currentReadInfo.isHasPreviousChapter()) {
                     goToPriviousChapter();
                 } else {
@@ -178,6 +198,8 @@ public class ReadBookActivity extends Activity {
         nextChapterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
+                hideSoft();
+                hideSearchLayout();
                 if (currentReadInfo.isHasNextChapter()) {
                     goToNextChapter();
                 } else {
@@ -209,6 +231,45 @@ public class ReadBookActivity extends Activity {
                 }
             }
         });
+
+        chapterSearchIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSearchLayout();
+            }
+        });
+
+        chapterSearchEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchByChapterName();
+                }
+                return false;
+            }
+        });
+
+        chapterSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchByChapterName();
+            }
+        });
+    }
+
+    private void showSearchLayout(){
+        chapterMenu.setVisibility(View.INVISIBLE);
+        chapterSearchIv.setVisibility(View.INVISIBLE);
+        chapterNameTv.setVisibility(View.INVISIBLE);
+        chapterSearchLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSearchLayout(){
+        chapterMenu.setVisibility(View.VISIBLE);
+        chapterSearchIv.setVisibility(View.VISIBLE);
+        chapterNameTv.setVisibility(View.VISIBLE);
+        chapterSearchLayout.setVisibility(View.INVISIBLE);
+        chapterSearchEt.setText("");
     }
 
     private void showMenu() {
@@ -220,13 +281,17 @@ public class ReadBookActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        hideSoft();
         if (isShowMenu) {
-            hideSoft();
             clearInput();
             hideMenu();
-        } else {
-            super.onBackPressed();
+            return;
         }
+        if (chapterSearchLayout.getVisibility() == View.VISIBLE) {
+            hideSearchLayout();
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void hideMenu() {
@@ -357,6 +422,7 @@ public class ReadBookActivity extends Activity {
                 currentDisplayInfo.addAll(splitAllInfo.get(currentReadInfo.getCurrentPage()));
                 bookChapterAdapter.notifyData(currentReadInfo.getCurrentPage(), currentReadInfo.getCurrentChapter());
                 setDisplay();
+                clearInput();
                 saveBookMark();
                 readProgressTv.setText(getProgress());
                 new Handler().post(new Runnable() {
@@ -388,8 +454,7 @@ public class ReadBookActivity extends Activity {
         if (currentReadInfo.getCurrentPage() == splitAllInfo.size() - 1) {
             currentReadInfo.setHasNextPage(false);
         }
-        skipPageEt.setText("");
-        skipPageEt.setHint((currentReadInfo.getCurrentPage() + 1) + "");
+        clearInput();
         currentDisplayInfo.clear();
         currentDisplayInfo.addAll(splitAllInfo.get(currentReadInfo.getCurrentPage()));
         bookChapterAdapter.notifyData(currentReadInfo.getCurrentPage(), currentReadInfo.getCurrentChapter());
@@ -416,8 +481,6 @@ public class ReadBookActivity extends Activity {
         }
         if (afterClick.getCurrentChapter().getPage() != afterClick.getCurrentPage()) {
             afterClick.setCurrentPage(afterClick.getCurrentChapter().getPage());
-            skipPageEt.setText("");
-            skipPageEt.setHint((afterClick.getCurrentPage() + 1) + "");
             if (afterClick.getCurrentPage() == 0) {
                 afterClick.setHasPreviousPage(false);
             } else {
@@ -445,8 +508,7 @@ public class ReadBookActivity extends Activity {
         if (currentReadInfo.getCurrentPage() == 0) {
             currentReadInfo.setHasPreviousPage(false);
         }
-        skipPageEt.setText("");
-        skipPageEt.setHint((currentReadInfo.getCurrentPage() + 1) + "");
+        clearInput();
         currentDisplayInfo.clear();
         currentDisplayInfo.addAll(splitAllInfo.get(currentReadInfo.getCurrentPage()));
         bookChapterAdapter.notifyData(currentReadInfo.getCurrentPage(), currentReadInfo.getCurrentChapter());
@@ -471,8 +533,6 @@ public class ReadBookActivity extends Activity {
             afterClick.setHasPreviousChapter(false);
         }
         if (afterClick.getCurrentChapter().getPage() != afterClick.getCurrentPage()) {
-            skipPageEt.setText("");
-            skipPageEt.setHint((afterClick.getCurrentPage() + 1) + "");
             afterClick.setCurrentPage(afterClick.getCurrentChapter().getPage());
 
             if (afterClick.getCurrentPage() == 0) {
@@ -509,8 +569,7 @@ public class ReadBookActivity extends Activity {
         }
 
         currentReadInfo.setCurrentPage(index);
-        skipPageEt.setText("");
-        skipPageEt.setHint((currentReadInfo.getCurrentPage() + 1) + "");
+        clearInput();
         currentDisplayInfo.clear();
         currentDisplayInfo.addAll(splitAllInfo.get(currentReadInfo.getCurrentPage()));
         bookChapterAdapter.notifyData(currentReadInfo.getCurrentPage(), currentReadInfo.getCurrentChapter());
@@ -518,6 +577,43 @@ public class ReadBookActivity extends Activity {
         chapterLv.smoothScrollToPosition(positon);
         setDisplay();
         return true;
+    }
+
+    private void goToChapter(BookChapterInfo skipInfo){
+        ReadInfo afterSkip = new ReadInfo();
+        if (allInfo.size() <2) {
+            afterSkip.setHasNextChapter(false);
+            afterSkip.setHasPreviousChapter(false);
+        } else {
+            if (skipInfo.getIndex() == allInfo.size() - 1) {
+                afterSkip.setHasNextChapter(false);
+            } else {
+                afterSkip.setHasNextChapter(true);
+            }
+            if (skipInfo.getIndex() == 0) {
+                afterSkip.setHasPreviousChapter(false);
+            } else {
+                afterSkip.setHasPreviousChapter(true);
+            }
+        }
+        if(splitAllInfo.size()<2){
+            afterSkip.setHasNextPage(false);
+            afterSkip.setHasPreviousChapter(false);
+        }else{
+            if(skipInfo.getPage()==splitAllInfo.size()-1){
+                afterSkip.setHasNextPage(false);
+            }else{
+                afterSkip.setHasNextPage(true);
+            }
+            if(skipInfo.getPage()==0){
+                afterSkip.setHasPreviousPage(false);
+            }else{
+                afterSkip.setHasPreviousPage(true);
+            }
+        }
+        afterSkip.setCurrentPage(skipInfo.getPage());
+        afterSkip.setCurrentChapter(skipInfo);
+        getChapterContent(afterSkip);
     }
 
     private void setDisplay() {
@@ -539,6 +635,8 @@ public class ReadBookActivity extends Activity {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(skipPageEt.getWindowToken(), 0);
+
+        inputMethodManager.hideSoftInputFromWindow(chapterSearchEt.getWindowToken(), 0);
     }
 
     private void clearInput() {
@@ -582,5 +680,51 @@ public class ReadBookActivity extends Activity {
         NumberFormat format= NumberFormat.getPercentInstance();
         format.setMinimumFractionDigits(2);
         return format.format(num);
+    }
+
+    private void searchByChapterName(){
+        DialogUtil.getInstance().showLoadingDialog(this);
+        hideSoft();
+        String chapterName = chapterSearchEt.getText().toString();
+        if (StringUtils.isEmpty(chapterName)) {
+            Toast.makeText(ReadBookActivity.this, "请输入章节名!", Toast.LENGTH_SHORT).show();
+            DialogUtil.getInstance().hideLoadingView();
+            return;
+        }
+        hideSearchLayout();
+        List<BookChapterInfo> result = new ArrayList<>();
+        for (BookChapterInfo item : allInfo) {
+            if (item.getChapterName() != null && item.getChapterName().contains(chapterName)) {
+                result.add(item);
+            }
+        }
+        DialogUtil.getInstance().hideLoadingView();
+        if(result.size()>0){
+            showSearchResultDialog(result);
+        }
+    }
+
+    private void showSearchResultDialog(List<BookChapterInfo> searchResult){
+        final Dialog searchChapterDialog = new Dialog(this, R.style.Dialog_Fullscreen);
+        searchChapterDialog.show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View viewDialog = inflater.inflate(R.layout.dialog_search_chapter, null);
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+        int height = display.getHeight();
+        //设置dialog的宽高为屏幕的宽高
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+        searchChapterDialog.setContentView(viewDialog, layoutParams);
+        searchChapterDialog.setCanceledOnTouchOutside(false);
+        ListView searchChapterLv= (ListView) viewDialog.findViewById(R.id.dialog_search_chapter_lv);
+        DialogSearchChapterAdapter adapter=new DialogSearchChapterAdapter(this,searchResult);
+        searchChapterLv.setAdapter(adapter);
+        adapter.setOnItemChapterClickListener(new DialogSearchChapterAdapter.OnItemChapterClickListener() {
+            @Override
+            public void onItemClick(BookChapterInfo info) {
+                goToChapter(info);
+                searchChapterDialog.hide();
+            }
+        });
     }
 }
