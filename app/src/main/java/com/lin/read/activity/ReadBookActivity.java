@@ -598,7 +598,7 @@ public class ReadBookActivity extends Activity {
         }
         if(splitAllInfo.size()<2){
             afterSkip.setHasNextPage(false);
-            afterSkip.setHasPreviousChapter(false);
+            afterSkip.setHasPreviousPage(false);
         }else{
             if(skipInfo.getPage()==splitAllInfo.size()-1){
                 afterSkip.setHasNextPage(false);
