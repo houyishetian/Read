@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,7 +26,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.GsonBuilder;
 import com.lin.read.R;
 import com.lin.read.adapter.BookChapterAdapter;
 import com.lin.read.adapter.DialogSearchChapterAdapter;
@@ -66,6 +66,7 @@ public class ReadBookActivity extends Activity {
     private TextView readProgressTv;
 
     private View chapterSearchLayout;
+    private View chapterContentLayout;
     private EditText chapterSearchEt;
     private Button chapterSearchBtn;
     private ImageView chapterSearchIv;
@@ -119,6 +120,7 @@ public class ReadBookActivity extends Activity {
         readProgressTv = (TextView) findViewById(R.id.read_progress);
 
         chapterSearchLayout=findViewById(R.id.chapter_search_layout);
+        chapterContentLayout=findViewById(R.id.chapter_content_layout);
         chapterSearchBtn= (Button) findViewById(R.id.chapter_search_btn);
         chapterSearchEt= (EditText) findViewById(R.id.chapter_search_et);
         chapterSearchIv= (ImageView) findViewById(R.id.chapter_search_iv);
@@ -255,21 +257,42 @@ public class ReadBookActivity extends Activity {
                 searchByChapterName();
             }
         });
+
+        chapterContentTv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSearchLayout();
+                return false;
+            }
+        });
+        readScroll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSearchLayout();
+                return false;
+            }
+        });
     }
 
     private void showSearchLayout(){
-        chapterMenu.setVisibility(View.INVISIBLE);
-        chapterSearchIv.setVisibility(View.INVISIBLE);
-        chapterNameTv.setVisibility(View.INVISIBLE);
+        Animation searchIn = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_read_search_view_in);
+        Animation chapterOut = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_read_chapter_view_out);
+        chapterSearchLayout.startAnimation(searchIn);
+        chapterContentLayout.startAnimation(chapterOut);
+        chapterContentLayout.setVisibility(View.INVISIBLE);
         chapterSearchLayout.setVisibility(View.VISIBLE);
     }
 
     private void hideSearchLayout(){
-        chapterMenu.setVisibility(View.VISIBLE);
-        chapterSearchIv.setVisibility(View.VISIBLE);
-        chapterNameTv.setVisibility(View.VISIBLE);
-        chapterSearchLayout.setVisibility(View.INVISIBLE);
-        chapterSearchEt.setText("");
+        if(chapterSearchLayout.getVisibility()==View.VISIBLE){
+            Animation searchOut = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_read_search_view_out);
+            Animation chapterIn = AnimationUtils.loadAnimation(ReadBookActivity.this, R.anim.set_read_chapter_view_in);
+            chapterSearchLayout.startAnimation(searchOut);
+            chapterContentLayout.startAnimation(chapterIn);
+            chapterContentLayout.setVisibility(View.VISIBLE);
+            chapterSearchLayout.setVisibility(View.INVISIBLE);
+            chapterSearchEt.setText("");
+        }
     }
 
     private void showMenu() {

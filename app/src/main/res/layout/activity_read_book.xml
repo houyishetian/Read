@@ -11,39 +11,54 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:minHeight="30dp"
-            android:layout_height="wrap_content">
+            android:minHeight="30dp">
 
-            <ImageView
-                android:id="@+id/chapter_menu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/chapter" />
-
-            <TextView
-                android:id="@+id/chapter_name"
+            <RelativeLayout
+                android:id="@+id/chapter_content_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
-                android:ellipsize="start"
-                android:gravity="center"
-                android:maxLines="2"
-                android:layout_centerVertical="true"
-                android:layout_centerInParent="true"
-                android:text=""
-                android:textSize="20sp" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/chapter_menu"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/chapter" />
+
+                <TextView
+                    android:id="@+id/chapter_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
+                    android:ellipsize="start"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/chapter_search_iv"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/search" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/chapter_search_layout"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -55,18 +70,18 @@
                 <EditText
                     android:id="@+id/chapter_search_et"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
                     android:background="@drawable/shape_scan_type_item_unselected"
-                    android:maxLines="1"
-                    android:singleLine="true"
+                    android:hint="输入章节名"
                     android:imeOptions="actionSearch"
                     android:maxLength="15"
-                    android:hint="输入章节名"
-                    android:textColor="@android:color/black"
+                    android:maxLines="1"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
                 <Button
@@ -80,31 +95,23 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/chapter_search_iv"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="5dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/search" />
-
         </RelativeLayout>
+
         <ScrollView
             android:id="@+id/read_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:scrollbarThumbVertical="@drawable/shape_scroll_view_reading_page"
-            android:layout_weight="1">
+            android:scrollbarThumbVertical="@drawable/shape_scroll_view_reading_page">
 
             <TextView
                 android:id="@+id/chapter_content"
                 android:layout_width="match_parent"
-                android:textSize="18sp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:textSize="18sp" />
         </ScrollView>
 
         <LinearLayout
