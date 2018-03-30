@@ -128,7 +128,7 @@
 
                 <TextView
                     android:id="@+id/mark_item_web_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="42dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="7dp"
@@ -138,7 +138,8 @@
                     android:paddingRight="7dp"
                     android:paddingTop="3dp"
                     android:text="--"
-                    android:visibility="gone"
+                    android:gravity="center"
+                    android:visibility="visible"
                     android:textSize="9sp" />
 
                 <TextView
