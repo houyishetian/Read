@@ -45,6 +45,24 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         holder.vipClick.setText(bookInfo.getVipClick()+"万点击");
         holder.score.setText(bookInfo.getScore());
         holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
+        holder.layouView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onBookItemClickListener!=null){
+                    onBookItemClickListener.onBookItemClick(bookInfo);
+                }
+            }
+        });
+    }
+
+    public interface OnBookItemClickListener{
+        void onBookItemClick(BookInfo bookInfo);
+    }
+
+    private OnBookItemClickListener onBookItemClickListener;
+
+    public void setOnBookItemClickListener(OnBookItemClickListener onBookItemClickListener) {
+        this.onBookItemClickListener = onBookItemClickListener;
     }
 
     @Override
@@ -63,8 +81,10 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         private TextView vipClick;
         private TextView score;
         private TextView scoreNum;
+        private View layouView;
         public ViewHolder(View itemView) {
             super(itemView);
+            layouView=itemView;
             bookName= (TextView) itemView.findViewById(R.id.book_item_bookname);
             authorName= (TextView) itemView.findViewById(R.id.book_item_authorname);
             webType= (TextView) itemView.findViewById(R.id.book_item_web);
@@ -74,6 +94,10 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
             vipClick= (TextView) itemView.findViewById(R.id.book_item_vipclick);
             score= (TextView) itemView.findViewById(R.id.book_item_score);
             scoreNum= (TextView) itemView.findViewById(R.id.book_item_scorenum);
+        }
+
+        public View getLayouView(){
+            return layouView;
         }
     }
 }

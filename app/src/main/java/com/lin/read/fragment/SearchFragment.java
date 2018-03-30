@@ -45,6 +45,7 @@ public class SearchFragment extends Fragment {
     private final int INDEX_NOVEL_80 = 1;
     private final int INDEX_DING_DIAN = 2;
     private final int INDEX_BIXIA = 3;
+    private final int INDEX_AISHUWANG = 4;
 
     private final int INDEX_DEFAULT = 2;
 
@@ -58,6 +59,8 @@ public class SearchFragment extends Fragment {
     private TextView emptyTv;
 
     private List<WebTypeBean> webTypeList;
+
+    private boolean isFromScanFragment=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = (View)inflater.inflate(R.layout.fragment_search, null);
@@ -219,5 +222,23 @@ public class SearchFragment extends Fragment {
         webTypeBeenList.add(webTypeBean4);
 
         return  webTypeBeenList;
+    }
+
+    public void setSearchType(BookInfo bookInfo){
+        currentSelectWeb = webTypeList.get(INDEX_DING_DIAN);
+        selectTypeTv.setText(currentSelectWeb.getWebName());
+        bookNameEt.setText(bookInfo.getBookName());
+        isFromScanFragment = true;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            if(isFromScanFragment){
+                searchBt.performClick();
+                isFromScanFragment=false;
+            }
+        }
     }
 }

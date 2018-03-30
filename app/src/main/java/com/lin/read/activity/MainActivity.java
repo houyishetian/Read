@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.lin.read.R;
+import com.lin.read.filter.BookInfo;
 import com.lin.read.fragment.BookMarksFragment;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.fragment.SearchFragment;
@@ -101,6 +102,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 allFunctionViews.get(i).setBackgroundResource(R.color.main_unselected);
             }
         }
+    }
+
+    public void clickScanBookItem(BookInfo bookInfo){
+        searchFragment.setSearchType(bookInfo);
+        searchView.performClick();
     }
 
     private long lastClick = 0L;
