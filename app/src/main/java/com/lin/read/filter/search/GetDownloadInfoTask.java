@@ -62,12 +62,7 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         if (resolveUtilsFactory != null) {
             try {
-                String[] addParams = new String[params.length + 1];
-                for (int i = 0; i < params.length; i++) {
-                    addParams[i] = params[i];
-                }
-                addParams[params.length] = webName;
-                List<BookInfo> resultData = resolveUtilsFactory.getBooksByBookname(addParams);
+                List<BookInfo> resultData = resolveUtilsFactory.getBooksByBookname(params);
                 result(true, resultData);
             } catch (IOException e) {
                 e.printStackTrace();

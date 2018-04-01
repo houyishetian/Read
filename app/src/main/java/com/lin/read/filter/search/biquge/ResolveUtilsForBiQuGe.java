@@ -29,7 +29,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
             return null;
         }
         String bookName = params[0];
-        String webName = "笔趣阁";
+        String webName = params[2];;
         if (StringUtils.isEmpty(bookName)) {
             return null;
         }

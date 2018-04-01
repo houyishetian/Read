@@ -186,7 +186,7 @@ public class SearchFragment extends Fragment {
                 DialogUtil.getInstance().hideLoadingView();
             }
         });
-        task.execute(new String[]{bookName,"0"});
+        task.execute(new String[]{bookName,"0",currentSelectWeb.getWebName()});
     }
 
     private List<WebTypeBean> getAllWebTypes(){

@@ -31,7 +31,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
             return null;
         }
         String bookName = params[0];
-        String webName = params[1];
+        String webName = params[2];
         if (StringUtils.isEmpty(bookName)) {
             return null;
         }
