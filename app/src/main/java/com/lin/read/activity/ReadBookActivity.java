@@ -272,6 +272,15 @@ public class ReadBookActivity extends Activity {
                 return false;
             }
         });
+        skipPageEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    skipTv.performClick();
+                }
+                return false;
+            }
+        });
     }
 
     private void showSearchLayout(){

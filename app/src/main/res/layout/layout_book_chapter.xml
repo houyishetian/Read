@@ -85,6 +85,7 @@
                         android:maxLines="1"
                         android:inputType="number"
                         android:maxLength="2"
+                        android:imeOptions="actionDone"
                         android:layout_weight="1"/>
 
                     <TextView
