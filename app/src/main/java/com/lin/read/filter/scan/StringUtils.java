@@ -150,7 +150,6 @@ public class StringUtils {
 		}
 		InputStream input=conn.getInputStream();
 		String unicodeType="UTF-8";
-		Log.e("Test","unicodeType:"+unicodeType);
 		BufferedReader reader=new BufferedReader(new InputStreamReader(
 				input, unicodeType));
 		String current=null;

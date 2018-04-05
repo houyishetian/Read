@@ -43,7 +43,6 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         }
         BufferedReader reader = null;
         String unicodeType=StringUtils.getCharSet(conn);
-        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
         String current = null;
@@ -122,7 +121,6 @@ public class ResolveUtilsForBDZhannei extends ResolveUtilsFactory {
         List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
         String unicodeType=StringUtils.getCharSet(conn);
-        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
 

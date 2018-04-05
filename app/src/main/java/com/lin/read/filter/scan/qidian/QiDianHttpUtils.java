@@ -68,7 +68,6 @@ public class QiDianHttpUtils {
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
 		}else{
 			String unicodeType="UTF-8";
-			Log.e("Test","unicodeType:"+unicodeType);
 			reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream(), unicodeType));
 			String current = null;
@@ -112,7 +111,6 @@ public class QiDianHttpUtils {
 		}else {
 			try {
 				String unicodeType=StringUtils.getCharSet(conn);
-				Log.e("Test","unicodeType:"+unicodeType);
 				reader = new BufferedReader(new InputStreamReader(
 						conn.getInputStream(), unicodeType));
 				String current = null;
@@ -238,7 +236,6 @@ public class QiDianHttpUtils {
 		}
 		BufferedReader reader = null;
 		String unicodeType="UTF-8";
-		Log.e("Test","unicodeType:"+unicodeType);
 		reader = new BufferedReader(new InputStreamReader(
 				conn.getInputStream(), unicodeType));
 		String current = null;
@@ -262,10 +259,10 @@ public class QiDianHttpUtils {
 				e.printStackTrace();
 			}
 		}
-		if (StringUtils.isWordsNumVipClickRecommendFit(searchInfo, bookInfo)) {
-			Log.e("Test","书籍符合条件："+ bookInfo.toString());
-			return bookInfo;
-		}
-		return null;
+//		if (StringUtils.isWordsNumVipClickRecommendFit(searchInfo, bookInfo)) {
+//			Log.e("Test","书籍符合条件："+ bookInfo.toString());
+//			return bookInfo;
+//		}
+		return bookInfo;
 	}
 }

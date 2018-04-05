@@ -53,7 +53,6 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
         List<BookInfo> result = new ArrayList<BookInfo>();
         BufferedReader reader = null;
         String unicodeType=StringUtils.getCharSet(conn);
-        Log.e("Test","unicodeType:"+unicodeType);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
 

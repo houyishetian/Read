@@ -39,7 +39,6 @@ public class ResolveChapterUtils {
         String regex = null;
         List<Integer> allGroups = Arrays.asList(new Integer[]{1, 2});
         String uniCodeType=StringUtils.getCharSet(conn);
-        Log.e("Test","unicodeType:"+uniCodeType);
         switch (bookInfo.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
                 //<li><a rel="nofollow" href="http://www.qiushu.cc/t/67053/17977700.html">第1章 脱去球衣，换上西服</a></li>
@@ -191,8 +190,6 @@ public class ResolveChapterUtils {
         }
 
         String uniCodeType = StringUtils.getCharSet(conn);
-        Log.e("Test", "uniCodeType:" + uniCodeType);
-        List<BookChapterInfo> result = new ArrayList<BookChapterInfo>();
         BufferedReader reader = null;
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), uniCodeType));
