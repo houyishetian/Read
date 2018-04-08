@@ -221,6 +221,12 @@ public class SearchFragment extends Fragment {
         webTypeBean4.setCanDownload(true);
         webTypeBeenList.add(webTypeBean4);
 
+        WebTypeBean webTypeBean5=new WebTypeBean();
+        webTypeBean5.setWebName("请看");
+        webTypeBean5.setTag(Constants.RESOLVE_FROM_QINGKAN);
+        webTypeBean5.setCanDownload(true);
+        webTypeBeenList.add(webTypeBean5);
+
         return  webTypeBeenList;
     }
 

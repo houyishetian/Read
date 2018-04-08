@@ -60,6 +60,10 @@ public class ResolveChapterUtils {
                 //<div class="clc"><a href="/xs/180445/20519569/">第一章 黄山真君和九洲一号群</a></div>
                 regex = "<div class=\"clc\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></div>";
                 break;
+            case Constants.RESOLVE_FROM_QINGKAN:
+                //<li><a href="https://www.qingkan9.com/book/daojun_7399/34175873.html">第一章 没白来</a></li>
+                regex="li><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>";
+                break;
             default:
                 return null;
         }
@@ -250,6 +254,12 @@ public class ResolveChapterUtils {
                 if(current.trim().startsWith("<div id=\"chapter_content\">")){
                     resultContent = current.trim().replace("<div id=\"chapter_content\">","")
                             .replace("<script language=\"javascript\">setFontSize();</script>","");
+                    break;
+                }
+            }else if(Constants.RESOLVE_FROM_QINGKAN.equals(bookChapterInfo.getWebType())){
+                //<div id="content"><div id="txtright"><script src="https://www.qingkan9.com/file/script/9.js"></script></div><!--go-->
+                if(current.trim().startsWith("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->")){
+                    resultContent = current.trim().replace("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->","");
                     break;
                 }
             }else{
