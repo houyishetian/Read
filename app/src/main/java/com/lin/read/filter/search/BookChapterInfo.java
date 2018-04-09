@@ -15,6 +15,24 @@ public class BookChapterInfo implements Serializable {
     private boolean isCurrentReading=false;
     private int page=-1;
     private int index=-1;
+    private boolean isComplete = true;
+    private String nextLink;
+
+    public String getNextLink() {
+        return nextLink;
+    }
+
+    public void setNextLink(String nextLink) {
+        this.nextLink = nextLink;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(boolean complete) {
+        isComplete = complete;
+    }
 
     public String getChapterNameOri() {
         return chapterNameOri;
@@ -76,10 +94,14 @@ public class BookChapterInfo implements Serializable {
     public String toString() {
         return "BookChapterInfo{" +
                 "chapterName='" + chapterName + '\'' +
+                ", chapterNameOri='" + chapterNameOri + '\'' +
                 ", chapterLink='" + chapterLink + '\'' +
                 ", webType='" + webType + '\'' +
+                ", isCurrentReading=" + isCurrentReading +
                 ", page=" + page +
                 ", index=" + index +
+                ", isComplete=" + isComplete +
+                ", nextLink='" + nextLink + '\'' +
                 '}';
     }
 }

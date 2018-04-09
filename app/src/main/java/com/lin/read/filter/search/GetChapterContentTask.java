@@ -2,12 +2,11 @@ package com.lin.read.filter.search;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.scan.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lisonglin on 2018/3/17.
@@ -35,6 +34,15 @@ public class GetChapterContentTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         try {
             String content = ResolveChapterUtils.getChapterContent(bookChapterInfo);
+            while (!bookChapterInfo.isComplete()) {
+                Log.e("Test","未读完，继续读!");
+                String temp = ResolveChapterUtils.getChapterContent(bookChapterInfo);
+                if (StringUtils.isEmpty(temp)) {
+                    break;
+                } else {
+                    content = content + temp;
+                }
+            }
             result(true, bookChapterInfo.getChapterName(), content);
         } catch (IOException e) {
             e.printStackTrace();

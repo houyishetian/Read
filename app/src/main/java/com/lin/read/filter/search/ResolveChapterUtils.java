@@ -184,7 +184,12 @@ public class ResolveChapterUtils {
         if (bookChapterInfo == null) {
             return null;
         }
-        String url = bookChapterInfo.getChapterLink();
+        String url;
+        if (bookChapterInfo.isComplete()) {
+            url = bookChapterInfo.getChapterLink();
+        } else {
+            url = bookChapterInfo.getNextLink();
+        }
         if (StringUtils.isEmpty(url)) {
             return null;
         }
@@ -204,6 +209,9 @@ public class ResolveChapterUtils {
         String resultContent="";
 
         boolean isStart=false;
+
+        //
+        String nextLink = null;
 
         while ((current = reader.readLine()) != null) {
             if(Constants.RESOLVE_FROM_BIQUGE.equals(bookChapterInfo.getWebType())){
@@ -258,9 +266,25 @@ public class ResolveChapterUtils {
                 }
             }else if(Constants.RESOLVE_FROM_QINGKAN.equals(bookChapterInfo.getWebType())){
                 //<div id="content"><div id="txtright"><script src="https://www.qingkan9.com/file/script/9.js"></script></div><!--go-->
-                if(current.trim().startsWith("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->")){
+                if(!isStart && current.trim().startsWith("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->")){
                     resultContent = current.trim().replace("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->","");
-                    break;
+                    continue;
+                }
+                //<a class="current"><b>1</b></a>
+                String currentFlagRegex = "<a class=\"current\"><b>\\d+</b></a>";
+                if (!isStart && current.trim().matches(currentFlagRegex)) {
+                    isStart = true;
+                    continue;
+                }
+                if(isStart){
+                    //<a href="https://www.qingkan9.com/book/daojun_7399/34175995_1.html">1</a>
+                    String pageRegex = "<a href=\"([^\n]{1,})\">(\\d){1,}</a>";;
+                    List<Integer> pageGroups = Arrays.asList(1,2);
+                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), pageRegex, pageGroups);
+                    if (currentResult != null && currentResult.size() >0) {
+                        nextLink = currentResult.get(0).get(0);
+                        break;
+                    }
                 }
             }else{
                 break;
@@ -272,6 +296,13 @@ public class ResolveChapterUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        if(!StringUtils.isEmpty(nextLink)){
+            bookChapterInfo.setComplete(false);
+            bookChapterInfo.setNextLink(nextLink);
+        }else{
+            bookChapterInfo.setComplete(true);
+            bookChapterInfo.setNextLink(null);
         }
         return resultContent;
     }
