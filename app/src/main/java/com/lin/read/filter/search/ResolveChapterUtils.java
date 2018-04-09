@@ -300,6 +300,9 @@ public class ResolveChapterUtils {
         if(!StringUtils.isEmpty(nextLink)){
             bookChapterInfo.setComplete(false);
             bookChapterInfo.setNextLink(nextLink);
+            if (resultContent != null && resultContent.endsWith("<br /><br />")) {
+                resultContent = resultContent.substring(0, resultContent.length() - "<br /><br />".length());
+            }
         }else{
             bookChapterInfo.setComplete(true);
             bookChapterInfo.setNextLink(null);
