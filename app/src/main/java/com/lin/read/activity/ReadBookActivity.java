@@ -189,6 +189,7 @@ public class ReadBookActivity extends Activity {
             @Override
             public void onNoDoubleClick(View v) {
                 hideSoft();
+                clearInput();
                 hideSearchLayout();
                 if (currentReadInfo.isHasPreviousChapter()) {
                     goToPriviousChapter();
@@ -201,6 +202,7 @@ public class ReadBookActivity extends Activity {
             @Override
             public void onNoDoubleClick(View v) {
                 hideSoft();
+                clearInput();
                 hideSearchLayout();
                 if (currentReadInfo.isHasNextChapter()) {
                     goToNextChapter();
@@ -261,6 +263,8 @@ public class ReadBookActivity extends Activity {
         chapterContentTv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                hideSoft();
+                clearInput();
                 hideSearchLayout();
                 return false;
             }
@@ -268,6 +272,8 @@ public class ReadBookActivity extends Activity {
         readScroll.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                hideSoft();
+                clearInput();
                 hideSearchLayout();
                 return false;
             }
@@ -320,6 +326,7 @@ public class ReadBookActivity extends Activity {
             return;
         }
         if (chapterSearchLayout.getVisibility() == View.VISIBLE) {
+            clearInput();
             hideSearchLayout();
             return;
         }
