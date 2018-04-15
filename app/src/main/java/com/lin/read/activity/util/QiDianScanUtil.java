@@ -118,9 +118,9 @@ public class QiDianScanUtil {
             public void onItemClick(int position, String clickText) {
                 Log.e("Test", "current position:" + position);
                 if (!StringUtils.isEmpty(clickText)) {
-                    if (clickText.equals(QiDianConstants.RANK_RECOMMEND) || clickText.equals(QiDianConstants.RANK_FINAL)) {
+                    if (clickText.equals(QiDianConstants.QD_RANK_RECOMMEND) || clickText.equals(QiDianConstants.QD_RANK_FINAL)) {
                         scanDateLinearLayout.setVisibility(View.VISIBLE);
-                        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+                        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.QD_DATE_WEEK);
                         scanDateTypeAdapter.notifyDataSetChanged();
                     } else {
                         scanDateLinearLayout.setVisibility(View.GONE);
@@ -195,24 +195,24 @@ public class QiDianScanUtil {
             scanDateLinearLayout.setVisibility(View.GONE);
         } else {
             scanDateLinearLayout.setVisibility(View.VISIBLE);
-            scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+            scanDateTypeAdapter.setDefaultChecked(QiDianConstants.QD_DATE_WEEK);
             scanDateTypeAdapter.notifyDataSetChanged();
         }
     }
 
     private void setAdapter(Activity activity) {
         scanRankTypeRcv.setLayoutManager(new GridLayoutManager(activity, 4));
-        scanRankTypeAdapter.setDefaultChecked(QiDianConstants.RANK_RECOMMEND);
+        scanRankTypeAdapter.setDefaultChecked(QiDianConstants.QD_RANK_RECOMMEND);
         scanRankTypeRcv.addItemDecoration(new ScanTypeItemDecoration(activity, 15));
         scanRankTypeRcv.setAdapter(scanRankTypeAdapter);
 
         scanBookTypeRcv.setLayoutManager(new GridLayoutManager(activity, 4));
-        scanBookTypeAdapter.setDefaultChecked(QiDianConstants.BOOK_XUAN_HUAN);
+        scanBookTypeAdapter.setDefaultChecked(QiDianConstants.QD_BOOK_XUAN_HUAN);
         scanBookTypeRcv.addItemDecoration(new ScanTypeItemDecoration(activity, 15));
         scanBookTypeRcv.setAdapter(scanBookTypeAdapter);
 
         scanDateTypeRcv.setLayoutManager(new GridLayoutManager(activity, 4));
-        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.DATE_WEEK);
+        scanDateTypeAdapter.setDefaultChecked(QiDianConstants.QD_DATE_WEEK);
         scanDateTypeRcv.addItemDecoration(new ScanTypeItemDecoration(activity, 15));
         scanDateTypeRcv.setAdapter(scanDateTypeAdapter);
         scanDateLinearLayout.setVisibility(View.VISIBLE);

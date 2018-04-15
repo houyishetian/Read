@@ -1,31 +1,20 @@
 package com.lin.read.fragment;
 
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,17 +24,13 @@ import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.decoration.ScanTypeItemDecoration;
-import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
-import com.lin.read.utils.NumberInputFilter;
 import com.lin.read.utils.QiDianBookComparator;
-import com.lin.read.utils.ScoreInputFilter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -170,7 +155,7 @@ public class ScanFragment extends Fragment {
                     currentWebPosition = position;
                     if (position == LAYOUT_INDEX_QIDIAN) {
                         String rankType=qiDianScanUtil.getRankType();
-                        if (rankType.equals(QiDianConstants.RANK_RECOMMEND) || rankType.equals(QiDianConstants.RANK_FINAL)) {
+                        if (rankType.equals(QiDianConstants.QD_RANK_RECOMMEND) || rankType.equals(QiDianConstants.QD_RANK_FINAL)) {
                             qiDianScanUtil.hideDateLayout(false);
                         }else{
                             qiDianScanUtil.hideDateLayout(true);
