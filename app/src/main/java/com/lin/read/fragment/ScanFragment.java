@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.lin.read.R;
 import com.lin.read.activity.util.QiDianScanUtil;
+import com.lin.read.activity.util.ZongHengScanUtil;
 import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
@@ -67,6 +68,7 @@ public class ScanFragment extends Fragment {
     private Handler handler;
 
     private QiDianScanUtil qiDianScanUtil;
+    private ZongHengScanUtil zongHengScanUtil;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +81,9 @@ public class ScanFragment extends Fragment {
         handler=new Handler();
         qiDianScanUtil=new QiDianScanUtil();
         qiDianScanUtil.initQiDianViews(this,view,handler);
+
+        zongHengScanUtil = new ZongHengScanUtil();
+        zongHengScanUtil.initQiDianViews(this,view);
 
         scanFilterTv = (TextView) view.findViewById(R.id.scan_filter);
         scanSortIv = (RelativeLayout) view.findViewById(R.id.scan_sort);
