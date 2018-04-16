@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.qidian.QiDianHttpUtils;
 import com.lin.read.utils.MessageUtils;
 
@@ -25,7 +26,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
 
     public OnGetBookInfoListener onGetBookInfoListener;
     private SearchInfo searchInfo;
-    private List<String> allBookInfo;
+    private List<Object> allBookInfo;
     private String qidianToken = null;
     private Handler handler;
 
@@ -42,7 +43,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         task.execute(searchInfo);
     }
 
-    class GetQiDianBookInfoTask extends AsyncTask<SearchInfo, Void, List<String>> {
+    class GetQiDianBookInfoTask extends AsyncTask<SearchInfo, Void, List<Object>> {
         private int page;
 
         public GetQiDianBookInfoTask(int page) {
@@ -50,7 +51,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         }
 
         @Override
-        protected List<String> doInBackground(SearchInfo... params) {
+        protected List<Object> doInBackground(SearchInfo... params) {
             MessageUtils.sendWhat(handler, MessageUtils.SCAN_START);
             try {
                 qidianToken = QiDianHttpUtils.getToken();
@@ -65,7 +66,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
             }
 
             SearchInfo searchInfo = params[0];
-            List<String> firstPageInfo = null;
+            List<Object> firstPageInfo = null;
             try {
                 firstPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo, page);
                 if (firstPageInfo != null && firstPageInfo.size() > 1) {
@@ -81,16 +82,17 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         }
 
         @Override
-        protected void onPostExecute(List<String> strings) {
+        protected void onPostExecute(List<Object> strings) {
             super.onPostExecute(strings);
             if (getCode() != CODE_SUCC) {
                 if (onGetBookInfoListener != null) {
                     onGetBookInfoListener.failed(getCode());
                 }
             } else {
-                int maxPage = Integer.parseInt(strings.get(0));
+                int maxPage = Integer.parseInt((String) strings.get(0));
                 strings.remove(0);
                 allBookInfo.addAll(strings);
+                final int maxNumFirstPage = strings.size();
                 if (maxPage > 1) {
                     scanBookInfoService = Executors.newFixedThreadPool(10);
                     final int totalTaskNum = maxPage - 1;
@@ -101,7 +103,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                             @Override
                             public void run() {
                                 try {
-                                    List<String> currentPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo, index);
+                                    List<Object> currentPageInfo = QiDianHttpUtils.getMaxPageAndBookInfoFromRankPage(searchInfo, index);
                                     synchronized (Runnable.class) {
                                         currentPageInfo.remove(0);
                                         allBookInfo.addAll(currentPageInfo);
@@ -110,7 +112,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                                         } else {
                                             Log.e("Test","全部扫描完书籍，待过滤");
                                             MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, allBookInfo.size());
-                                            scanBookInfoByCondition(allBookInfo);
+                                            scanBookInfoByCondition(allBookInfo,maxNumFirstPage);
                                         }
                                     }
                                 } catch (IOException e) {
@@ -131,15 +133,15 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                     }
                 } else {
                     MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, allBookInfo.size());
-                    scanBookInfoByCondition(allBookInfo);
+                    scanBookInfoByCondition(allBookInfo,maxNumFirstPage);
                 }
             }
         }
     }
 
 
-    private void scanBookInfoByCondition(final List<String> bookInfos) {
-        if (bookInfos == null || bookInfos.size() == 0) {
+    private void scanBookInfoByCondition(final List<Object> bookInfos,final int maxNumFirstPage) {
+        if (bookInfos == null || bookInfos.size() == 0 || maxNumFirstPage<=0) {
             setCode(CODE_OTHER_ERROR);
             if (onGetBookInfoListener != null) {
                 onGetBookInfoListener.failed(getCode());
@@ -162,12 +164,14 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         if(index>=maxSize){
                             Log.e("Test","重新扫描："+ bookInfos.get(index));
                         }
-                        BookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,bookInfos.get(index),3);
+                        BookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,((ScanBookBean)bookInfos.get(index)).getUrl(),3);
 
                         if(scoreBookInfo!=null){
-                            scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, bookInfos.get(index));
+                            scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, ((ScanBookBean)bookInfos.get(index)).getUrl());
                             synchronized (Runnable.class) {
                                 if (scoreBookInfo != null) {
+                                    ScanBookBean scanBookBean = (ScanBookBean) bookInfos.get(index);
+                                    scoreBookInfo.setPosition(scanBookBean.getPage() * maxNumFirstPage + scanBookBean.getPosition());
                                     resultBookInfo.add(scoreBookInfo);
                                     MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE, resultBookInfo.size());
                                 }
@@ -198,7 +202,7 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         e.printStackTrace();
                         if(QiDianHttpUtils.EXCEPTION_GET_CONN_ERROR.equals(e.getMessage())){
                             synchronized (Runnable.class){
-                                int count=getCount(bookInfos,bookInfos.get(index));
+                                int count=getCount(bookInfos,((ScanBookBean)bookInfos.get(index)).getUrl());
                                 Log.e("Test","扫描失败："+ bookInfos.get(index)+",已经失败"+count+"次");
                                 if(count<3){
                                     completeTask.add("1");
@@ -234,13 +238,13 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
         }
     }
 
-    public int getCount(List<String> allData,String item){
+    public int getCount(List<Object> allData,String item){
         if(allData==null||allData.size()==0||StringUtils.isEmpty(item)){
             return 0;
         }
         int count=0;
-        for(String currentItem:allData){
-            if(item.equals(currentItem)){
+        for(Object currentItem:allData){
+            if(item.equals(((ScanBookBean)currentItem).getUrl())){
                 count++;
             }
         }

@@ -22,6 +22,15 @@ public class BookInfo implements Parcelable{
     private String bookType;
     private String downloadLink;
     private String webName;
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public String getWebName() {
         return webName;
@@ -48,6 +57,7 @@ public class BookInfo implements Parcelable{
                 ", bookType='" + bookType + '\'' +
                 ", downloadLink='" + downloadLink + '\'' +
                 ", webName='" + webName + '\'' +
+                ", position=" + position +
                 '}';
     }
 
@@ -176,6 +186,7 @@ public class BookInfo implements Parcelable{
         dest.writeString(this.bookType);
         dest.writeString(this.downloadLink);
         dest.writeString(this.webName);
+        dest.writeInt(position);
     }
 
     public static final Creator<BookInfo> CREATOR = new Creator<BookInfo>() {
@@ -196,6 +207,7 @@ public class BookInfo implements Parcelable{
             bookInfo.setBookType(in.readString());
             bookInfo.setDownloadLink(in.readString());
             bookInfo.setWebName(in.readString());
+            bookInfo.setPosition(in.readInt());
             return bookInfo;
         }
 

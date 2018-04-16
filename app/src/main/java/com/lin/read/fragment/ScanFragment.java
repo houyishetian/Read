@@ -26,12 +26,13 @@ import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.MainActivity;
+import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
-import com.lin.read.utils.QiDianBookComparator;
+import com.lin.read.filter.BookComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -235,6 +236,7 @@ public class ScanFragment extends Fragment {
                     emptyTv.setVisibility(View.VISIBLE);
                     allBooksRcv.setVisibility(View.GONE);
                     if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
+                        qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
                         qiDianScanUtil.setLastClickItem(-1);
                     }
                     Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
@@ -249,11 +251,12 @@ public class ScanFragment extends Fragment {
                         scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
                         allBookData.clear();
                         allBookData.addAll(allBookDataFromScan);
-                        Collections.sort(allBookData,new QiDianBookComparator(QiDianBookComparator.SortType.DESCEND, QiDianBookComparator.BookType.SCORE));
+                        Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));
                         allBookAdapter.notifyDataSetChanged();
                         allBooksRcv.smoothScrollToPosition(0);
                         if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
-                            qiDianScanUtil.setLastClickItem(-1);
+                            qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
+                            qiDianScanUtil.setLastClickItem(BookComparatorUtil.SORT_BY_DEFAULT);
                         }
                         Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
                     }else{

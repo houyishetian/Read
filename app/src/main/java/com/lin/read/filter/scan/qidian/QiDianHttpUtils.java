@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.GsonBuilder;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.entity.ScoreJson;
@@ -50,7 +51,7 @@ public class QiDianHttpUtils {
 	 * get max page num and book info url from rank page
 	 * @return 0--max page num
 	 */
-	public static List<String> getMaxPageAndBookInfoFromRankPage(SearchInfo searchInfo,int page) throws IOException {
+	public static List<Object> getMaxPageAndBookInfoFromRankPage(SearchInfo searchInfo,int page) throws IOException {
 		if(searchInfo==null){
 			return null;
 		}
@@ -62,7 +63,7 @@ public class QiDianHttpUtils {
 		}
 		Log.e("Test","execute start:"+urlLink);
 		HttpURLConnection conn = HttpUtils.getConn(urlLink,3);
-		List<String> maxPageAndBookUrlList = new ArrayList<String>();
+		List<Object> maxPageAndBookUrlList = new ArrayList<Object>();
 		BufferedReader reader = null;
 		if(conn==null){
 			throw new IOException(EXCEPTION_GET_CONN_ERROR);
@@ -73,11 +74,17 @@ public class QiDianHttpUtils {
 			String current = null;
 			// whether already get max page
 			boolean getMaxPage = false;
+			int position=0;
 			while ((current = reader.readLine()) != null) {
 				String bookUrl = QiDianRegexUtils
 						.getBookUrlFromRankPage(current);
 				if (bookUrl != null) {
-					maxPageAndBookUrlList.add(bookUrl);
+					ScanBookBean scanBookBean=new ScanBookBean();
+					scanBookBean.setUrl(bookUrl);
+					scanBookBean.setPage(page);
+					scanBookBean.setPosition(position);
+					position++;
+					maxPageAndBookUrlList.add(scanBookBean);
 				} else {
 					if (!getMaxPage) {
 						String maxPage = QiDianRegexUtils

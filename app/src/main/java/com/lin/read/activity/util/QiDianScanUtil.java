@@ -26,6 +26,7 @@ import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanTypeItemDecoration;
+import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -34,7 +35,7 @@ import com.lin.read.fragment.ScanFragment;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.utils.NumberInputFilter;
-import com.lin.read.utils.QiDianBookComparator;
+import com.lin.read.filter.BookComparator;
 import com.lin.read.utils.ScoreInputFilter;
 
 import java.util.ArrayList;
@@ -77,19 +78,9 @@ public class QiDianScanUtil {
     private Activity activity;
     private ScanFragment scanFragment;
 
-    private final int SORT_BY_SCORE = 0;
-    private final int SORT_BY_SCORE_NUM = 1;
-    private final int SORT_BY_WORDS = 2;
-    private final int SORT_BY_RECOMMEND = 3;
-    private final int SORT_BY_VIP_CLICK = 4;
-
-    private final int SORT_ASCEND = 1;
-    private final int SORT_DESCEND = 2;
-
-    private int lastClickItem = -1;
-    private int lastSortType = -1;
-
     private ArrayList<BookInfo> allBookData;
+
+    private BookComparatorUtil bookComparatorUtil;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
         activity = scanFragment.getActivity();
@@ -320,7 +311,7 @@ public class QiDianScanUtil {
     }
 
     public void setLastClickItem(int lastClickItem) {
-        this.lastClickItem = lastClickItem;
+        bookComparatorUtil.setLastClickItem(lastClickItem);
     }
 
     private Dialog sortDialog;
@@ -337,17 +328,20 @@ public class QiDianScanUtil {
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         sortDialog.setContentView(viewDialog, layoutParams);
 
+        View sortByDefault = viewDialog.findViewById(R.id.qidian_sort_by_default);
         View sortByScore = viewDialog.findViewById(R.id.qidian_sort_by_score);
         View sortByScoreNum = viewDialog.findViewById(R.id.qidian_sort_by_scorenum);
         View sortByWordsNum = viewDialog.findViewById(R.id.qidian_sort_by_wordsnum);
         View sortByRecommend = viewDialog.findViewById(R.id.qidian_sort_by_recommend);
         View sortByVipClick = viewDialog.findViewById(R.id.qidian_sort_by_vipclick);
-        sortByScore.setTag(SORT_BY_SCORE);
-        sortByScoreNum.setTag(SORT_BY_SCORE_NUM);
-        sortByWordsNum.setTag(SORT_BY_WORDS);
-        sortByRecommend.setTag(SORT_BY_RECOMMEND);
-        sortByVipClick.setTag(SORT_BY_VIP_CLICK);
+        sortByDefault.setTag(BookComparatorUtil.SORT_BY_DEFAULT);
+        sortByScore.setTag(BookComparatorUtil.SORT_BY_SCORE);
+        sortByScoreNum.setTag(BookComparatorUtil.SORT_BY_SCORE_NUM);
+        sortByWordsNum.setTag(BookComparatorUtil.SORT_BY_WORDS);
+        sortByRecommend.setTag(BookComparatorUtil.SORT_BY_RECOMMEND);
+        sortByVipClick.setTag(BookComparatorUtil.SORT_BY_VIP_CLICK);
         sortByScore.setOnClickListener(new SortDialogItemsClickListener());
+        sortByDefault.setOnClickListener(new SortDialogItemsClickListener());
         sortByScoreNum.setOnClickListener(new SortDialogItemsClickListener());
         sortByWordsNum.setOnClickListener(new SortDialogItemsClickListener());
         sortByRecommend.setOnClickListener(new SortDialogItemsClickListener());
@@ -361,9 +355,9 @@ public class QiDianScanUtil {
             if (o != null) {
                 try {
                     int currentItem = (int) o;
-                    QiDianBookComparator.SortType sortType = getSortType(currentItem);
-                    QiDianBookComparator.BookType bookType = getSortBookType(currentItem);
-                    Collections.sort(allBookData, new QiDianBookComparator(sortType, bookType));
+                    BookComparator.SortType sortType = bookComparatorUtil.getSortType(currentItem);
+                    BookComparator.BookType bookType = bookComparatorUtil.getSortBookType(currentItem);
+                    Collections.sort(allBookData, new BookComparator(sortType, bookType));
 
                     scanFragment.refreshBookData();
                     hideSortDialog();
@@ -380,45 +374,7 @@ public class QiDianScanUtil {
         }
     }
 
-    private QiDianBookComparator.SortType getSortType(int currentClickItem) {
-        if (lastClickItem == currentClickItem) {
-            if (lastSortType == SORT_ASCEND) {
-                lastSortType = SORT_DESCEND;
-            } else {
-                lastSortType = SORT_ASCEND;
-            }
-        } else {
-            lastSortType = SORT_DESCEND;
-        }
-        lastClickItem = currentClickItem;
-        QiDianBookComparator.SortType sortType;
-        if (lastSortType == SORT_DESCEND) {
-            sortType = QiDianBookComparator.SortType.DESCEND;
-        } else {
-            sortType = QiDianBookComparator.SortType.ASCEND;
-        }
-        return sortType;
-    }
-
-    private QiDianBookComparator.BookType getSortBookType(int currentClickItem) {
-        QiDianBookComparator.BookType bookType = null;
-        switch (currentClickItem) {
-            case SORT_BY_SCORE:
-                bookType = QiDianBookComparator.BookType.SCORE;
-                break;
-            case SORT_BY_SCORE_NUM:
-                bookType = QiDianBookComparator.BookType.SCORE_NUM;
-                break;
-            case SORT_BY_WORDS:
-                bookType = QiDianBookComparator.BookType.WORDS_NUM;
-                break;
-            case SORT_BY_RECOMMEND:
-                bookType = QiDianBookComparator.BookType.RECOMMEND;
-                break;
-            case SORT_BY_VIP_CLICK:
-                bookType = QiDianBookComparator.BookType.VIP_CLICK;
-                break;
-        }
-        return bookType;
+    public void setBookComparatorUtil(BookComparatorUtil bookComparatorUtil) {
+        this.bookComparatorUtil = bookComparatorUtil;
     }
 }

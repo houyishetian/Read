@@ -1,4 +1,4 @@
-package com.lin.read.utils;
+package com.lin.read.filter;
 
 import com.lin.read.filter.BookInfo;
 
@@ -10,20 +10,20 @@ import java.util.List;
  * Created by lisonglin on 2017/10/19.
  */
 
-public class QiDianBookComparator implements Comparator<BookInfo> {
+public class BookComparator implements Comparator<BookInfo> {
 
     public enum SortType {
         ASCEND, DESCEND
     }
 
     public enum BookType {
-        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIP_CLICK
+        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIP_CLICK, POSTION
     }
 
     private SortType sortType;
     private BookType bookType;
 
-    public QiDianBookComparator(SortType sortType, BookType bookType) {
+    public BookComparator(SortType sortType, BookType bookType) {
         this.sortType = sortType;
         this.bookType = bookType;
     }
@@ -65,6 +65,8 @@ public class QiDianBookComparator implements Comparator<BookInfo> {
         float num0=0;
         float num1=0;
         switch (bookType) {
+            case POSTION:
+                return bookInfo0.getPosition() - bookInfo1.getPosition();
             case SCORE:
                 try {
                     num0 = Float.parseFloat(bookInfo0.getScore());
@@ -124,6 +126,7 @@ public class QiDianBookComparator implements Comparator<BookInfo> {
             return null;
         }
         List<BookType> result = new ArrayList<>();
+        result.add(BookType.POSTION);
         result.add(BookType.SCORE);
         result.add(BookType.SCORE_NUM);
         result.add(BookType.WORDS_NUM);
