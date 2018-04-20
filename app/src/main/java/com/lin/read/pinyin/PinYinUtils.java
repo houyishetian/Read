@@ -55,9 +55,9 @@ public class PinYinUtils {
                 throw new Exception(ERROR_PARSE_FAILED);
             }
         } else {
+            result.add(String.valueOf(nameChar));
             Log.e("Test", nameChar + " not a chinest");
         }
-        result.add(String.valueOf(nameChar));
         return result;
     }
 

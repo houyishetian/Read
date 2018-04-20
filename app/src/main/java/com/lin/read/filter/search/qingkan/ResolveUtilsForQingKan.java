@@ -8,8 +8,7 @@ import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
-import com.lin.read.filter.search.bdzhannei.BookIndex;
-import com.lin.read.utils.ChapterHandleUtils;
+import com.lin.read.pinyin.PinYinUtils;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.DateUtils;
 
@@ -49,7 +48,13 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
             return null;
         }
         String url = null;
-        url = "https://www.qingkan9.com/novel.php?action=search&searchtype=novelname&searchkey=%B5%C0%BE%FD&input=" + bookName;
+        try {
+            String searchKey = PinYinUtils.getAllPinYin(bookName).get(0);
+            url = "https://www.qingkan9.com/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input=";
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
         Log.e("Test", "search url:" + url);
         return resolveSearchResultFromBDZhanNei(url, Constants.RESOLVE_FROM_QINGKAN, webName);
     }
