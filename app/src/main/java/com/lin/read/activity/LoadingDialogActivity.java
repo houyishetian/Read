@@ -92,7 +92,8 @@ public class LoadingDialogActivity extends Activity {
 
     private void scanBook(){
         SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
-        new ReadGetQiDianBookInfoFactory().getBookInfo(handler,searchInfo, new ReadGetBookInfoFactory.OnGetBookInfoListener() {
+
+        ReadGetBookInfoFactory.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo, new ReadGetBookInfoFactory.OnGetBookInfoListener() {
             @Override
             public void succ(Object allBookInfo) {
                 if(allBookInfo!=null){

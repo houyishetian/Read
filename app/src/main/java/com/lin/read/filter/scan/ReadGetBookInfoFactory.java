@@ -2,6 +2,8 @@ package com.lin.read.filter.scan;
 
 import android.os.Handler;
 
+import com.lin.read.utils.Constants;
+
 /**
  * Created by lisonglin on 2017/10/15.
  */
@@ -17,12 +19,23 @@ public abstract class ReadGetBookInfoFactory {
 
 
     private int code;
-    public ReadGetBookInfoFactory(String type){
+    protected ReadGetBookInfoFactory(){
 
     }
 
-    public ReadGetBookInfoFactory(){
-
+    public static ReadGetBookInfoFactory getInstance(String type){
+        if(StringUtils.isEmpty(type)){
+            return null;
+        }
+        switch (type) {
+            case Constants.WEB_QIDIAN:
+                return new ReadGetQiDianBookInfoFactory();
+            case Constants.WEB_ZONGHENG:
+                return new ReadZongHengBookInfoFactory();
+            case Constants.WEB_17K:
+            default:
+                return null;
+        }
     }
 
     public int getCode() {

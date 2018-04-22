@@ -153,6 +153,27 @@ public class StringUtils {
 		}
 		return false;
 	}
+	
+	public static boolean isCommentRaiseFit(SearchInfo searchInfo, BookInfo bookInfo) {
+		if (searchInfo == null || bookInfo == null) {
+			return false;
+		}
+		if (searchInfo.getCommentNum() != null && searchInfo.getRaiseNum() != null && bookInfo.getCommentNum() != null
+				&& bookInfo.getRaiseNum() != null) {
+			try {
+				float currentCommentNum = Float.parseFloat(bookInfo.getCommentNum());
+				float searchCommentNum = Float.parseFloat(searchInfo.getCommentNum());
+
+				float currentRaiseNum = Float.parseFloat(bookInfo.getRaiseNum());
+				float searchRaiseNum = Float.parseFloat(searchInfo.getRaiseNum());
+
+				return currentCommentNum >= searchCommentNum && currentRaiseNum >= searchRaiseNum;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 
 	public static String formatLastUpdate(String srcDate){
 		if(isEmpty(srcDate)){
@@ -224,5 +245,18 @@ public class StringUtils {
 		}
 		Log.e("Test","cannot get charset , use UTF-8");
 		return "UTF-8";
+	}
+
+	public static String parseDataByTenThousand(String num){
+		if(isEmpty(num)){
+			return null;
+		}
+		try {
+			int parse = Integer.parseInt(num);
+			return String.format("%.2f", parse/10000f);
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

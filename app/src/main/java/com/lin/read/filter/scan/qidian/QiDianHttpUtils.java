@@ -9,6 +9,7 @@ import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.entity.ScoreJson;
+import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.util.List;
 
 public class QiDianHttpUtils {
 	public static final String TOKEY_KEY="_csrfToken";
-	public static final String EXCEPTION_GET_CONN_ERROR="EXCEPTION_GET_CONN_ERROR";
 	public static String getToken() throws IOException {
 //		String url = "https://www.qidian.com/";
 		String url = "https://book.qidian.com/info/1004608738";
@@ -31,11 +31,11 @@ public class QiDianHttpUtils {
 		CookieHandler.setDefault(manager);
 		HttpURLConnection conn = HttpUtils.getConn(url,3);
 		if(conn==null){
-			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
 		}
 		conn=HttpUtils.getConn(url,3);
 		if(conn==null){
-			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
 		}
 		CookieStore cookieJar = manager.getCookieStore();
 		List<HttpCookie> cookies = cookieJar.getCookies();
@@ -66,7 +66,7 @@ public class QiDianHttpUtils {
 		List<Object> maxPageAndBookUrlList = new ArrayList<Object>();
 		BufferedReader reader = null;
 		if(conn==null){
-			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
 		}else{
 			String unicodeType="UTF-8";
 			reader = new BufferedReader(new InputStreamReader(
@@ -114,7 +114,7 @@ public class QiDianHttpUtils {
 		List<String> maxPageAndBookUrlList = new ArrayList<String>();
 		BufferedReader reader = null;
 		if(conn==null){
-			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
 		}else {
 			try {
 				String unicodeType=StringUtils.getCharSet(conn);
@@ -170,7 +170,7 @@ public class QiDianHttpUtils {
 		}
 		HttpURLConnection conn=HttpUtils.getConn(url,3);
 		if(conn==null){
-			throw new IOException(EXCEPTION_GET_CONN_ERROR);
+			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
 		}
 
 //		{

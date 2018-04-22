@@ -1,6 +1,7 @@
 package com.lin.read.filter.scan.zongheng;
 
 import com.lin.read.filter.scan.ScanTypeInfo;
+import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 
 /**
@@ -8,12 +9,16 @@ import com.lin.read.filter.scan.StringUtils;
  */
 
 public class ZongHengStringUtil {
-    public static String getSearchUrl(ScanTypeInfo rankInfo, ScanTypeInfo bookTypeInfo, ScanTypeInfo dateInfo) {
-        if (rankInfo == null || StringUtils.isEmpty(rankInfo.getText())) {
+    public static String getSearchUrl(SearchInfo searchInfo, int page) {
+        ScanTypeInfo rankInfo = searchInfo.getRankInfo();
+        ScanTypeInfo bookTypeInfo = searchInfo.getBookTypeInfo();
+        ScanTypeInfo dateInfo = searchInfo.getDateInfo();
+
+        if (rankInfo == null || StringUtils.isEmpty(rankInfo.getText()) || page <= 0) {
             return null;
         }
         //http://book.zongheng.com/ranknow/male/r1/c0/q0/1.html
-        String url = "http://book.zongheng.com/ranknow/male/%s/%s/q0/1.html";
+        String url = "http://book.zongheng.com/ranknow/male/%s/%s/q0/%d.html";
         String param0 = null;
         String param1 = null;
         //月票榜 点击榜 新书榜 红票榜 黑票榜 捧场榜 潜力大作榜 今日畅销榜 新书订阅榜 热门作品更新榜
@@ -49,6 +54,6 @@ public class ZongHengStringUtil {
             default:
                 return null;
         }
-        return String.format(url, param0, param1);
+        return String.format(url, param0, param1,page);
     }
 }

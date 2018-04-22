@@ -139,12 +139,12 @@ public class ScanFragment extends Fragment {
     }
 
     private void setAdapter() {
-        scanWebTypeAdapter = new ScanTypeAdapter(getActivity(), QiDianConstants.scanWebTypeList);
+        scanWebTypeAdapter = new ScanTypeAdapter(getActivity(), Constants.scanWebTypeList);
         allBookData=new ArrayList<>();
         allBookAdapter=new ScanBookItemAdapter(getActivity(),allBookData);
 
         scanWebTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        scanWebTypeAdapter.setDefaultChecked(QiDianConstants.WEB_QIDIAN);
+        scanWebTypeAdapter.setDefaultChecked(Constants.WEB_QIDIAN);
         scanWebTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanWebTypeRcv.setAdapter(scanWebTypeAdapter);
 

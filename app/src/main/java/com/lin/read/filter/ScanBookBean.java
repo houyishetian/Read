@@ -8,6 +8,7 @@ public class ScanBookBean {
     private String url;
     private int position;
     private int page;
+    private String bookName;
 
     @Override
     public String toString() {
@@ -15,7 +16,16 @@ public class ScanBookBean {
                 "url='" + url + '\'' +
                 ", position=" + position +
                 ", page=" + page +
+                ", bookName='" + bookName + '\'' +
                 '}';
+    }
+
+    public String getBookName() {
+        return bookName;
+    }
+
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public int getPage() {

@@ -23,21 +23,16 @@ public class BookInfo implements Parcelable{
     private String downloadLink;
     private String webName;
     private int position;
+    //zongheng
+    private String raiseNum;
+    private String commentNum;
 
-    public int getPosition() {
-        return position;
+    public String getRaiseNum() {
+        return raiseNum;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public String getWebName() {
-        return webName;
-    }
-
-    public void setWebName(String webName) {
-        this.webName = webName;
+    public void setRaiseNum(String raiseNum) {
+        this.raiseNum = raiseNum;
     }
 
     @Override
@@ -58,7 +53,33 @@ public class BookInfo implements Parcelable{
                 ", downloadLink='" + downloadLink + '\'' +
                 ", webName='" + webName + '\'' +
                 ", position=" + position +
+                ", raiseNum='" + raiseNum + '\'' +
+                ", commentNum='" + commentNum + '\'' +
                 '}';
+    }
+
+    public String getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(String commentNum) {
+        this.commentNum = commentNum;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public String getWebName() {
+        return webName;
+    }
+
+    public void setWebName(String webName) {
+        this.webName = webName;
     }
 
     public String getBookName() {
@@ -187,6 +208,8 @@ public class BookInfo implements Parcelable{
         dest.writeString(this.downloadLink);
         dest.writeString(this.webName);
         dest.writeInt(position);
+        dest.writeString(raiseNum);
+        dest.writeString(commentNum);
     }
 
     public static final Creator<BookInfo> CREATOR = new Creator<BookInfo>() {
@@ -208,6 +231,8 @@ public class BookInfo implements Parcelable{
             bookInfo.setDownloadLink(in.readString());
             bookInfo.setWebName(in.readString());
             bookInfo.setPosition(in.readInt());
+            bookInfo.setRaiseNum(in.readString());
+            bookInfo.setCommentNum(in.readString());
             return bookInfo;
         }
 

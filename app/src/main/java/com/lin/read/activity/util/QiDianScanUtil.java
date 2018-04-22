@@ -240,7 +240,7 @@ public class QiDianScanUtil {
 
     public SearchInfo getSearchInfo() {
         SearchInfo searchInfo = new SearchInfo();
-        searchInfo.setWebType("1");
+        searchInfo.setWebType(Constants.WEB_QIDIAN);
         searchInfo.setRankType(scanRankTypeAdapter.getCheckedInfo().getId());
         searchInfo.setBookType(scanBookTypeAdapter.getCheckedInfo().getId());
         if (scanDateLinearLayout.getVisibility() == View.VISIBLE) {

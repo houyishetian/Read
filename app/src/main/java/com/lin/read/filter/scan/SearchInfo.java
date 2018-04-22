@@ -17,6 +17,72 @@ public class SearchInfo implements Serializable{
     private String wordsNum;
     private String recommend;
 
+    //zongheng
+    private ScanTypeInfo rankInfo;
+    private ScanTypeInfo bookTypeInfo;
+    private ScanTypeInfo dateInfo;
+    private String raiseNum;
+    private String commentNum;
+
+    @Override
+    public String toString() {
+        return "SearchInfo{" +
+                "webType='" + webType + '\'' +
+                ", rankType='" + rankType + '\'' +
+                ", dateType='" + dateType + '\'' +
+                ", bookType='" + bookType + '\'' +
+                ", score='" + score + '\'' +
+                ", scoreNum='" + scoreNum + '\'' +
+                ", wordsNum='" + wordsNum + '\'' +
+                ", recommend='" + recommend + '\'' +
+                ", rankInfo=" + rankInfo +
+                ", bookTypeInfo=" + bookTypeInfo +
+                ", dateInfo=" + dateInfo +
+                ", raiseNum='" + raiseNum + '\'' +
+                ", commentNum='" + commentNum + '\'' +
+                '}';
+    }
+
+    public String getRaiseNum() {
+        return raiseNum;
+    }
+
+    public void setRaiseNum(String raiseNum) {
+        this.raiseNum = raiseNum;
+    }
+
+    public String getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(String commentNum) {
+        this.commentNum = commentNum;
+    }
+
+    public ScanTypeInfo getRankInfo() {
+        return rankInfo;
+    }
+
+    public void setRankInfo(ScanTypeInfo rankInfo) {
+        this.rankInfo = rankInfo;
+    }
+
+    public ScanTypeInfo getBookTypeInfo() {
+        return bookTypeInfo;
+    }
+
+    public void setBookTypeInfo(ScanTypeInfo bookTypeInfo) {
+        this.bookTypeInfo = bookTypeInfo;
+    }
+
+    public ScanTypeInfo getDateInfo() {
+        return dateInfo;
+    }
+
+    public void setDateInfo(ScanTypeInfo dateInfo) {
+        this.dateInfo = dateInfo;
+    }
+
     public String getWebType() {
         return webType;
     }
@@ -79,20 +145,6 @@ public class SearchInfo implements Serializable{
 
     public void setDateType(String dateType) {
         this.dateType = dateType;
-    }
-
-    @Override
-    public String toString() {
-        return "SearchInfo{" +
-                "webType='" + webType + '\'' +
-                ", rankType='" + rankType + '\'' +
-                ", dateType='" + dateType + '\'' +
-                ", bookType='" + bookType + '\'' +
-                ", score='" + score + '\'' +
-                ", scoreNum='" + scoreNum + '\'' +
-                ", wordsNum='" + wordsNum + '\'' +
-                ", recommend='" + recommend + '\'' +
-                '}';
     }
 
 }

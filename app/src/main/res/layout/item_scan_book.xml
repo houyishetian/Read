@@ -99,6 +99,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/book_item_infos"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
@@ -144,6 +145,7 @@
             android:gravity="center">
 
             <LinearLayout
+                android:id="@+id/book_item_score_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -162,6 +164,38 @@
 
                 <TextView
                     android:id="@+id/book_item_scorenum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:gravity="top|center_horizontal"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/book_item_comment_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/book_item_raise"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:text="--"
+                    android:lines="1"
+                    android:textSize="18sp"
+                    android:gravity="bottom|center_horizontal"
+                    android:textColor="@android:color/holo_red_light"/>
+
+                <TextView
+                    android:id="@+id/book_item_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="--"

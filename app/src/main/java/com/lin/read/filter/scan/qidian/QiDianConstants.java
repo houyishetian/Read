@@ -6,14 +6,9 @@ import java.util.List;
 
 
 public class QiDianConstants {
-	public static List<ScanTypeInfo> scanWebTypeList;
 	public static List<ScanTypeInfo> scanRankTypeList;
 	public static List<ScanTypeInfo> scanBookTypeList;
 	public static List<ScanTypeInfo> scanDateTypeList;
-
-	public static final String WEB_QIDIAN="起点";
-	public static final String WEB_ZONGHENG="纵横";
-	public static final String WEB_17K="17k";
 
 	public static final String QD_RANK_YUE_PIAO ="月票";
 	public static final String QD_RANK_HOT_SALE ="热销";
@@ -44,11 +39,6 @@ public class QiDianConstants {
 	public static final String QD_BOOK_ER_CI_YUAN ="二次元";
 
 	static{
-		scanWebTypeList=new ArrayList<>();
-		scanWebTypeList.add(new ScanTypeInfo(WEB_QIDIAN, false, "1"));
-		scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
-		scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
-
 		scanRankTypeList=new ArrayList<>();
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_YUE_PIAO, false, "yuepiao"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_HOT_SALE, false, "hotsales"));

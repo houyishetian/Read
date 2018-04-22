@@ -1,5 +1,10 @@
 package com.lin.read.utils;
 
+import com.lin.read.filter.scan.ScanTypeInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lisonglin on 2017/10/15.
  */
@@ -29,4 +34,17 @@ public class Constants {
     public static final String RESOLVE_FROM_BIXIA = "BIXIA";
     public static final String RESOLVE_FROM_AISHU = "AISHUWANG";
     public static final String RESOLVE_FROM_QINGKAN = "QINGKAN";
+
+    public static final String EXCEPTION_GET_CONN_ERROR="EXCEPTION_GET_CONN_ERROR";
+
+    public static List<ScanTypeInfo> scanWebTypeList;
+    public static final String WEB_QIDIAN="起点";
+    public static final String WEB_ZONGHENG="纵横";
+    public static final String WEB_17K="17k";
+    static{
+        scanWebTypeList=new ArrayList<>();
+        scanWebTypeList.add(new ScanTypeInfo(WEB_QIDIAN, false, "1"));
+        scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
+        scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
+    }
 }

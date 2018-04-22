@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -38,13 +39,55 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         final BookInfo bookInfo =allBookData.get(position);
         holder.bookName.setText(bookInfo.getBookName());
         holder.authorName.setText(bookInfo.getAuthorName());
-        holder.webType.setText("起点");
+        holder.webType.setText(bookInfo.getWebName());
         holder.lastUpdate.setText(StringUtils.formatLastUpdate(bookInfo.getLastUpdate()));
-        holder.wordsNum.setText(bookInfo.getWordsNum()+"万字");
-        holder.recommend.setText(bookInfo.getRecommend()+"万推荐");
-        holder.vipClick.setText(bookInfo.getVipClick()+"万点击");
-        holder.score.setText(bookInfo.getScore());
-        holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
+        if(StringUtils.isEmpty(bookInfo.getWordsNum())){
+            holder.wordsNum.setVisibility(View.INVISIBLE);
+        }else{
+            holder.wordsNum.setVisibility(View.VISIBLE);
+            holder.wordsNum.setText(bookInfo.getWordsNum()+"万字");
+        }
+        if(StringUtils.isEmpty(bookInfo.getRecommend())){
+            holder.recommend.setVisibility(View.INVISIBLE);
+        }else{
+            holder.recommend.setVisibility(View.VISIBLE);
+            holder.recommend.setText(bookInfo.getRecommend()+"万推荐");
+        }
+        if(StringUtils.isEmpty(bookInfo.getVipClick())){
+            holder.vipClick.setVisibility(View.INVISIBLE);
+        }else{
+            holder.vipClick.setVisibility(View.VISIBLE);
+            holder.vipClick.setText(bookInfo.getVipClick()+"万点击");
+        }
+        if (View.VISIBLE != holder.wordsNum.getVisibility() && View.VISIBLE != holder.recommend.getVisibility() && View.VISIBLE != holder.vipClick.getVisibility()) {
+            holder.viewBookItemInfos.setVisibility(View.GONE);
+        } else {
+            holder.viewBookItemInfos.setVisibility(View.VISIBLE);
+        }
+        if(StringUtils.isEmpty(bookInfo.getWebName())){
+            holder.viewScoreInfos.setVisibility(View.INVISIBLE);
+            holder.viewCommentInfos.setVisibility(View.INVISIBLE);
+        }else{
+            switch (bookInfo.getWebName()) {
+                case Constants.WEB_QIDIAN:
+                    holder.viewScoreInfos.setVisibility(View.VISIBLE);
+                    holder.viewCommentInfos.setVisibility(View.INVISIBLE);
+                    holder.score.setText(bookInfo.getScore());
+                    holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
+                    break;
+                case Constants.WEB_ZONGHENG:
+                    holder.viewScoreInfos.setVisibility(View.INVISIBLE);
+                    holder.viewCommentInfos.setVisibility(View.VISIBLE);
+                    holder.raiseNum.setText(bookInfo.getRaiseNum());
+                    holder.commentNum.setText(bookInfo.getCommentNum());
+                    break;
+                default:
+                    holder.viewScoreInfos.setVisibility(View.INVISIBLE);
+                    holder.viewCommentInfos.setVisibility(View.INVISIBLE);
+                    break;
+            }
+        }
+
         holder.layouView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,9 +122,15 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         private TextView wordsNum;
         private TextView recommend;
         private TextView vipClick;
+        private View viewBookItemInfos;
         private TextView score;
         private TextView scoreNum;
         private View layouView;
+        private View viewScoreInfos;
+        private View viewCommentInfos;
+        private TextView commentNum;
+        private TextView raiseNum;
+
         public ViewHolder(View itemView) {
             super(itemView);
             layouView=itemView;
@@ -94,6 +143,11 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
             vipClick= (TextView) itemView.findViewById(R.id.book_item_vipclick);
             score= (TextView) itemView.findViewById(R.id.book_item_score);
             scoreNum= (TextView) itemView.findViewById(R.id.book_item_scorenum);
+            viewBookItemInfos = itemView.findViewById(R.id.book_item_infos);
+            viewScoreInfos = itemView.findViewById(R.id.book_item_score_info);
+            viewCommentInfos = itemView.findViewById(R.id.book_item_comment_info);
+            commentNum = (TextView) itemView.findViewById(R.id.book_item_comment);
+            raiseNum = (TextView) itemView.findViewById(R.id.book_item_raise);
         }
 
         public View getLayouView(){

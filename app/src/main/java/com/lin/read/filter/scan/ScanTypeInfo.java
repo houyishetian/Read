@@ -1,10 +1,12 @@
 package com.lin.read.filter.scan;
 
+import java.io.Serializable;
+
 /**
  * Created by lisonglin on 2017/10/12.
  */
 
-public class ScanTypeInfo {
+public class ScanTypeInfo implements Serializable{
     private String text;
     private boolean checked;
     private String id;

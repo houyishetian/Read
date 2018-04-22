@@ -1,19 +1,26 @@
 package com.lin.read.activity.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.lin.read.R;
+import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.filter.scan.ScanTypeInfo;
+import com.lin.read.filter.scan.SearchInfo;
+import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.filter.scan.zongheng.ZongHengConstants;
 import com.lin.read.fragment.ScanFragment;
+import com.lin.read.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +47,10 @@ public class ZongHengScanUtil {
     private EditText etPengChang;
     private EditText etWordsNum;
     private EditText etRecommend;
+    private Button btnOK;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view) {
-        Activity activity = scanFragment.getActivity();
+        final Activity activity = scanFragment.getActivity();
         rcvRankType = (RecyclerView) view.findViewById(R.id.rcv_zh_scan_rank);
         rcvBookType = (RecyclerView) view.findViewById(R.id.rcv_zh_scan_booktype);
         rcvDateType = (RecyclerView) view.findViewById(R.id.rcv_zh_scan_date);
@@ -52,6 +60,7 @@ public class ZongHengScanUtil {
         etPengChang= (EditText) view.findViewById(R.id.zh_et_pengchang);
         etWordsNum= (EditText) view.findViewById(R.id.zh_et_words_num);
         etRecommend= (EditText) view.findViewById(R.id.zh_et_recommend);
+        btnOK = (Button) view.findViewById(R.id.zh_scan_ok);
 
         rankTypeList=new ArrayList<>();
         bookTypeList=new ArrayList<>();
@@ -69,6 +78,20 @@ public class ZongHengScanUtil {
         setAdapter(rcvDateType, dateAdapter, activity, ZongHengConstants.DATE_WEEK);
 
         setAdapterItemClick();
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanFragment.hideFilterLayout();
+                SearchInfo searchInfo = getSearchInfo();
+                if (searchInfo != null) {
+                    Log.e("Test", searchInfo.toString());
+                    Intent intent = new Intent(activity, LoadingDialogActivity.class);
+                    intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
+                    scanFragment.startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
+                }
+            }
+        });
     }
 
     private void setAdapter(RecyclerView rcv, ScanTypeAdapter adapter, Activity activity, String defaule) {
@@ -151,5 +174,30 @@ public class ZongHengScanUtil {
                 }
             }
         });
+    }
+
+    public SearchInfo getSearchInfo() {
+        SearchInfo searchInfo = new SearchInfo();
+        searchInfo.setWebType(Constants.WEB_ZONGHENG);
+        searchInfo.setBookTypeInfo(bookTypeAdapter.getCheckedInfo());
+        searchInfo.setDateInfo(dateAdapter.getCheckedInfo());
+        searchInfo.setRankInfo(rankTypeAdapter.getCheckedInfo());
+
+        String pinglun = StringUtils.setQiDianDefaultValue(etPingLun.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
+        String pengchang = StringUtils.setQiDianDefaultValue(etPengChang.getText().toString(), "100", StringUtils.INPUTTYPE_INTEGER);
+        String wordsNum = StringUtils.setQiDianDefaultValue(etWordsNum.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
+        String recommend = StringUtils.setQiDianDefaultValue(etRecommend.getText().toString(), "50", StringUtils.INPUTTYPE_INTEGER);
+        if (pinglun == null || pengchang == null || wordsNum == null || recommend == null) {
+            return null;
+        }
+        etPingLun.setText(pinglun);
+        etPengChang.setText(pengchang);
+        etWordsNum.setText(wordsNum);
+        etRecommend.setText(recommend);
+        searchInfo.setCommentNum(pinglun);
+        searchInfo.setRaiseNum(pengchang);
+        searchInfo.setWordsNum(wordsNum);
+        searchInfo.setRecommend(recommend);
+        return searchInfo;
     }
 }
