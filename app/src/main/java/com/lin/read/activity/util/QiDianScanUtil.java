@@ -61,20 +61,6 @@ public class QiDianScanUtil {
     private EditText wordsNumEt;
     private EditText recommendEt;
 
-    private ScrollView scrollView;
-
-    private Button scanOK;
-
-    private boolean isSoftInputDisplay = false;
-
-    //添加用来在键盘显示的时候，改变该view的高度（键盘高度），从而把layout顶上去；若是键盘隐藏，则将该view高度设置为0
-    private View tempViewForSoft;
-
-    //用来记录上次监听到的屏幕高度变化时的高度，避免重复处理，否则会陷入死循环
-    int lastHeight = -1;
-
-    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
-
     private Activity activity;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
@@ -87,9 +73,6 @@ public class QiDianScanUtil {
         scoreNumEt = (EditText) view.findViewById(R.id.et_socre_num);
         wordsNumEt = (EditText) view.findViewById(R.id.et_words_num);
         recommendEt = (EditText) view.findViewById(R.id.et_recommend);
-        scanOK = (Button) view.findViewById(R.id.scan_ok);
-        scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
-        tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
 
         scanRankTypeAdapter = new ScanTypeAdapter(activity, QiDianConstants.scanRankTypeList);
         scanBookTypeAdapter = new ScanTypeAdapter(activity, QiDianConstants.scanBookTypeList);
@@ -113,62 +96,6 @@ public class QiDianScanUtil {
                 }
             }
         });
-
-        scanOK.setOnClickListener(new NoDoubleClickListener() {
-            @Override
-            public void onNoDoubleClick(View v) {
-                scanFragment.hideFilterLayout();
-                SearchInfo searchInfo = getSearchInfo();
-                if (searchInfo != null) {
-                    Log.e("Test", searchInfo.toString());
-//                showScaningDialog();
-                    Intent intent = new Intent(activity, LoadingDialogActivity.class);
-                    intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
-                    scanFragment.startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
-                }
-            }
-        });
-
-        onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-            //当键盘弹出隐藏的时候会 调用此方法。
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                //获取当前界面可视部分
-                activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-                //获取屏幕的高度
-                int screenHeight = activity.getWindow().getDecorView().getRootView().getHeight();
-                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
-                int heightDifference = screenHeight - r.bottom;
-                if (heightDifference == 0) {
-                    isSoftInputDisplay = false;
-                    android.util.Log.e("Test", "hide softInput!---" + heightDifference);
-                } else {
-                    isSoftInputDisplay = true;
-                    android.util.Log.e("Test", "show softInput!---" + heightDifference);
-                }
-
-                //若当前height改变还未处理过
-                if (lastHeight != heightDifference) {
-                    //将该height设置到tempViewForSoft
-                    ViewGroup.LayoutParams params = tempViewForSoft.getLayoutParams();
-                    params.height = heightDifference;
-                    if (params.height != 0) {
-                        params.height = 200;
-                    }
-                    tempViewForSoft.setLayoutParams(params);
-                    //若此时是键盘显示
-                    if (heightDifference != 0) {
-                        ((MainActivity) activity).hideBottomViews(true);
-                        scrollToEndAndRequestFocus(handler, scrollView);
-                    } else {
-                        ((MainActivity) activity).hideBottomViews(false);
-                    }
-                    //将当前高度记为已处理，否则fullScroll会requestLayout,会再次触发onGlobalLayout，这样会陷入死循环
-                    lastHeight = heightDifference;
-                }
-            }
-        };
     }
 
     public String getRankType() {
@@ -257,50 +184,5 @@ public class QiDianScanUtil {
         searchInfo.setWordsNum(wordsNum);
         searchInfo.setRecommend(recommend);
         return searchInfo;
-    }
-
-    private void scrollToEndAndRequestFocus(Handler handler, final ScrollView scrollView) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                //获取触发键盘的EditText
-                EditText currentFocusEt = getFocusEt();
-                //scrollview滚动到末尾
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                //之前触发键盘的EditText重新获取焦点
-                if (currentFocusEt != null) {
-                    currentFocusEt.setFocusable(true);
-                    currentFocusEt.requestFocus();
-                }
-            }
-        });
-    }
-
-    public void hideSoftInQidian() {
-        if (isSoftInputDisplay) {
-            View view = getFocusEt();
-            InputMethodManager inputMethodManager =
-                    (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            view.clearFocus();
-        }
-    }
-
-    private Activity getActivity() {
-        return activity;
-    }
-
-    /**
-     * 设置键盘状态的监听
-     */
-    public void setSoftInputStateListener() {
-        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
-    }
-
-    /**
-     * 取消键盘状态的监听
-     */
-    public void cancelSoftInputStateListener() {
-        scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
     }
 }

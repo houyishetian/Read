@@ -48,7 +48,6 @@ public class ZongHengScanUtil {
     private EditText etPengChang;
     private EditText etWordsNum;
     private EditText etRecommend;
-    private Button btnOK;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view) {
         final Activity activity = scanFragment.getActivity();
@@ -61,7 +60,6 @@ public class ZongHengScanUtil {
         etPengChang= (EditText) view.findViewById(R.id.zh_et_pengchang);
         etWordsNum= (EditText) view.findViewById(R.id.zh_et_words_num);
         etRecommend= (EditText) view.findViewById(R.id.zh_et_recommend);
-        btnOK = (Button) view.findViewById(R.id.zh_scan_ok);
 
         rankTypeList=new ArrayList<>();
         bookTypeList=new ArrayList<>();
@@ -79,20 +77,6 @@ public class ZongHengScanUtil {
         setAdapter(rcvDateType, dateAdapter, activity, ZongHengConstants.DATE_WEEK);
 
         setAdapterItemClick();
-
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanFragment.hideFilterLayout();
-                SearchInfo searchInfo = getSearchInfo();
-                if (searchInfo != null) {
-                    Log.e("Test", searchInfo.toString());
-                    Intent intent = new Intent(activity, LoadingDialogActivity.class);
-                    intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
-                    scanFragment.startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
-                }
-            }
-        });
     }
 
     private void setAdapter(RecyclerView rcv, ScanTypeAdapter adapter, Activity activity, String defaule) {
@@ -200,5 +184,27 @@ public class ZongHengScanUtil {
         searchInfo.setWordsNum(wordsNum);
         searchInfo.setRecommend(recommend);
         return searchInfo;
+    }
+
+    /**
+     * 获取触发键盘时获取焦点的view
+     *
+     * @return
+     */
+    public EditText getFocusEt() {
+
+        if (etPingLun.hasFocus()) {
+            return etPingLun;
+        }
+        if (etPengChang.hasFocus()) {
+            return etPengChang;
+        }
+        if (etWordsNum.hasFocus()) {
+            return etWordsNum;
+        }
+        if (etRecommend.hasFocus()) {
+            return etRecommend;
+        }
+        return null;
     }
 }
