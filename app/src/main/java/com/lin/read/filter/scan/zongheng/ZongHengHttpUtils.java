@@ -104,7 +104,7 @@ public class ZongHengHttpUtils {
         boolean isStartResulveLastUpdate=false;
         while ((current = reader.readLine()) != null) {
             if (!isStartResulveLastUpdate) {
-                if(current.trim().equals("<div class=\"uptime\">\n")){
+                if(current.trim().equals("<div class=\"uptime\">")){
                     isStartResulveLastUpdate=true;
                     continue;
                 }
