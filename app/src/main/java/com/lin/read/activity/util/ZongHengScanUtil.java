@@ -14,6 +14,7 @@ import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanTypeItemDecoration;
+import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.scan.ScanTypeInfo;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -48,6 +49,8 @@ public class ZongHengScanUtil {
     private EditText etWordsNum;
     private EditText etRecommend;
     private Button btnOK;
+
+    private BookComparatorUtil bookComparatorUtil;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view) {
         final Activity activity = scanFragment.getActivity();
@@ -199,5 +202,17 @@ public class ZongHengScanUtil {
         searchInfo.setWordsNum(wordsNum);
         searchInfo.setRecommend(recommend);
         return searchInfo;
+    }
+
+    public void setLastClickItem(int lastClickItem) {
+        bookComparatorUtil.setLastClickItem(lastClickItem);
+    }
+
+    public void setBookComparatorUtil(BookComparatorUtil bookComparatorUtil) {
+        this.bookComparatorUtil = bookComparatorUtil;
+    }
+
+    public BookComparatorUtil getBookComparatorUtil() {
+        return bookComparatorUtil;
     }
 }

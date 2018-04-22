@@ -138,7 +138,7 @@ public class StringUtils {
 			return false;
 		}
 		if (searchInfo.getWordsNum() != null && searchInfo.getRecommend() != null && bookInfo.getWordsNum() != null
-				&& bookInfo.getVipClick() != null && bookInfo.getRecommend() != null) {
+				&& bookInfo.getClick() != null && bookInfo.getRecommend() != null) {
 			try {
 				float currentRecommend = Float.parseFloat(bookInfo.getRecommend());
 				float searchRecommend = Float.parseFloat(searchInfo.getRecommend());

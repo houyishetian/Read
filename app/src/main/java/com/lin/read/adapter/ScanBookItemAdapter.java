@@ -53,11 +53,11 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
             holder.recommend.setVisibility(View.VISIBLE);
             holder.recommend.setText(bookInfo.getRecommend()+"万推荐");
         }
-        if(StringUtils.isEmpty(bookInfo.getVipClick())){
+        if(StringUtils.isEmpty(bookInfo.getClick())){
             holder.vipClick.setVisibility(View.INVISIBLE);
         }else{
             holder.vipClick.setVisibility(View.VISIBLE);
-            holder.vipClick.setText(bookInfo.getVipClick()+"万点击");
+            holder.vipClick.setText(bookInfo.getClick()+"万点击");
         }
         if (View.VISIBLE != holder.wordsNum.getVisibility() && View.VISIBLE != holder.recommend.getVisibility() && View.VISIBLE != holder.vipClick.getVisibility()) {
             holder.viewBookItemInfos.setVisibility(View.GONE);

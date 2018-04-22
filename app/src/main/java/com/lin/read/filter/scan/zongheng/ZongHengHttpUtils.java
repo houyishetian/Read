@@ -143,7 +143,7 @@ public class ZongHengHttpUtils {
                 List<Integer> clickGroups = Arrays.asList(1);
                 List<String> clickResult = RegexUtils.getDataByRegex(current, clickRegex, clickGroups);
                 if (clickResult != null && clickResult.size() == clickGroups.size()) {
-                    bookInfo.setVipClick(StringUtils.parseDataByTenThousand(clickResult.get(0)));
+                    bookInfo.setClick(StringUtils.parseDataByTenThousand(clickResult.get(0)));
                     continue;
                 }
 

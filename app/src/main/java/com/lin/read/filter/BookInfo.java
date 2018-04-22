@@ -14,7 +14,7 @@ public class BookInfo implements Parcelable{
     private String lastUpdate;
     private String wordsNum;
     private String recommend;
-    private String vipClick;
+    private String click;
     private String score;
     private String scoreNum;
     private String lastChapter;
@@ -27,14 +27,6 @@ public class BookInfo implements Parcelable{
     private String raiseNum;
     private String commentNum;
 
-    public String getRaiseNum() {
-        return raiseNum;
-    }
-
-    public void setRaiseNum(String raiseNum) {
-        this.raiseNum = raiseNum;
-    }
-
     @Override
     public String toString() {
         return "BookInfo{" +
@@ -44,7 +36,7 @@ public class BookInfo implements Parcelable{
                 ", lastUpdate='" + lastUpdate + '\'' +
                 ", wordsNum='" + wordsNum + '\'' +
                 ", recommend='" + recommend + '\'' +
-                ", vipClick='" + vipClick + '\'' +
+                ", click='" + click + '\'' +
                 ", score='" + score + '\'' +
                 ", scoreNum='" + scoreNum + '\'' +
                 ", lastChapter='" + lastChapter + '\'' +
@@ -56,6 +48,14 @@ public class BookInfo implements Parcelable{
                 ", raiseNum='" + raiseNum + '\'' +
                 ", commentNum='" + commentNum + '\'' +
                 '}';
+    }
+
+    public String getRaiseNum() {
+        return raiseNum;
+    }
+
+    public void setRaiseNum(String raiseNum) {
+        this.raiseNum = raiseNum;
     }
 
     public String getCommentNum() {
@@ -130,12 +130,12 @@ public class BookInfo implements Parcelable{
         this.recommend = recommend;
     }
 
-    public String getVipClick() {
-        return vipClick;
+    public String getClick() {
+        return click;
     }
 
-    public void setVipClick(String vipClick) {
-        this.vipClick = vipClick;
+    public void setClick(String click) {
+        this.click = click;
     }
 
     public String getScore() {
@@ -199,7 +199,7 @@ public class BookInfo implements Parcelable{
         dest.writeString(this.lastUpdate);
         dest.writeString(this.wordsNum);
         dest.writeString(this.recommend);
-        dest.writeString(this.vipClick);
+        dest.writeString(this.click);
         dest.writeString(this.score);
         dest.writeString(this.scoreNum);
         dest.writeString(this.lastChapter);
@@ -222,7 +222,7 @@ public class BookInfo implements Parcelable{
             bookInfo.setLastUpdate(in.readString());
             bookInfo.setWordsNum(in.readString());
             bookInfo.setRecommend(in.readString());
-            bookInfo.setVipClick(in.readString());
+            bookInfo.setClick(in.readString());
             bookInfo.setScore(in.readString());
             bookInfo.setScoreNum(in.readString());
             bookInfo.setLastChapter(in.readString());

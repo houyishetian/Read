@@ -26,85 +26,12 @@
             android:layout_height="1dp"
             android:background="#8B7D7B" />
 
-        <TextView
-            android:id="@+id/qidian_sort_by_default"
+        <ListView
+            android:id="@+id/dialog_select_sort_type_lv"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="默认排序"
-            android:textColor="@android:color/black" />
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:cacheColorHint="@null"/>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8B7D7B" />
-
-        <TextView
-            android:id="@+id/qidian_sort_by_score"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="按分数排序"
-            android:textColor="@android:color/black" />
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8B7D7B" />
-
-        <TextView
-            android:id="@+id/qidian_sort_by_scorenum"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="按评分人数排序"
-            android:textColor="@android:color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8B7D7B" />
-
-        <TextView
-            android:id="@+id/qidian_sort_by_wordsnum"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="按总字数排序"
-            android:textColor="@android:color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8B7D7B" />
-
-        <TextView
-            android:id="@+id/qidian_sort_by_recommend"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="按推荐票排序"
-            android:textColor="@android:color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#8B7D7B" />
-
-        <TextView
-            android:id="@+id/qidian_sort_by_vipclick"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="30dp"
-            android:text="按会员点击排序"
-            android:textColor="@android:color/black" />
     </LinearLayout>
 </LinearLayout>

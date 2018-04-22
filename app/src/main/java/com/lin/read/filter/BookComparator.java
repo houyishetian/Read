@@ -17,7 +17,7 @@ public class BookComparator implements Comparator<BookInfo> {
     }
 
     public enum BookType {
-        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIP_CLICK, POSTION
+        SCORE, SCORE_NUM, WORDS_NUM, RECOMMEND, VIP_CLICK, POSTION, RAISE, COMMENT
     }
 
     private SortType sortType;
@@ -105,13 +105,27 @@ public class BookComparator implements Comparator<BookInfo> {
                 break;
             case VIP_CLICK:
                 try {
-                    num0 = Float.parseFloat(bookInfo0.getVipClick());
-                    num1 = Float.parseFloat(bookInfo1.getVipClick());
+                    num0 = Float.parseFloat(bookInfo0.getClick());
+                    num1 = Float.parseFloat(bookInfo1.getClick());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return 0;
                 }
                 break;
+            case RAISE:
+                try {
+                    return Integer.parseInt(bookInfo0.getRaiseNum()) - Integer.parseInt(bookInfo1.getRaiseNum());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return 0;
+                }
+            case COMMENT:
+                try {
+                    return Integer.parseInt(bookInfo0.getCommentNum()) - Integer.parseInt(bookInfo1.getCommentNum());
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return 0;
+                }
         }
         if(num0>num1){
             return 1;
@@ -129,6 +143,8 @@ public class BookComparator implements Comparator<BookInfo> {
         result.add(BookType.POSTION);
         result.add(BookType.SCORE);
         result.add(BookType.SCORE_NUM);
+        result.add(BookType.RAISE);
+        result.add(BookType.COMMENT);
         result.add(BookType.WORDS_NUM);
         result.add(BookType.RECOMMEND);
         result.add(BookType.VIP_CLICK);

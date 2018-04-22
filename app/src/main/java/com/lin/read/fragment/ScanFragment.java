@@ -28,6 +28,7 @@ import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
@@ -131,7 +132,19 @@ public class ScanFragment extends Fragment {
             public void onNoDoubleClick(View v) {
                 if(allBookData.size()!=0){
                     if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
-                        qiDianScanUtil.showSortDialog(allBookData);
+                        qiDianScanUtil.getBookComparatorUtil().showSortDialog(getActivity(), allBookData, new BookComparatorUtil.OnSortCompletedListener() {
+                            @Override
+                            public void onSortCompleted() {
+                                refreshBookData();
+                            }
+                        });
+                    }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
+                        zongHengScanUtil.getBookComparatorUtil().showSortDialog(getActivity(), allBookData, new BookComparatorUtil.OnSortCompletedListener() {
+                            @Override
+                            public void onSortCompleted() {
+                                refreshBookData();
+                            }
+                        });
                     }
                 }
             }
@@ -238,6 +251,9 @@ public class ScanFragment extends Fragment {
                     if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
                         qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
                         qiDianScanUtil.setLastClickItem(-1);
+                    }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
+                        zongHengScanUtil.setBookComparatorUtil(new BookComparatorUtil());
+                        zongHengScanUtil.setLastClickItem(-1);
                     }
                     Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
                     break;
@@ -256,7 +272,10 @@ public class ScanFragment extends Fragment {
                         allBooksRcv.smoothScrollToPosition(0);
                         if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
                             qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
-                            qiDianScanUtil.setLastClickItem(BookComparatorUtil.SORT_BY_DEFAULT);
+                            qiDianScanUtil.setLastClickItem(SortInfo.ID_SORT_BY_DEFAULT);
+                        }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
+                            zongHengScanUtil.setBookComparatorUtil(new BookComparatorUtil());
+                            zongHengScanUtil.setLastClickItem(-1);
                         }
                         Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
                     }else{

@@ -76,15 +76,10 @@ public class QiDianScanUtil {
     private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
     private Activity activity;
-    private ScanFragment scanFragment;
-
-    private ArrayList<BookInfo> allBookData;
-
     private BookComparatorUtil bookComparatorUtil;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
         activity = scanFragment.getActivity();
-        this.scanFragment = scanFragment;
         scanRankTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_rank);
         scanBookTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_booktype);
         scanDateTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_date);
@@ -314,67 +309,11 @@ public class QiDianScanUtil {
         bookComparatorUtil.setLastClickItem(lastClickItem);
     }
 
-    private Dialog sortDialog;
-    public void showSortDialog(ArrayList<BookInfo> allBookData) {
-        this.allBookData = allBookData;
-        sortDialog = new Dialog(this.getActivity(), R.style.Dialog_Fullscreen);
-        sortDialog.show();
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View viewDialog = inflater.inflate(R.layout.dialog_qidian_book_sort, null);
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        //设置dialog的宽高为屏幕的宽高
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
-        sortDialog.setContentView(viewDialog, layoutParams);
-
-        View sortByDefault = viewDialog.findViewById(R.id.qidian_sort_by_default);
-        View sortByScore = viewDialog.findViewById(R.id.qidian_sort_by_score);
-        View sortByScoreNum = viewDialog.findViewById(R.id.qidian_sort_by_scorenum);
-        View sortByWordsNum = viewDialog.findViewById(R.id.qidian_sort_by_wordsnum);
-        View sortByRecommend = viewDialog.findViewById(R.id.qidian_sort_by_recommend);
-        View sortByVipClick = viewDialog.findViewById(R.id.qidian_sort_by_vipclick);
-        sortByDefault.setTag(BookComparatorUtil.SORT_BY_DEFAULT);
-        sortByScore.setTag(BookComparatorUtil.SORT_BY_SCORE);
-        sortByScoreNum.setTag(BookComparatorUtil.SORT_BY_SCORE_NUM);
-        sortByWordsNum.setTag(BookComparatorUtil.SORT_BY_WORDS);
-        sortByRecommend.setTag(BookComparatorUtil.SORT_BY_RECOMMEND);
-        sortByVipClick.setTag(BookComparatorUtil.SORT_BY_VIP_CLICK);
-        sortByScore.setOnClickListener(new SortDialogItemsClickListener());
-        sortByDefault.setOnClickListener(new SortDialogItemsClickListener());
-        sortByScoreNum.setOnClickListener(new SortDialogItemsClickListener());
-        sortByWordsNum.setOnClickListener(new SortDialogItemsClickListener());
-        sortByRecommend.setOnClickListener(new SortDialogItemsClickListener());
-        sortByVipClick.setOnClickListener(new SortDialogItemsClickListener());
-    }
-
-    class SortDialogItemsClickListener extends NoDoubleClickListener {
-        @Override
-        public void onNoDoubleClick(View v) {
-            Object o = v.getTag();
-            if (o != null) {
-                try {
-                    int currentItem = (int) o;
-                    BookComparator.SortType sortType = bookComparatorUtil.getSortType(currentItem);
-                    BookComparator.BookType bookType = bookComparatorUtil.getSortBookType(currentItem);
-                    Collections.sort(allBookData, new BookComparator(sortType, bookType));
-
-                    scanFragment.refreshBookData();
-                    hideSortDialog();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void hideSortDialog() {
-        if (sortDialog != null && sortDialog.isShowing()) {
-            sortDialog.dismiss();
-        }
-    }
-
     public void setBookComparatorUtil(BookComparatorUtil bookComparatorUtil) {
         this.bookComparatorUtil = bookComparatorUtil;
+    }
+
+    public BookComparatorUtil getBookComparatorUtil() {
+        return bookComparatorUtil;
     }
 }

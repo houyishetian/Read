@@ -61,7 +61,7 @@ public class QiDianRegexUtils {
         Matcher matcher=pattern.matcher(data);
         if(matcher.find()){
             bookInfo.setWordsNum(matcher.group(1));
-            bookInfo.setVipClick(matcher.group(2));
+            bookInfo.setClick(matcher.group(2));
             bookInfo.setRecommend(matcher.group(3));
             return true;
         }

@@ -255,7 +255,7 @@ public class QiDianHttpUtils {
 			if (bookInfo.getLastChapter() == null && bookInfo.getLastUpdate() == null) {
 				QiDianRegexUtils.getQiDianLastUpdateAndLastChapter(bookInfo, current);
 			}
-			if (bookInfo.getWordsNum() == null && bookInfo.getVipClick() == null && bookInfo.getRecommend() == null) {
+			if (bookInfo.getWordsNum() == null && bookInfo.getClick() == null && bookInfo.getRecommend() == null) {
 				QiDianRegexUtils.getQiDianWordsNumVipClickRecommend(bookInfo, current);
 			}
 		}
