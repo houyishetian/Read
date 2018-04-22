@@ -50,8 +50,6 @@ public class ZongHengScanUtil {
     private EditText etRecommend;
     private Button btnOK;
 
-    private BookComparatorUtil bookComparatorUtil;
-
     public void initQiDianViews(final ScanFragment scanFragment, View view) {
         final Activity activity = scanFragment.getActivity();
         rcvRankType = (RecyclerView) view.findViewById(R.id.rcv_zh_scan_rank);
@@ -202,17 +200,5 @@ public class ZongHengScanUtil {
         searchInfo.setWordsNum(wordsNum);
         searchInfo.setRecommend(recommend);
         return searchInfo;
-    }
-
-    public void setLastClickItem(int lastClickItem) {
-        bookComparatorUtil.setLastClickItem(lastClickItem);
-    }
-
-    public void setBookComparatorUtil(BookComparatorUtil bookComparatorUtil) {
-        this.bookComparatorUtil = bookComparatorUtil;
-    }
-
-    public BookComparatorUtil getBookComparatorUtil() {
-        return bookComparatorUtil;
     }
 }

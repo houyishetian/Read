@@ -76,7 +76,6 @@ public class QiDianScanUtil {
     private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
     private Activity activity;
-    private BookComparatorUtil bookComparatorUtil;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
         activity = scanFragment.getActivity();
@@ -303,17 +302,5 @@ public class QiDianScanUtil {
      */
     public void cancelSoftInputStateListener() {
         scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
-    }
-
-    public void setLastClickItem(int lastClickItem) {
-        bookComparatorUtil.setLastClickItem(lastClickItem);
-    }
-
-    public void setBookComparatorUtil(BookComparatorUtil bookComparatorUtil) {
-        this.bookComparatorUtil = bookComparatorUtil;
-    }
-
-    public BookComparatorUtil getBookComparatorUtil() {
-        return bookComparatorUtil;
     }
 }

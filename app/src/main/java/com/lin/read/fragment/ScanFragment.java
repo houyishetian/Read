@@ -72,6 +72,8 @@ public class ScanFragment extends Fragment {
     private QiDianScanUtil qiDianScanUtil;
     private ZongHengScanUtil zongHengScanUtil;
 
+    private BookComparatorUtil bookComparatorUtil;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
@@ -131,15 +133,8 @@ public class ScanFragment extends Fragment {
             @Override
             public void onNoDoubleClick(View v) {
                 if(allBookData.size()!=0){
-                    if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
-                        qiDianScanUtil.getBookComparatorUtil().showSortDialog(getActivity(), allBookData, new BookComparatorUtil.OnSortCompletedListener() {
-                            @Override
-                            public void onSortCompleted() {
-                                refreshBookData();
-                            }
-                        });
-                    }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
-                        zongHengScanUtil.getBookComparatorUtil().showSortDialog(getActivity(), allBookData, new BookComparatorUtil.OnSortCompletedListener() {
+                    if (bookComparatorUtil != null) {
+                        bookComparatorUtil.showSortDialog(getActivity(), allBookData, new BookComparatorUtil.OnSortCompletedListener() {
                             @Override
                             public void onSortCompleted() {
                                 refreshBookData();
@@ -248,13 +243,7 @@ public class ScanFragment extends Fragment {
                     allBookAdapter.notifyDataSetChanged();
                     emptyTv.setVisibility(View.VISIBLE);
                     allBooksRcv.setVisibility(View.GONE);
-                    if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
-                        qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
-                        qiDianScanUtil.setLastClickItem(-1);
-                    }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
-                        zongHengScanUtil.setBookComparatorUtil(new BookComparatorUtil());
-                        zongHengScanUtil.setLastClickItem(-1);
-                    }
+                    bookComparatorUtil = null;
                     Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.SCAN_RESPONSE_SUCC:
@@ -270,13 +259,8 @@ public class ScanFragment extends Fragment {
                         Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));
                         allBookAdapter.notifyDataSetChanged();
                         allBooksRcv.smoothScrollToPosition(0);
-                        if(currentWebPosition==LAYOUT_INDEX_QIDIAN){
-                            qiDianScanUtil.setBookComparatorUtil(new BookComparatorUtil());
-                            qiDianScanUtil.setLastClickItem(SortInfo.ID_SORT_BY_DEFAULT);
-                        }else if (currentWebPosition==LAYOUT_INDEX_ZONGHENG){
-                            zongHengScanUtil.setBookComparatorUtil(new BookComparatorUtil());
-                            zongHengScanUtil.setLastClickItem(-1);
-                        }
+                        bookComparatorUtil = new BookComparatorUtil();
+                        bookComparatorUtil.setLastClickItem(SortInfo.ID_SORT_BY_DEFAULT);
                         Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
                     }else{
                         emptyTv.setVisibility(View.VISIBLE);
