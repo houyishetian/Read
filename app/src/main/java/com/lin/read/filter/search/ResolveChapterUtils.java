@@ -228,6 +228,11 @@ public class ResolveChapterUtils {
                     continue;
                 }
                 if (isStart && current.contains("<div class=\"con_l\"><script>read_di()")) {
+                    //<a href="/t/53604/" target="_blank">一婚到底，总裁大人难伺候最新章节</a><div class="contads r"><script type="text/javascript">reads();</script></div>
+                    //<a href="/t/18882/" target="_blank">豪门盛宠：魅色首席诱情人全文阅读</a><div class="contads l"><script type="text/javascript">reads();</script></div>
+                    //<strong>在线阅读天火大道Http://wWw.qiushu.cc/</strong>
+                    String removeRegex = "(<strong>([^\n^\"]+)</strong>)|(<a href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"]+)</a><div class=\"contads (r|l)\"><script type=\"text/javascript\">reads\\(\\);</script></div>)";
+                    resultContent = RegexUtils.replaceDataByRegex(resultContent, removeRegex);
                     isStart = false;
                     break;
                 }
