@@ -20,18 +20,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.android:support-v4:r7'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile files('libs/gson-2.8.1.jar')
-    compile files('libs/antlr-2.7.4.jar')
-    compile files('libs/chardet-1.0.jar')
-    compile files('libs/cpdetector_1.0.10.jar')
-    compile files('libs/jargs-1.0.jar')
-    compile files('libs/pinyin4j-2.5.0.jar')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    implementation('com.android.support:recyclerview-v7:23.4.0')
+    implementation files('libs/gson-2.8.1.jar')
+    implementation files('libs/antlr-2.7.4.jar')
+    implementation files('libs/chardet-1.0.jar')
+    implementation files('libs/cpdetector_1.0.10.jar')
+    implementation files('libs/jargs-1.0.jar')
+    implementation files('libs/pinyin4j-2.5.0.jar')
 }
