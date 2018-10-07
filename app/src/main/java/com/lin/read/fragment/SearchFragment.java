@@ -2,6 +2,7 @@ package com.lin.read.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lin.read.R;
+import com.lin.read.activity.SearchMusicActivity;
 import com.lin.read.adapter.DialogWebTypeAdapter;
 import com.lin.read.adapter.SearchBookItemAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
@@ -61,6 +63,8 @@ public class SearchFragment extends Fragment {
     private List<WebTypeBean> webTypeList;
 
     private boolean isFromScanFragment=false;
+
+    private final String MUSIC_SEARCH_KEY = "音乐搜索";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = (View)inflater.inflate(R.layout.fragment_search, null);
@@ -102,6 +106,11 @@ public class SearchFragment extends Fragment {
                         return false;
                     }
                     hideSoft();
+                    if(MUSIC_SEARCH_KEY.equals(bookName)){
+                        Intent toMusicIntent = new Intent(getActivity(), SearchMusicActivity.class);
+                        getActivity().startActivity(toMusicIntent);
+                        return false;
+                    }
                     search(bookName);
                 }
                 return false;
@@ -117,6 +126,11 @@ public class SearchFragment extends Fragment {
                     return;
                 }
                 hideSoft();
+                if(MUSIC_SEARCH_KEY.equals(bookName)){
+                    Intent toMusicIntent = new Intent(getActivity(), SearchMusicActivity.class);
+                    getActivity().startActivity(toMusicIntent);
+                    return;
+                }
                 search(bookName);
             }
         });

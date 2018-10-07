@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lin.read">
+          package="com.lin.read">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/ThemeSplash">
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/ThemeSplash">
         <activity android:name=".activity.LaunchActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:theme="@android:style/Theme.Light.NoTitleBar" />
-
-        <activity android:name=".activity.LoadingDialogActivity"
-            android:theme="@style/LoadingDialogActivityStyle"/>
-
+                android:name=".activity.MainActivity"
+                android:theme="@android:style/Theme.Light.NoTitleBar"
+                android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".activity.ReadBookActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:theme="@android:style/Theme.Light.NoTitleBar" />
+                android:name=".activity.LoadingDialogActivity"
+                android:theme="@style/LoadingDialogActivityStyle"/>
+        <activity
+                android:name=".activity.ReadBookActivity"
+                android:theme="@android:style/Theme.Light.NoTitleBar"
+                android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".activity.SearchMusicActivity"
+                  android:theme="@android:style/Theme.Light.NoTitleBar"
+                  android:windowSoftInputMode="adjustResize|stateHidden"/>
     </application>
 
 </manifest>
