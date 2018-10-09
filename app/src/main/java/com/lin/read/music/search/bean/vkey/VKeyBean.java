@@ -1,6 +1,8 @@
 package com.lin.read.music.search.bean.vkey;
 
-public class VKeyBean {
+import java.io.Serializable;
+
+public class VKeyBean implements Serializable {
 //    {
 //        "code": 0,
 //         "cid": 205361747,

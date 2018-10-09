@@ -1,10 +1,12 @@
 package com.lin.read.filter.scan.qidian.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by lisonglin on 2017/10/15.
  */
 
-public class ScoreJson {
+public class ScoreJson implements Serializable {
 //    {
 //        "data": {
 //    },

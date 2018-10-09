@@ -1,6 +1,8 @@
 package com.lin.read.music.search.bean.seachresult;
 
-public class MusicDataBean {
+import java.io.Serializable;
+
+public class MusicDataBean implements Serializable {
     private String keyword;
     private int priority;
     private MusicDataSongBean song;

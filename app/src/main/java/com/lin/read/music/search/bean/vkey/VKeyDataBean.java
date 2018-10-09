@@ -1,8 +1,9 @@
 package com.lin.read.music.search.bean.vkey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class VKeyDataBean {
+public class VKeyDataBean implements Serializable {
 //        "data": {
 //              "expiration": 80400,
 //              "items": [

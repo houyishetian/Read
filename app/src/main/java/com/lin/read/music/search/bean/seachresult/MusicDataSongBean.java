@@ -1,8 +1,9 @@
 package com.lin.read.music.search.bean.seachresult;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MusicDataSongBean {
+public class MusicDataSongBean implements Serializable {
     private int curnum;
     private int curpage;
     private ArrayList<MusicDataSongItemBean> list;

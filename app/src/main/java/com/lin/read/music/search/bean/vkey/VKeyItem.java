@@ -1,6 +1,8 @@
 package com.lin.read.music.search.bean.vkey;
 
-public class VKeyItem {
+import java.io.Serializable;
+
+public class VKeyItem implements Serializable {
 //                {
 //                   "subcode": 0,
 //                   "songmid": "003a1tne1nSz1Y",

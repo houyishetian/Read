@@ -1,6 +1,8 @@
 package com.lin.read.music.search.bean.seachresult;
 
-public class MusicFileBean {
+import java.io.Serializable;
+
+public class MusicFileBean implements Serializable {
     private String media_mid;
 
     public String getMedia_mid() {
