@@ -51,6 +51,7 @@ public class ResolveChapterUtils {
                 regex = "<dd><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
                 break;
             case Constants.RESOLVE_FROM_DINGDIAN:
+                //<td class="L"><a href="16460819.html">第二章 青牛镇</a></td> -->https://www.x23us.com/html/0/328/16460819.html
                 //<td class="L"><a href="http://www.23us.so/files/article/html/10/10674/7219354.html">新书《一念永恒》，VIP上架啦</a></td>
                 regex = "<td class=\"L\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>";
                 break;
@@ -92,7 +93,7 @@ public class ResolveChapterUtils {
                         if (item != null && item.size() == allGroups.size()) {
                             BookChapterInfo bookChapterInfo = new BookChapterInfo();
                             bookChapterInfo.setWebType(bookInfo.getWebType());
-                            bookChapterInfo.setChapterLink(item.get(0));
+                            bookChapterInfo.setChapterLink(bookInfo.getBookLink() + item.get(0));
                             String oriChapterName = item.get(1);
                             bookChapterInfo.setChapterNameOri(oriChapterName);
                             bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
@@ -242,16 +243,12 @@ public class ResolveChapterUtils {
                     resultContent += current;
                 }
             }else if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookChapterInfo.getWebType())){
-                if (!isStart && "<dd id=\"contents\">".equals(current.trim())) {
-                    isStart = true;
-                    continue;
-                }
-                if (isStart && current.trim().equals("<div class=\"adhtml\"><script>show_htm3();</script></div>")) {
-                    isStart = false;
+                String dingdianRegex = "<dd id=\"contents\">([^\n]{1,})</dd>";;
+                List<Integer> biqugeGroups = Arrays.asList(new Integer[]{1});
+                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), dingdianRegex, biqugeGroups);
+                if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
+                    resultContent=currentResult.get(0);
                     break;
-                }
-                if (isStart) {
-                    resultContent += current;
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookChapterInfo.getWebType())){
                 if (!isStart && "<div id=\"content\">".equals(current.trim())) {
