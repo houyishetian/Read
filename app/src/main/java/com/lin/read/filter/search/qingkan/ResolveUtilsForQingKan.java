@@ -50,7 +50,7 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
         String url = null;
         try {
             String searchKey = PinYinUtils.getAllPinYin(bookName).get(0);
-            url = "https://www.qingkan9.com/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input=";
+            url = "https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input=";
         }catch (Exception e){
             e.printStackTrace();
             return null;
