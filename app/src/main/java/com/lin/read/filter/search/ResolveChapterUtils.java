@@ -98,11 +98,11 @@ public class ResolveChapterUtils {
                     break;
                 }
             } else if (Constants.RESOLVE_FROM_AISHU.equals(bookInfo.getWebType())) {
-                if(isStart){
-                    if (current.trim().equals("<div class=\"clear\"></div>")) {
-                        isStart = false;
-                        break;
-                    }
+                if (!isStart && current.trim().equals("<div class=\"neirong\">")) {
+                    isStart = true;
+                    continue;
+                }
+                if (isStart) {
                     List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
                     if (currentResult != null && currentResult.size() > 0) {
                         for (List<String> item : currentResult) {
@@ -117,10 +117,6 @@ public class ResolveChapterUtils {
                             }
                         }
                         break;
-                    }
-                }else{
-                    if(current.trim().equals("<div class=\"neirong\">")){
-                        isStart=true;
                     }
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookInfo.getWebType())){
