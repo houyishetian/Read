@@ -17,9 +17,9 @@ public class AiShuWangParseLinkUtils {
         if (data.startsWith("//")) {
             return "http:" + data;
         }
-        //http://www.22ff.com/
+        //http://www.22ff.org/
         if (data.startsWith("/")) {
-            return "http://www.22ff.com" + data;
+            return "http://www.22ff.org" + data;
         }
         return data;
     }
@@ -28,8 +28,8 @@ public class AiShuWangParseLinkUtils {
         if (TextUtils.isEmpty(data)) {
             return data;
         }
-        //http://www.22ff.com/xs/180297.txt --> http://67.229.159.202/full/181/180297.txt
-        //http://www.22ff.com/xs/37758.txt --> http://67.229.159.202/full/232/231584.txt
+        //http://www.22ff.org/xs/180297.txt --> http://67.229.159.202/full/181/180297.txt
+        //http://www.22ff.org/xs/37758.txt --> http://67.229.159.202/full/232/231584.txt
         Pattern pattern=Pattern.compile("/(\\d{5,})\\.txt");
         Matcher matcher=pattern.matcher(data);
         if(matcher.find()){

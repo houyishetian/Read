@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -270,9 +272,18 @@ public class ResolveChapterUtils {
                     break;
                 }
             }else if(Constants.RESOLVE_FROM_QINGKAN.equals(bookChapterInfo.getWebType())){
-                //<div id="content"><div id="txtright"><script src="https://www.qingkan9.com/file/script/9.js"></script></div><!--go-->
-                if(!isStart && current.trim().startsWith("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->")){
-                    resultContent = current.trim().replace("<div id=\"content\"><div id=\"txtright\"><script src=\"https://www.qingkan9.com/file/script/9.js\"></script></div><!--go-->","");
+                //<div id="content"><div id="txtright"><script src="https://www.qk6.org/file/script/9.js"></script></div><!--go-->
+                //https://www.qk6.org
+                String domain = null;
+                try {
+                    URI uri = new URI(bookChapterInfo.getChapterLink());
+                    domain = uri.getScheme()+"://"+uri.getHost();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                final String startContentStr = "<div id=\"content\"><div id=\"txtright\"><script src=\""+domain+"/file/script/9.js\"></script></div><!--go-->";
+                if(!isStart && current.trim().startsWith(startContentStr)){
+                    resultContent = current.trim().replace(startContentStr,"");
                     continue;
                 }
                 //<a class="current"><b>1</b></a>

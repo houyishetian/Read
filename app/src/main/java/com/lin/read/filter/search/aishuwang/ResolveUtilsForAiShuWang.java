@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Created by lisonglin on 2018/2/24.
- * resolve from: http://www.22ff.com/txt/
+ * resolve from: http://www.22ff.org/txt/
  */
 
 public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
@@ -35,7 +35,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
         if (StringUtils.isEmpty(bookName)) {
             return null;
         }
-        String url="http://www.22ff.com/s_"+bookName;
+        String url="http://www.22ff.org/s_"+bookName;
         Log.e("Test","search url:"+url);
         return resolveSearchResultFromBiQuGe(url,webName);
     }
@@ -62,7 +62,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
 //	<ul>
 //		<li class="neirong1"><a href="/xs/180297/">修真聊天群</a><a href="/xs/180297.txt" title="修真聊天群TXT下载">TXT下载</a></li>
 //		<li class="neirong2"><a href="/xs/180297/20993544/">第325章 子曰：剥掉皮就是肉！</a></li>
-//		<li class="neirong4"><a href="//www.22ff.com/author/圣骑士的传说(书坊)">圣骑士的传说(书坊)</a></li>
+//		<li class="neirong4"><a href="//www.22ff.org/author/圣骑士的传说(书坊)">圣骑士的传说(书坊)</a></li>
 //		<li class="neirong3">02-08 07:26</li>
 //	</ul>
 
@@ -80,7 +80,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
                     bookInfo = new BookInfo();
                     bookInfo.setBookLink(AiShuWangParseLinkUtils.parseLink(resolveBookNameResult.get(0)));
                     bookInfo.setBookName(resolveBookNameResult.get(1));
-                    //http://www.22ff.com/xs/180297.txt --> http://67.229.159.202/full/181/180297.txt  http://67.229.159.202/full/232/231584.txt
+                    //http://www.22ff.org/xs/180297.txt --> http://67.229.159.202/full/181/180297.txt  http://67.229.159.202/full/232/231584.txt
                     bookInfo.setDownloadLink(AiShuWangParseLinkUtils.parseDownloadLink(resolveBookNameResult.get(2)));
                 }
             }else{
@@ -93,7 +93,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
                 }
 
                 //authorName
-                //<li class="neirong4"><a href="//www.22ff.com/author/圣骑士的传说">圣骑士的传说</a></li>
+                //<li class="neirong4"><a href="//www.22ff.org/author/圣骑士的传说">圣骑士的传说</a></li>
                 List<String> resolveAuthorResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong4\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>",Arrays.asList(new Integer[]{2}));
                 if (resolveAuthorResult != null && resolveAuthorResult.size() == 1) {
                     bookInfo.setAuthorName(resolveAuthorResult.get(0));

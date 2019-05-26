@@ -41,7 +41,7 @@ public class BookMarkSharePres {
         Log.e("Test", "save book mark-->" + key + "=" + value);
         editor.putString(key, value);
 
-        List<String> currentItems=getBookMarkList(context,preferences);
+        ArrayList<String> currentItems=getBookMarkList(context,preferences);
         if (currentItems == null) {
             currentItems = new ArrayList<>();
         }
@@ -79,11 +79,11 @@ public class BookMarkSharePres {
         return preferences.getString(key, null);
     }
 
-    private static List<String> getBookMarkList(Context context,SharedPreferences preferences) {
+    private static ArrayList<String> getBookMarkList(Context context,SharedPreferences preferences) {
         String value = preferences.getString(BOOK_MARK_LIST, null);
-        List<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
         try {
-            result = new GsonBuilder().create().fromJson(value,List.class);
+            result = new GsonBuilder().create().fromJson(value,ArrayList.class);
             return result;
         } catch (Exception e) {
             Log.e("Test", "parse to List<String> error:" + e.getMessage());
@@ -97,7 +97,7 @@ public class BookMarkSharePres {
         }
         SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        List<String> currentItems = getBookMarkList(context, preferences);
+        ArrayList<String> currentItems = getBookMarkList(context, preferences);
 
         for(BookMarkBean deleteItem:deleteItems){
             if (deleteItem == null) {
@@ -119,7 +119,7 @@ public class BookMarkSharePres {
 
     public static List<BookMarkBean> getBookMarkBeans(Context context){
         SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
-        List<String> currentItems=getBookMarkList(context,preferences);
+        ArrayList<String> currentItems=getBookMarkList(context,preferences);
         List<BookMarkBean> result=new ArrayList<>();
         if (currentItems == null || currentItems.size() == 0) {
             return result;
