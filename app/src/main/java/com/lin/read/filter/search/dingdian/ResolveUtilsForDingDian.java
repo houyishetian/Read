@@ -42,13 +42,14 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
 //    <td class="odd" align="center">18-10-18</td>
 //    <td class="even" align="center">完成</td>
 //  </tr>
-            if (current.trim().equals("<tr>")) {
+            current = current.trim();
+            if (current.equals("<tr>")) {
                 //start resolve
                 bookInfo = new BookInfo();
                 bookInfo.setWebType(Constants.RESOLVE_FROM_DINGDIAN);
                 bookInfo.setWebName(params[2]);
             }
-            if (current.trim().equals("</tr>")) {
+            if (current.equals("</tr>")) {
                 //end resolve
                 if (bookInfo != null && !TextUtils.isEmpty(bookInfo.getBookName())) {
                     result.add(bookInfo);
@@ -57,23 +58,23 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
             }
             if (bookInfo != null) {
                 current = current.replaceAll("<b style=\"color:red\">", "").replaceAll("</b>", "");
-                List<String> resolveBookNameResult = RegexUtils.getDataByRegex(current, "<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
+                List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
                 if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
                     bookInfo.setBookName(resolveBookNameResult.get(1));
                 }
 
-                List<String> resolveLastChapterResult = RegexUtils.getDataByRegex(current, "<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
+                List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
                 if (resolveLastChapterResult != null && resolveLastChapterResult.size() != 0) {
                     bookInfo.setLastChapter(resolveLastChapterResult.get(1));
                     bookInfo.setBookLink(resolveLastChapterResult.get(0));
                 }
 
-                List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
                 if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
                     bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                 }
 
-                List<String> resolveAuthorResult = RegexUtils.getDataByRegex(current, "<td class=\"odd\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                List<String> resolveAuthorResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
                 if (resolveAuthorResult != null && resolveAuthorResult.size() != 0) {
                     bookInfo.setAuthorName(resolveAuthorResult.get(0));
                 }

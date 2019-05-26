@@ -52,12 +52,11 @@ public class ResolveChapterUtils {
                 break;
             case Constants.RESOLVE_FROM_DINGDIAN:
                 //<td class="L"><a href="16460819.html">第二章 青牛镇</a></td> -->https://www.x23us.com/html/0/328/16460819.html
-                //<td class="L"><a href="http://www.23us.so/files/article/html/10/10674/7219354.html">新书《一念永恒》，VIP上架啦</a></td>
                 regex = "<td class=\"L\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>";
                 break;
             case Constants.RESOLVE_FROM_BIXIA:
-                //<dd> <a style="" href="/0_743/5168336.html">第1814章 安检环节?</a></dd>
-                regex = "<dd> <a style=\"\" href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
+                //<dd><a href="https://www.bxwx666.org/txt/2/138094.htm">第十七章 厉师兄（1）</a></dd>
+                regex = "<dd><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></dd>";
                 break;
             case Constants.RESOLVE_FROM_AISHU:
                 //<div class="clc"><a href="/xs/180445/20519569/">第一章 黄山真君和九洲一号群</a></div>
@@ -77,15 +76,11 @@ public class ResolveChapterUtils {
 
         String current = null;
         Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
-        //for BiXia start
-        boolean isFirstDtAlreadyFind = false;
-        boolean isSecondDtAlreadyFind = false;
-        //for BiXia end
-
         //for Ai Shu Wang start
-        boolean isResolveAiShuStart=false;
+        boolean isStart=false;
         //for Ai Shu Wang end
         while ((current = reader.readLine()) != null) {
+            current = current.trim();
             if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
                 List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
                 if (currentResult != null && currentResult.size() > 0) {
@@ -103,9 +98,9 @@ public class ResolveChapterUtils {
                     break;
                 }
             } else if (Constants.RESOLVE_FROM_AISHU.equals(bookInfo.getWebType())) {
-                if(isResolveAiShuStart){
+                if(isStart){
                     if (current.trim().equals("<div class=\"clear\"></div>")) {
-                        isResolveAiShuStart = false;
+                        isStart = false;
                         break;
                     }
                     List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
@@ -125,39 +120,33 @@ public class ResolveChapterUtils {
                     }
                 }else{
                     if(current.trim().equals("<div class=\"neirong\">")){
-                        isResolveAiShuStart=true;
+                        isStart=true;
                     }
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookInfo.getWebType())){
-                if (!isFirstDtAlreadyFind) {
-                    if (current.trim().contains("<dt>")) {
-                        isFirstDtAlreadyFind = true;
-                    }
+                if (!isStart && current.equals("<dl>")) {
+                    isStart = true;
                     continue;
-                } else {
-                    if(!isSecondDtAlreadyFind){
-                        if (current.trim().contains("<dt>")) {
-                            isSecondDtAlreadyFind = true;
-                        }
-                        continue;
-                    }
                 }
-                if (current.trim().equals("</dl>")) {
+                if (isStart && current.equals("</dl>")) {
+                    isStart = false;
                     break;
                 }
-                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
-                if (currentResult != null && currentResult.size() == allGroups.size()) {
-                    BookChapterInfo bookChapterInfo=new BookChapterInfo();
-                    bookChapterInfo.setWebType(bookInfo.getWebType());
-                    String bookLinkOri=currentResult.get(0);
-                    if (!TextUtils.isEmpty(bookLinkOri) && !bookLinkOri.startsWith("https://") && !bookLinkOri.startsWith("http://")) {
-                        bookLinkOri="https://www.bixia.org/"+bookLinkOri;
+                if (isStart) {
+                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
+                    if (currentResult != null && currentResult.size() > 0) {
+                        for (List<String> item : currentResult) {
+                            if (item != null && item.size() == allGroups.size()) {
+                                BookChapterInfo bookChapterInfo = new BookChapterInfo();
+                                bookChapterInfo.setWebType(bookInfo.getWebType());
+                                bookChapterInfo.setChapterLink(item.get(0));
+                                String oriChapterName = item.get(1);
+                                bookChapterInfo.setChapterNameOri(oriChapterName);
+                                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                                result.add(bookChapterInfo);
+                            }
+                        }
                     }
-                    bookChapterInfo.setChapterLink(bookLinkOri);
-                    String oriChapterName = currentResult.get(1);
-                    bookChapterInfo.setChapterNameOri(oriChapterName);
-                    bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
-                    result.add(bookChapterInfo);
                 }
             }else{
                 List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
@@ -217,6 +206,7 @@ public class ResolveChapterUtils {
         String nextLink = null;
 
         while ((current = reader.readLine()) != null) {
+            current = current.trim();
             if(Constants.RESOLVE_FROM_BIQUGE.equals(bookChapterInfo.getWebType())){
                 String biqugeRegex = "<div id=\"content\">([^\n]{1,})";;
                 List<Integer> biqugeGroups = Arrays.asList(new Integer[]{1});
@@ -251,16 +241,13 @@ public class ResolveChapterUtils {
                     break;
                 }
             }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookChapterInfo.getWebType())){
-                if (!isStart && "<div id=\"content\">".equals(current.trim())) {
+                if (!isStart && "<div id=\"zjneirong\">".equals(current.trim())) {
                     isStart = true;
                     continue;
                 }
-                if (isStart && current.trim().equals("<script>chaptererror();</script>")) {
-                    isStart = false;
-                    break;
-                }
                 if (isStart) {
-                    resultContent += current;
+                    resultContent = current.substring(0, current.length() - 7);
+                    break;
                 }
             } else if(Constants.RESOLVE_FROM_AISHU.equals(bookChapterInfo.getWebType())){
                 if(current.trim().startsWith("<div id=\"chapter_content\">")){

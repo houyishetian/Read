@@ -37,6 +37,27 @@ public class RegexUtils {
         return null;
     }
 
+    public static List<String> getDataByRegexMatch(String content, String regex, List<Integer> allGroup) {
+        if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
+                || allGroup == null || allGroup.size() == 0) {
+            return null;
+        }
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        try {
+            if (matcher.matches()) {
+                List<String> resultList = new ArrayList<String>();
+                for (Integer group : allGroup) {
+                    resultList.add(matcher.group(group));
+                }
+                return resultList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static List<List<String>> getDataByRegexManyData(String content, String regex, List<Integer> allGroup) {
         if (StringUtils.isEmpty(content) || StringUtils.isEmpty(regex)
                 || allGroup == null || allGroup.size() == 0) {

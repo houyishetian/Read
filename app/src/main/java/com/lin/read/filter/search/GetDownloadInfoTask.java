@@ -7,7 +7,9 @@ import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.search.aishuwang.ResolveUtilsForAiShuWang;
 import com.lin.read.filter.search.biquge.ResolveUtilsForBiQuGe;
 import com.lin.read.filter.search.bdzhannei.ResolveUtilsForBDZhannei;
+import com.lin.read.filter.search.bixia.ResolveUtilsForBiXia;
 import com.lin.read.filter.search.dingdian.ResolveUtilsForDingDian;
+import com.lin.read.filter.search.novel80.ResolveUtilsForNovel80;
 import com.lin.read.filter.search.qingkan.ResolveUtilsForQingKan;
 import com.lin.read.utils.Constants;
 
@@ -33,8 +35,7 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, List<BookInfo>>
         this.webType=currentResolveType.getTag();
         switch (currentResolveType.getTag()) {
             case Constants.RESOLVE_FROM_NOVEL80:
-                resolveUtilsFactory = new ResolveUtilsForBDZhannei();
-                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
+                resolveUtilsFactory = new ResolveUtilsForNovel80();
                 break;
             case Constants.RESOLVE_FROM_BIQUGE:
                 resolveUtilsFactory = new ResolveUtilsForBiQuGe();
@@ -43,8 +44,7 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, List<BookInfo>>
                 resolveUtilsFactory = new ResolveUtilsForDingDian();
                 break;
             case Constants.RESOLVE_FROM_BIXIA:
-                resolveUtilsFactory = new ResolveUtilsForBDZhannei();
-                ((ResolveUtilsForBDZhannei)resolveUtilsFactory).setTag(currentResolveType.getTag());
+                resolveUtilsFactory = new ResolveUtilsForBiXia();
                 break;
             case Constants.RESOLVE_FROM_AISHU:
                 resolveUtilsFactory = new ResolveUtilsForAiShuWang();
