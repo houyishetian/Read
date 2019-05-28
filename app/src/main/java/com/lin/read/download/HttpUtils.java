@@ -251,4 +251,38 @@ public class HttpUtils {
         Log.e("Test", "code error url:" + code + ",url=" + urlLink);
         return getConn(urlLink, totalNum - 1);
     }
+
+    public static Object getConnOrRedirectUrlWithUserAgent(String urlLink, int totalNum) throws IOException {
+        if (StringUtils.isEmpty(urlLink)) {
+            Log.e("Test", "empty url:" + urlLink);
+            return null;
+        }
+        if (totalNum <= 0) {
+            return null;
+        }
+        URL url = new URL(urlLink);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(20000);
+        conn.setReadTimeout(20000);
+        conn.setInstanceFollowRedirects(false);
+//        .setUserAgent("Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
+        conn.setRequestProperty("User-Agent","Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)");
+        int code = -1;
+        try {
+            code = conn.getResponseCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (totalNum == 1) {
+                throw new IOException();
+            }
+        }
+        if (code == 200) {
+            return conn;
+        } else if (code == 301 || code == 302) {
+            String location = conn.getHeaderField("Location");
+            return location;
+        }
+        Log.e("Test", "code error url:" + code + ",url=" + urlLink);
+        return getConn(urlLink, totalNum - 1);
+    }
 }
