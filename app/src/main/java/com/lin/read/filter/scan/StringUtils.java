@@ -63,7 +63,8 @@ public class StringUtils {
 			return null;
 		}
 //		https://book.qidian.com/info/1004895684
-		return baseBookInfoPage+"/info/"+bookId;
+//		return baseBookInfoPage+"/info/"+bookId;
+		return String.format("https://m.qidian.com/book/%s",bookId);
 	}
 
 	public static String getBookId(String bookUrl){
@@ -150,6 +151,34 @@ public class StringUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		return false;
+	}
+
+	public static boolean isWordsNumFit(SearchInfo searchInfo, BookInfo bookInfo){
+		try {
+			float currentWordsNum = Float.parseFloat(bookInfo.getWordsNum());
+			float searchWordsNum = Float.parseFloat(searchInfo.getWordsNum());
+			return currentWordsNum >= searchWordsNum;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean isScoreAndScoreNumFie(SearchInfo searchInfo, BookInfo bookInfo){
+		try {
+			String currentScore = bookInfo.getScore();
+			String currentScoreNum = bookInfo.getScoreNum();
+			String searchScore = searchInfo.getScore();
+			String searchScoreNum = searchInfo.getScoreNum();
+			float currentScoref = Float.parseFloat(currentScore);
+			float searchScoref = Float.parseFloat(searchScore);
+			int currentScoreNumi = Integer.parseInt(currentScoreNum);
+			int searchScoreNumi = Integer.parseInt(searchScoreNum);
+			return currentScoref >= searchScoref && currentScoreNumi >= searchScoreNumi;
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		return false;
 	}

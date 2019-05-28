@@ -1,5 +1,6 @@
 package com.lin.read.filter.scan.qidian;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.GsonBuilder;
@@ -9,6 +10,7 @@ import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.entity.ScoreJson;
+import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
@@ -20,6 +22,7 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QiDianHttpUtils {
@@ -228,8 +231,8 @@ public class QiDianHttpUtils {
 		}
 	}
 
-	public static BookInfo getBookDetailsInfo(SearchInfo searchInfo, BookInfo bookInfo, String bookUrl) throws IOException {
-		if (searchInfo == null || bookInfo == null || StringUtils.isEmpty(bookUrl)) {
+	public static BookInfo getBookDetailsInfo(SearchInfo searchInfo, String bookUrl) throws IOException {
+		if (searchInfo == null || StringUtils.isEmpty(bookUrl)) {
 			return null;
 		}
 		//book.qidian.com/info/1005263115
@@ -239,25 +242,84 @@ public class QiDianHttpUtils {
 		}
 		HttpURLConnection conn = HttpUtils.getConn(url,3);
 		if (conn == null) {
-			throw new IOException();
+			return null;
 		}
 		BufferedReader reader = null;
 		String unicodeType="UTF-8";
 		reader = new BufferedReader(new InputStreamReader(
 				conn.getInputStream(), unicodeType));
 		String current = null;
-		// whether already get max page
-		boolean getMaxPage = false;
+		boolean isResolvingScore = false;
+		BookInfo bookInfo = new BookInfo();
 		while ((current = reader.readLine()) != null) {
-			if (bookInfo.getBookName() == null && bookInfo.getAuthorName() == null) {
-				QiDianRegexUtils.getQiDianBookNameAndAuthorName(bookInfo, current);
+			current = current.trim();
+			/*resolve book last update start*/
+			//<p class="gray ell" id="ariaMuLu" role="option">2小时前<span class="char-dot">·</span>连载至第717章 外来的和尚会念经（求月票）</p>
+			List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "id=\"ariaMuLu\" role=\"option\">([^\n]{1,})<span class=\"char-dot\">·</span>连载至([^\n]{1,})</p>", Arrays.asList(new Integer[]{1,2}));
+			if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
+				bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
+				bookInfo.setLastChapter(resolveLastUpdateResult.get(1));
+				continue;
 			}
-			if (bookInfo.getLastChapter() == null && bookInfo.getLastUpdate() == null) {
-				QiDianRegexUtils.getQiDianLastUpdateAndLastChapter(bookInfo, current);
+			/*resolve book last update end*/
+
+			/*resolve book words num start*/
+			//<p class="book-meta" role="option">182.22万字<span class="char-pipe">|</span>连载</p>
+			List<String> resolveBookWordsNumResult = RegexUtils.getDataByRegex(current, "<p class=\"book-meta\" role=\"option\">([0-9.]{1,})万字", Arrays.asList(new Integer[]{1}));
+			if (resolveBookWordsNumResult != null && resolveBookWordsNumResult.size() != 0) {
+				bookInfo.setWordsNum(resolveBookWordsNumResult.get(0));
+				if(!StringUtils.isWordsNumFit(searchInfo,bookInfo)){
+					return null;
+				}
+				continue;
 			}
-			if (bookInfo.getWordsNum() == null && bookInfo.getClick() == null && bookInfo.getRecommend() == null) {
-				QiDianRegexUtils.getQiDianWordsNumVipClickRecommend(bookInfo, current);
+			/*resolve book words num end*/
+
+			/*resolve book author start*/
+			//<a href="/author/4362633" role="option"><aria>作者：</aria>志鸟村<aria>级别：</aria>
+			List<String> resolveBookAuthorResult = RegexUtils.getDataByRegex(current, "role=\"option\"><aria>作者：</aria>([^\n^<]{1,})<aria>", Arrays.asList(new Integer[]{1}));
+			if (resolveBookAuthorResult != null && resolveBookAuthorResult.size() != 0) {
+				bookInfo.setAuthorName(resolveBookAuthorResult.get(0));
+				continue;
 			}
+			/*resolve book author end*/
+
+			/*resolve book name start*/
+			//<h2 class="book-title">大医凌然</h2>
+			List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<h2 class=\"book-title\">([^\n^<]{1,})</h2>", Arrays.asList(new Integer[]{1}));
+			if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
+				bookInfo.setBookName(resolveBookNameResult.get(0));
+				continue;
+			}
+			/*resolve book name end*/
+
+			/*resolve score start*/
+			if(!isResolvingScore && current.equals("<div class=\"book-score\" role=\"option\">")){
+				isResolvingScore = true;
+				continue;
+			}
+			if(isResolvingScore){
+				//<span class="gray">9分/618人评过</span>
+				List<String> resolveScoreResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"gray\">([0-9.]{1,})分/([0-9]{1,})人评过</span>", Arrays.asList(new Integer[]{1, 2}));
+				if (resolveScoreResult != null && resolveScoreResult.size() != 0) {
+					bookInfo.setScore(resolveScoreResult.get(0));
+					bookInfo.setScoreNum(resolveScoreResult.get(1));
+					continue;
+				}
+				if(current.equals("</div>")){
+					isResolvingScore = false;
+					if(TextUtils.isEmpty(bookInfo.getScore())){
+						bookInfo.setScore("0");
+					}
+					if(TextUtils.isEmpty(bookInfo.getScoreNum())){
+						bookInfo.setScoreNum("0");
+					}
+					if(!StringUtils.isScoreAndScoreNumFie(searchInfo,bookInfo)){
+						return null;
+					}
+				}
+			}
+			/*resolve score end*/
 		}
 		if (reader != null) {
 			try {
@@ -266,10 +328,6 @@ public class QiDianHttpUtils {
 				e.printStackTrace();
 			}
 		}
-//		if (StringUtils.isWordsNumVipClickRecommendFit(searchInfo, bookInfo)) {
-//			Log.e("Test","书籍符合条件："+ bookInfo.toString());
-//			return bookInfo;
-//		}
 		return bookInfo;
 	}
 }

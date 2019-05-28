@@ -57,6 +57,8 @@ public class HttpUtils {
             }
             Log.e("Test", "redirect code error url:" + code + ",url=" + urlLink);
             return getConn(urlLink, totalNum - 1);
+        } else if (code >= 400) {
+            return null;
         }
         Log.e("Test", "code error url:" + code + ",url=" + urlLink);
         return getConn(urlLink, totalNum - 1);

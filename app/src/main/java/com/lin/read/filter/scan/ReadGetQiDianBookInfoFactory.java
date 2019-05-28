@@ -165,38 +165,22 @@ public class ReadGetQiDianBookInfoFactory extends ReadGetBookInfoFactory {
                         if(index>=maxSize){
                             Log.e("Test","重新扫描："+ bookInfos.get(index));
                         }
-                        BookInfo scoreBookInfo=QiDianHttpUtils.getBookScoreInfo(searchInfo,qidianToken,((ScanBookBean)bookInfos.get(index)).getUrl(),3);
-
-                        if(scoreBookInfo!=null){
-                            scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, scoreBookInfo, ((ScanBookBean)bookInfos.get(index)).getUrl());
-                            synchronized (Runnable.class) {
-                                if (scoreBookInfo != null) {
-                                    ScanBookBean scanBookBean = (ScanBookBean) bookInfos.get(index);
-                                    scoreBookInfo.setPosition(scanBookBean.getPage() * maxNumFirstPage + scanBookBean.getPosition());
-                                    scoreBookInfo.setWebName(Constants.WEB_QIDIAN);
-                                    resultBookInfo.add(scoreBookInfo);
-                                    MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE, resultBookInfo.size());
-                                }
-                                completeTask.add("1");
-                                MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE, completeTask.size());
-                                if (bookInfos.size() == completeTask.size()) {
-                                    Log.e("Test", "all scan end!");
-                                    MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, resultBookInfo);
-                                    if (onGetBookInfoListener != null) {
-                                        onGetBookInfoListener.succ(resultBookInfo);
-                                    }
-                                }
+                        BookInfo scoreBookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, ((ScanBookBean) bookInfos.get(index)).getUrl());
+                        synchronized (Runnable.class) {
+                            if (scoreBookInfo != null) {
+                                ScanBookBean scanBookBean = (ScanBookBean) bookInfos.get(index);
+                                scoreBookInfo.setPosition(scanBookBean.getPage() * maxNumFirstPage + scanBookBean.getPosition());
+                                scoreBookInfo.setWebName(Constants.WEB_QIDIAN);
+                                resultBookInfo.add(scoreBookInfo);
+                                MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE, resultBookInfo.size());
                             }
-                        }else{
-                            synchronized (Runnable.class) {
-                                completeTask.add("1");
-                                MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE, completeTask.size());
-                                if (bookInfos.size() == completeTask.size()) {
-                                    Log.e("Test", "all scan end!");
-                                    MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, resultBookInfo);
-                                    if (onGetBookInfoListener != null) {
-                                        onGetBookInfoListener.succ(resultBookInfo);
-                                    }
+                            completeTask.add("1");
+                            MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE, completeTask.size());
+                            if (bookInfos.size() == completeTask.size()) {
+                                Log.e("Test", "all scan end!");
+                                MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, resultBookInfo);
+                                if (onGetBookInfoListener != null) {
+                                    onGetBookInfoListener.succ(resultBookInfo);
                                 }
                             }
                         }
