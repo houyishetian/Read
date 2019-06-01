@@ -107,6 +107,7 @@ public class LoadingDialogActivity extends Activity {
                         ArrayList<Object> allInfos = (ArrayList<Object>) allBookInfo;
                         int totalPage = Integer.parseInt(allInfos.get(0).toString());
                         intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
+                        intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getCurrentPage());
                         allInfos.remove(0);
                         allBooks = new ArrayList<>();
                         for (Object item : allInfos) {

@@ -182,6 +182,7 @@ public class ScanFragment extends Fragment {
                         break;
                     case LAYOUT_INDEX_YOUSHU:
                         searchInfo = youShuScanUtil.getSearchInfo();
+                        searchInfo.setCurrentPage(1);
                         break;
                     default:
                         return;
@@ -390,6 +391,7 @@ public class ScanFragment extends Fragment {
                     allBookAdapter.notifyDataSetChanged();
                     emptyTv.setVisibility(View.VISIBLE);
                     allBooksRcv.setVisibility(View.GONE);
+                    scanResultYouShuLl.setVisibility(View.GONE);
                     bookComparatorUtil = null;
                     Toast.makeText(getActivity(),"扫描失败，请检查网络!",Toast.LENGTH_SHORT).show();
                     break;

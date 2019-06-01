@@ -24,6 +24,7 @@ public class MessageUtils {
 
     public static final String BOOK_LIST ="BOOK_LIST";
     public static final String TOTAL_PAGE="TOTAL_PAGE";
+    public static final String CURRENT_PAGE="CURRENT_PAGE";
 
     public static void sendWhat(Handler handler, int what){
         if(handler!=null){

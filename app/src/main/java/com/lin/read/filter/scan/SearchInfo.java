@@ -32,25 +32,6 @@ public class SearchInfo implements Serializable{
     private ScanTypeInfo sortTypeInfo;
     private int currentPage = 1;
 
-    @Override
-    public String toString() {
-        return "SearchInfo{" +
-                "webType='" + webType + '\'' +
-                ", rankType='" + rankType + '\'' +
-                ", dateType='" + dateType + '\'' +
-                ", bookType='" + bookType + '\'' +
-                ", score='" + score + '\'' +
-                ", scoreNum='" + scoreNum + '\'' +
-                ", wordsNum='" + wordsNum + '\'' +
-                ", recommend='" + recommend + '\'' +
-                ", rankInfo=" + rankInfo +
-                ", bookTypeInfo=" + bookTypeInfo +
-                ", dateInfo=" + dateInfo +
-                ", raiseNum='" + raiseNum + '\'' +
-                ", commentNum='" + commentNum + '\'' +
-                '}';
-    }
-
     public String getRaiseNum() {
         return raiseNum;
     }
@@ -201,5 +182,30 @@ public class SearchInfo implements Serializable{
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchInfo{" +
+                "webType='" + webType + '\'' +
+                ", rankType='" + rankType + '\'' +
+                ", dateType='" + dateType + '\'' +
+                ", bookType='" + bookType + '\'' +
+                ", score='" + score + '\'' +
+                ", scoreNum='" + scoreNum + '\'' +
+                ", wordsNum='" + wordsNum + '\'' +
+                ", recommend='" + recommend + '\'' +
+                ", rankInfo=" + rankInfo +
+                ", bookTypeInfo=" + bookTypeInfo +
+                ", dateInfo=" + dateInfo +
+                ", raiseNum='" + raiseNum + '\'' +
+                ", commentNum='" + commentNum + '\'' +
+                ", categoryInfo=" + categoryInfo +
+                ", wordsNumInfo=" + wordsNumInfo +
+                ", bookStatusInfo=" + bookStatusInfo +
+                ", updateDateInfo=" + updateDateInfo +
+                ", sortTypeInfo=" + sortTypeInfo +
+                ", currentPage=" + currentPage +
+                '}';
     }
 }
