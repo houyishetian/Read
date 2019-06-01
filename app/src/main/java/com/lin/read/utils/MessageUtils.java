@@ -20,8 +20,10 @@ public class MessageUtils {
     public static final int SCAN_BOOK_INFO_BY_CONDITION_GET_ONE=3;
     public static final int SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE=4;
     public static final int SCAN_BOOK_INFO_BY_CONDITION_END=5;
+    public static final int SCAN_YOUSHU_END=6;
 
-    public static final String DATA_QIDIAN_BOOK_LIST="DATA_QIDIAN_BOOK_LIST";
+    public static final String BOOK_LIST ="BOOK_LIST";
+    public static final String TOTAL_PAGE="TOTAL_PAGE";
 
     public static void sendWhat(Handler handler, int what){
         if(handler!=null){
@@ -44,7 +46,7 @@ public class MessageUtils {
             Message msg=handler.obtainMessage();
             msg.what=what;
             Bundle bundle=new Bundle();
-            bundle.putParcelableArrayList(DATA_QIDIAN_BOOK_LIST,allData);
+            bundle.putParcelableArrayList(BOOK_LIST,allData);
             msg.setData(bundle);
             handler.sendMessage(msg);
         }

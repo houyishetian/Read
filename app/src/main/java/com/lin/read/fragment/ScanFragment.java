@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.util.QiDianScanUtil;
+import com.lin.read.activity.util.YouShuScanUtil;
 import com.lin.read.activity.util.ZongHengScanUtil;
 import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
@@ -41,6 +42,7 @@ import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.MessageUtils;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.filter.BookComparator;
 
@@ -59,6 +61,12 @@ public class ScanFragment extends Fragment {
     private View scanFilterLayout;
     private View scanFilterBlank;
 
+    private View scanResultYouShuLl;
+    private TextView scanYsPrePageTv;
+    private TextView scanYsNextPageTv;
+    private EditText scanYsSkipPageEt;
+    private TextView scanYsTotalPageTv;
+
     private RecyclerView scanWebTypeRcv;
     private ScanTypeAdapter scanWebTypeAdapter;
 
@@ -72,16 +80,19 @@ public class ScanFragment extends Fragment {
     private View layoutScanQiDian;
     private View layoutScanZongHeng;
     private View layoutScan17k;
+    private View layoutScanYouShu;
     private View[] allScanLayouts;
     private int currentWebPosition;
     private final int LAYOUT_INDEX_QIDIAN=0;
     private final int LAYOUT_INDEX_ZONGHENG=1;
     private final int LAYOUT_INDEX_17K=2;
+    private final int LAYOUT_INDEX_YOUSHU  =3;
 
     private Handler handler;
 
     private QiDianScanUtil qiDianScanUtil;
     private ZongHengScanUtil zongHengScanUtil;
+    private YouShuScanUtil youShuScanUtil;
 
     private BookComparatorUtil bookComparatorUtil;
 
@@ -112,11 +123,20 @@ public class ScanFragment extends Fragment {
         zongHengScanUtil = new ZongHengScanUtil();
         zongHengScanUtil.initQiDianViews(this,view);
 
+        youShuScanUtil = new YouShuScanUtil();
+        youShuScanUtil.initYouShuViews(this,view,handler);
+
         scanFilterTv = (TextView) view.findViewById(R.id.scan_filter);
         scanSortIv = (RelativeLayout) view.findViewById(R.id.scan_sort);
-        scanResultTv = (TextView) view.findViewById(R.id.scan_result);
+        scanResultTv = (TextView) view.findViewById(R.id.scan_result_qidian);
         scanFilterLayout = view.findViewById(R.id.layout_scan_filter);
         scanFilterBlank = view.findViewById(R.id.scan_filter_blank);
+
+        scanResultYouShuLl = view.findViewById(R.id.scan_result_youshu);
+        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
+        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
+        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
+        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
 
         scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
         tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
@@ -134,7 +154,8 @@ public class ScanFragment extends Fragment {
         layoutScan17k=view.findViewById(R.id.layout_scan_17k);
         layoutScanZongHeng=view.findViewById(R.id.layout_scan_zongheng);
         layoutScanQiDian=view.findViewById(R.id.layout_scan_qidian);
-        allScanLayouts=new View[]{layoutScanQiDian,layoutScanZongHeng,layoutScan17k};
+        layoutScanYouShu = view.findViewById(R.id.layout_scan_youshu);
+        allScanLayouts=new View[]{layoutScanQiDian,layoutScanZongHeng,layoutScan17k,layoutScanYouShu};
 
         setAdapter();
 
@@ -166,6 +187,9 @@ public class ScanFragment extends Fragment {
                         break;
                     case LAYOUT_INDEX_ZONGHENG:
                         searchInfo = zongHengScanUtil.getSearchInfo();
+                        break;
+                    case LAYOUT_INDEX_YOUSHU:
+                        searchInfo = youShuScanUtil.getSearchInfo();
                         break;
                     default:
                         return;
@@ -387,9 +411,18 @@ public class ScanFragment extends Fragment {
                         emptyTv.setVisibility(View.GONE);
                         allBooksRcv.setVisibility(View.VISIBLE);
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
-                        scanResultTv.setVisibility(View.VISIBLE);
-                        Log.e("Test", "接收:" + allBookDataFromScan);
-                        scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                        if(currentWebPosition == LAYOUT_INDEX_YOUSHU){
+                            int totalPage = data.getIntExtra(MessageUtils.TOTAL_PAGE,0);
+                            scanResultYouShuLl.setVisibility(View.VISIBLE);
+                            scanResultTv.setVisibility(View.GONE);
+                            scanYsTotalPageTv.setText(""+totalPage);
+                            scanYsSkipPageEt.setText("1");
+                        }else if(currentWebPosition == LAYOUT_INDEX_QIDIAN){
+                            scanResultTv.setVisibility(View.VISIBLE);
+                            scanResultYouShuLl.setVisibility(View.GONE);
+                            Log.e("Test", "接收:" + allBookDataFromScan);
+                            scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                        }
                         allBookData.clear();
                         allBookData.addAll(allBookDataFromScan);
                         Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));

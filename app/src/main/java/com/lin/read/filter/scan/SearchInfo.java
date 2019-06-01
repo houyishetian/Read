@@ -24,6 +24,13 @@ public class SearchInfo implements Serializable{
     private String raiseNum;
     private String commentNum;
 
+    //youshu
+    private ScanTypeInfo categoryInfo;
+    private ScanTypeInfo wordsNumInfo;
+    private ScanTypeInfo bookStatusInfo;
+    private ScanTypeInfo updateDateInfo;
+    private ScanTypeInfo sortTypeInfo;
+
     @Override
     public String toString() {
         return "SearchInfo{" +
@@ -147,4 +154,43 @@ public class SearchInfo implements Serializable{
         this.dateType = dateType;
     }
 
+    public ScanTypeInfo getCategoryInfo() {
+        return categoryInfo;
+    }
+
+    public void setCategoryInfo(ScanTypeInfo categoryInfo) {
+        this.categoryInfo = categoryInfo;
+    }
+
+    public ScanTypeInfo getWordsNumInfo() {
+        return wordsNumInfo;
+    }
+
+    public void setWordsNumInfo(ScanTypeInfo wordsNumInfo) {
+        this.wordsNumInfo = wordsNumInfo;
+    }
+
+    public ScanTypeInfo getBookStatusInfo() {
+        return bookStatusInfo;
+    }
+
+    public void setBookStatusInfo(ScanTypeInfo bookStatusInfo) {
+        this.bookStatusInfo = bookStatusInfo;
+    }
+
+    public ScanTypeInfo getUpdateDateInfo() {
+        return updateDateInfo;
+    }
+
+    public void setUpdateDateInfo(ScanTypeInfo updateDateInfo) {
+        this.updateDateInfo = updateDateInfo;
+    }
+
+    public ScanTypeInfo getSortTypeInfo() {
+        return sortTypeInfo;
+    }
+
+    public void setSortTypeInfo(ScanTypeInfo sortTypeInfo) {
+        this.sortTypeInfo = sortTypeInfo;
+    }
 }

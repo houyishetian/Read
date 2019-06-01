@@ -25,6 +25,7 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
     private List<ScanTypeInfo> data;
 
     private boolean isHold = false;
+    private int layoutId;
 
     public ScanTypeAdapter(Context context, List<ScanTypeInfo> data) {
         this.context = context;
@@ -32,9 +33,16 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
         setDefaultChecked("");
     }
 
+    public ScanTypeAdapter(Context context,List<ScanTypeInfo> data, int layoutId){
+        this.context = context;
+        this.data = data;
+        setDefaultChecked("");
+        this.layoutId = layoutId;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_scan_type, null);
+        View view = LayoutInflater.from(context).inflate(layoutId == 0 ? R.layout.item_scan_type : layoutId, null);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }

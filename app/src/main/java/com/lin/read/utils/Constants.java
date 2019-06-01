@@ -41,10 +41,12 @@ public class Constants {
     public static final String WEB_QIDIAN="起点";
     public static final String WEB_ZONGHENG="纵横";
     public static final String WEB_17K="17k";
+    public static final String WEB_YOU_SHU="优书";
     static{
         scanWebTypeList=new ArrayList<>();
         scanWebTypeList.add(new ScanTypeInfo(WEB_QIDIAN, false, "1"));
         scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
         scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
+        scanWebTypeList.add(new ScanTypeInfo(WEB_YOU_SHU, false, "4"));
     }
 }

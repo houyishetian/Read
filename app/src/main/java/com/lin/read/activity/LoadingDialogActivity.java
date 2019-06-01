@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.ReadGetBookInfoFactory;
-import com.lin.read.filter.scan.ReadGetQiDianBookInfoFactory;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
@@ -82,31 +81,47 @@ public class LoadingDialogActivity extends Activity {
                         tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE,msg.arg1));
                         break;
                     case MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END:
-                        ArrayList<BookInfo> result=msg.getData().getParcelableArrayList(MessageUtils.DATA_QIDIAN_BOOK_LIST);
+                        ArrayList<BookInfo> result=msg.getData().getParcelableArrayList(MessageUtils.BOOK_LIST);
                         tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_END,result.size()));
                         break;
+                    case MessageUtils.SCAN_YOUSHU_END:
+                            break;
                 }
             }
         };
     }
 
     private void scanBook(){
-        SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
+        final SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
 
         ReadGetBookInfoFactory.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo, new ReadGetBookInfoFactory.OnGetBookInfoListener() {
             @Override
             public void succ(Object allBookInfo) {
-                if(allBookInfo!=null){
-                    Log.e("Test","共："+((List) allBookInfo).size());
-                    ArrayList<BookInfo> allBooks= (ArrayList<BookInfo>) allBookInfo;
-                    Intent intent=new Intent();
-                    Bundle bundle=new Bundle();
-                    bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA,allBooks);
-                    Log.e("Test","传递："+ allBooks.toString());
-                    intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA,bundle);
-                    setResult(Constants.SCAN_RESPONSE_SUCC,intent);
-                    finish();
+                ArrayList<BookInfo> allBooks;
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                if (allBookInfo == null) {
+                    allBooks = new ArrayList<>();
+                } else {
+                    if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebType())) {
+                        ArrayList<Object> allInfos = (ArrayList<Object>) allBookInfo;
+                        int totalPage = Integer.parseInt(allInfos.get(0).toString());
+                        intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
+                        allInfos.remove(0);
+                        allBooks = new ArrayList<>();
+                        for (Object item : allInfos) {
+                            allBooks.add((BookInfo) item);
+                        }
+                    } else {
+                        allBooks = (ArrayList<BookInfo>) allBookInfo;
+                    }
                 }
+                Log.e("Test", "共：" + ((List) allBookInfo).size());
+                bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
+                Log.e("Test", "传递：" + allBooks.toString());
+                intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
+                setResult(Constants.SCAN_RESPONSE_SUCC, intent);
+                finish();
             }
 
             @Override

@@ -75,6 +75,12 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
                     holder.score.setText(bookInfo.getScore());
                     holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
                     break;
+                case Constants.WEB_YOU_SHU:
+                    holder.viewScoreInfos.setVisibility(View.VISIBLE);
+                    holder.viewCommentInfos.setVisibility(View.INVISIBLE);
+                    holder.score.setText(bookInfo.getScore());
+                    holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
+                    break;
                 case Constants.WEB_ZONGHENG:
                     holder.viewScoreInfos.setVisibility(View.INVISIBLE);
                     holder.viewCommentInfos.setVisibility(View.VISIBLE);

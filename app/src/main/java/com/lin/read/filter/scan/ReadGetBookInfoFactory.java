@@ -33,6 +33,9 @@ public abstract class ReadGetBookInfoFactory {
             case Constants.WEB_ZONGHENG:
                 return new ReadZongHengBookInfoFactory();
             case Constants.WEB_17K:
+                return null;
+            case Constants.WEB_YOU_SHU:
+                return new ReadGetYouShuBookInfoFactory();
             default:
                 return null;
         }

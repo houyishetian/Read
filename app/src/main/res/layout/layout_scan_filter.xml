@@ -59,6 +59,11 @@
                     layout="@layout/layout_scan_in_17k"
                     android:visibility="gone" />
 
+                <include
+                        android:id="@+id/layout_scan_youshu"
+                        layout="@layout/layout_scan_in_youshu"
+                        android:visibility="gone" />
+
                 <Button
                     android:id="@+id/scan_ok"
                     android:layout_width="match_parent"

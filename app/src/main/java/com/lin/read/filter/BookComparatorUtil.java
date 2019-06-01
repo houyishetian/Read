@@ -147,7 +147,7 @@ public class BookComparatorUtil {
         if (oneItem == null || StringUtils.isEmpty(oneItem.getWebName())) {
             return null;
         }
-        if(Constants.WEB_QIDIAN.equals(oneItem.getWebName())){
+        if(Constants.WEB_QIDIAN.equals(oneItem.getWebName()) || Constants.WEB_YOU_SHU.equals(oneItem.getWebName())){
             List<SortInfo> allSortInfo = new ArrayList<>();
             allSortInfo.add(new SortInfo(SortInfo.SORT_BY_DEFAULT,SortInfo.ID_SORT_BY_DEFAULT));
             if(!TextUtils.isEmpty(oneItem.getScore())){
