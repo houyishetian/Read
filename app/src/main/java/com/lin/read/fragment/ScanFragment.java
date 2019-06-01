@@ -62,10 +62,6 @@ public class ScanFragment extends Fragment {
     private View scanFilterBlank;
 
     private View scanResultYouShuLl;
-    private TextView scanYsPrePageTv;
-    private TextView scanYsNextPageTv;
-    private EditText scanYsSkipPageEt;
-    private TextView scanYsTotalPageTv;
 
     private RecyclerView scanWebTypeRcv;
     private ScanTypeAdapter scanWebTypeAdapter;
@@ -133,10 +129,6 @@ public class ScanFragment extends Fragment {
         scanFilterBlank = view.findViewById(R.id.scan_filter_blank);
 
         scanResultYouShuLl = view.findViewById(R.id.scan_result_youshu);
-        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
-        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
-        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
-        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
 
         scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
         tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
@@ -194,12 +186,7 @@ public class ScanFragment extends Fragment {
                     default:
                         return;
                 }
-                if (searchInfo != null) {
-                    Log.e("Test", searchInfo.toString());
-                    Intent intent = new Intent(getActivity(), LoadingDialogActivity.class);
-                    intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
-                    startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
-                }
+                startScanning(searchInfo);
             }
         });
 
@@ -412,11 +399,9 @@ public class ScanFragment extends Fragment {
                         allBooksRcv.setVisibility(View.VISIBLE);
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
                         if(currentWebPosition == LAYOUT_INDEX_YOUSHU){
-                            int totalPage = data.getIntExtra(MessageUtils.TOTAL_PAGE,0);
                             scanResultYouShuLl.setVisibility(View.VISIBLE);
                             scanResultTv.setVisibility(View.GONE);
-                            scanYsTotalPageTv.setText(""+totalPage);
-                            scanYsSkipPageEt.setText("1");
+                            youShuScanUtil.afterGetBookInfo(data);
                         }else if(currentWebPosition == LAYOUT_INDEX_QIDIAN){
                             scanResultTv.setVisibility(View.VISIBLE);
                             scanResultYouShuLl.setVisibility(View.GONE);
@@ -457,5 +442,14 @@ public class ScanFragment extends Fragment {
     public void refreshBookData(){
         allBookAdapter.notifyDataSetChanged();
         allBooksRcv.smoothScrollToPosition(0);
+    }
+
+    private void startScanning(SearchInfo searchInfo){
+        if (searchInfo != null) {
+            Log.e("Test", searchInfo.toString());
+            Intent intent = new Intent(getActivity(), LoadingDialogActivity.class);
+            intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
+            startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
+        }
     }
 }

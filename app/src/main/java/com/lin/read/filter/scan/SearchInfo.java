@@ -30,6 +30,7 @@ public class SearchInfo implements Serializable{
     private ScanTypeInfo bookStatusInfo;
     private ScanTypeInfo updateDateInfo;
     private ScanTypeInfo sortTypeInfo;
+    private int currentPage = 1;
 
     @Override
     public String toString() {
@@ -192,5 +193,13 @@ public class SearchInfo implements Serializable{
 
     public void setSortTypeInfo(ScanTypeInfo sortTypeInfo) {
         this.sortTypeInfo = sortTypeInfo;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 }

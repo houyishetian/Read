@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class YouShuHttpUtil {
-    public static ArrayList<Object> getAllBookInfo(SearchInfo searchInfo, int page) throws Exception {
+    public static ArrayList<Object> getAllBookInfo(SearchInfo searchInfo) throws Exception {
         if (searchInfo == null) {
             return null;
         }
-        String url = YouShuRegexUtil.getYouShuUrl(searchInfo, page);
+        String url = YouShuRegexUtil.getYouShuUrl(searchInfo);
         Log.d("you shu url:", url);
         HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
         if (conn == null) {

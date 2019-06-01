@@ -6,7 +6,7 @@ import com.lin.read.filter.scan.SearchInfo;
 public class YouShuRegexUtil {
     public static final String YOUSHU_LINK = "http://www.yousuu.com/category/%s?";
 
-    public static String getYouShuUrl(SearchInfo searchInfo,int page) {
+    public static String getYouShuUrl(SearchInfo searchInfo) {
         if (searchInfo == null) {
             return null;
         }
@@ -37,11 +37,11 @@ public class YouShuRegexUtil {
             }
             link += "sort=" + sortTypeId;
         }
-        if (page > 0) {
+        if (searchInfo.getCurrentPage() > 0) {
             if (!link.endsWith("?")) {
                 link += "&";
             }
-            link += "page=" + page;
+            link += "page=" + searchInfo.getCurrentPage();
         }
         return link;
     }

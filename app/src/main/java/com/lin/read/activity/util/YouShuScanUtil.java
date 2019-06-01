@@ -1,10 +1,13 @@
 package com.lin.read.activity.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanTypeItemDecoration;
@@ -12,6 +15,7 @@ import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.youshu.YouShuConstants;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.MessageUtils;
 
 public class YouShuScanUtil {
     private RecyclerView scanCategoryRcv;
@@ -25,6 +29,12 @@ public class YouShuScanUtil {
     private ScanTypeAdapter scanBookStateAdapter;
     private ScanTypeAdapter scanUpdateDateAdapter;
     private ScanTypeAdapter scanSortTypeAdapter;
+
+
+    private TextView scanYsPrePageTv;
+    private TextView scanYsNextPageTv;
+    private EditText scanYsSkipPageEt;
+    private TextView scanYsTotalPageTv;
 
     private Activity activity;
 
@@ -41,6 +51,11 @@ public class YouShuScanUtil {
         scanBookStateAdapter = new ScanTypeAdapter(activity, YouShuConstants.bookStatusList);
         scanUpdateDateAdapter = new ScanTypeAdapter(activity, YouShuConstants.updateDateList);
         scanSortTypeAdapter = new ScanTypeAdapter(activity, YouShuConstants.sortTypeList);
+
+        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
+        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
+        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
+        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
 
         setAdapter(activity);
     }
@@ -74,6 +89,7 @@ public class YouShuScanUtil {
 
     public SearchInfo getSearchInfo(){
         SearchInfo searchInfo = new SearchInfo();
+        searchInfo.setCurrentPage(1);
         searchInfo.setWebType(Constants.WEB_YOU_SHU);
         searchInfo.setCategoryInfo(scanCategoryAdapter.getCheckedInfo());
         searchInfo.setWordsNumInfo(scanWordsNumAdapter.getCheckedInfo());
@@ -81,5 +97,11 @@ public class YouShuScanUtil {
         searchInfo.setUpdateDateInfo(scanUpdateDateAdapter.getCheckedInfo());
         searchInfo.setSortTypeInfo(scanSortTypeAdapter.getCheckedInfo());
         return searchInfo;
+    }
+
+    public void afterGetBookInfo(Intent data){
+        int totalPage = data.getIntExtra(MessageUtils.TOTAL_PAGE,0);
+        scanYsTotalPageTv.setText(""+totalPage);
+        scanYsSkipPageEt.setText("1");
     }
 }
