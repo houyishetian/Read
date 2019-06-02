@@ -47,7 +47,7 @@
                 <include
                     android:id="@+id/layout_scan_qidian"
                     layout="@layout/layout_scan_in_qidian"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/layout_scan_zongheng"

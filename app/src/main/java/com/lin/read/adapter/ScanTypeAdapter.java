@@ -130,10 +130,12 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
         for (ScanTypeInfo item : data) {
             if (text.equals(item.getText())) {
                 item.setChecked(true);
+                return;
             } else {
                 item.setChecked(false);
             }
         }
+        data.get(0).setChecked(true);
     }
 
     public ScanTypeInfo getCheckedInfo() {
@@ -158,6 +160,18 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
             }
         }
         return null;
+    }
+
+    public int getCheckedPosition() {
+        if (data == null || data.size() == 0) {
+            return -1;
+        }
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).isChecked()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public interface OnScanItemClickListener {

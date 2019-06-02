@@ -37,6 +37,7 @@ import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.scan.ScanTypeInfo;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -73,16 +74,7 @@ public class ScanFragment extends Fragment {
 
     private Button scanOK;
 
-    private View layoutScanQiDian;
-    private View layoutScanZongHeng;
-    private View layoutScan17k;
-    private View layoutScanYouShu;
     private View[] allScanLayouts;
-    private int currentWebPosition;
-    private final int LAYOUT_INDEX_QIDIAN=0;
-    private final int LAYOUT_INDEX_ZONGHENG=1;
-    private final int LAYOUT_INDEX_17K=2;
-    private final int LAYOUT_INDEX_YOUSHU  =3;
 
     private Handler handler;
 
@@ -135,25 +127,27 @@ public class ScanFragment extends Fragment {
 
         scanOK = (Button) view.findViewById(R.id.scan_ok);
 
-        currentWebPosition=LAYOUT_INDEX_QIDIAN;
-
         scanWebTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_web);
 
         allBooksRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_all_books);
 
         emptyTv = (TextView) view.findViewById(R.id.empty_view);
 
-        layoutScan17k=view.findViewById(R.id.layout_scan_17k);
-        layoutScanZongHeng=view.findViewById(R.id.layout_scan_zongheng);
-        layoutScanQiDian=view.findViewById(R.id.layout_scan_qidian);
-        layoutScanYouShu = view.findViewById(R.id.layout_scan_youshu);
-        allScanLayouts=new View[]{layoutScanQiDian,layoutScanZongHeng,layoutScan17k,layoutScanYouShu};
-
+        allScanLayouts = new View[Constants.scanWebTypeList.size()];
+        for (int i = 0; i < Constants.scanWebTypeList.size(); i++) {
+            ScanTypeInfo item = Constants.scanWebTypeList.get(i);
+            allScanLayouts[i] = view.findViewById(Constants.scanWebTypeLayoutIdsMap.get(item.getText()));
+        }
         setAdapter();
 
         scanFilterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
+                if (Constants.scanWebTypeList == null || Constants.scanWebTypeList.size() == 0) {
+                    Toast.makeText(getActivity(), "没有该功能!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showScanLayout(scanWebTypeAdapter.getCheckedPosition());
                 Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_in);
                 scanFilterLayout.startAnimation(anim);
                 scanFilterLayout.setVisibility(View.VISIBLE);
@@ -173,14 +167,14 @@ public class ScanFragment extends Fragment {
             public void onClick(View v) {
                 hideFilterLayout();
                 SearchInfo searchInfo = null;
-                switch (currentWebPosition){
-                    case LAYOUT_INDEX_QIDIAN:
+                switch (scanWebTypeAdapter.getCheckedText()){
+                    case Constants.WEB_QIDIAN:
                         searchInfo = qiDianScanUtil.getSearchInfo();
                         break;
-                    case LAYOUT_INDEX_ZONGHENG:
+                    case Constants.WEB_ZONGHENG:
                         searchInfo = zongHengScanUtil.getSearchInfo();
                         break;
-                    case LAYOUT_INDEX_YOUSHU:
+                    case Constants.WEB_YOU_SHU:
                         searchInfo = youShuScanUtil.getSearchInfo();
                         searchInfo.setCurrentPage(1);
                         break;
@@ -302,8 +296,7 @@ public class ScanFragment extends Fragment {
                 if(!StringUtils.isEmpty(clickText)){
                     hideSoft();
                     showScanLayout(position);
-                    currentWebPosition = position;
-                    if (position == LAYOUT_INDEX_QIDIAN) {
+                    if (Constants.WEB_QIDIAN.equals(scanWebTypeAdapter.getCheckedText())) {
                         String rankType=qiDianScanUtil.getRankType();
                         if (rankType.equals(QiDianConstants.QD_RANK_RECOMMEND) || rankType.equals(QiDianConstants.QD_RANK_FINAL)) {
                             qiDianScanUtil.hideDateLayout(false);
@@ -371,10 +364,11 @@ public class ScanFragment extends Fragment {
     }
 
     public EditText getFocusEt() {
-        if (currentWebPosition == LAYOUT_INDEX_QIDIAN) {
-            return qiDianScanUtil.getFocusEt();
-        } else if (currentWebPosition == LAYOUT_INDEX_ZONGHENG) {
-            return zongHengScanUtil.getFocusEt();
+        switch (scanWebTypeAdapter.getCheckedText()){
+            case Constants.WEB_QIDIAN:
+                return qiDianScanUtil.getFocusEt();
+            case Constants.WEB_ZONGHENG:
+                return zongHengScanUtil.getFocusEt();
         }
         return null;
     }
@@ -400,15 +394,18 @@ public class ScanFragment extends Fragment {
                         emptyTv.setVisibility(View.GONE);
                         allBooksRcv.setVisibility(View.VISIBLE);
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
-                        if(currentWebPosition == LAYOUT_INDEX_YOUSHU){
-                            scanResultYouShuLl.setVisibility(View.VISIBLE);
-                            scanResultTv.setVisibility(View.GONE);
-                            youShuScanUtil.afterGetBookInfo(data);
-                        }else if(currentWebPosition == LAYOUT_INDEX_QIDIAN){
-                            scanResultTv.setVisibility(View.VISIBLE);
-                            scanResultYouShuLl.setVisibility(View.GONE);
-                            Log.e("Test", "接收:" + allBookDataFromScan);
-                            scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                        switch (scanWebTypeAdapter.getCheckedText()){
+                            case Constants.WEB_QIDIAN:
+                                scanResultTv.setVisibility(View.VISIBLE);
+                                scanResultYouShuLl.setVisibility(View.GONE);
+                                Log.e("Test", "接收:" + allBookDataFromScan);
+                                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                                break;
+                            case Constants.WEB_YOU_SHU:
+                                scanResultYouShuLl.setVisibility(View.VISIBLE);
+                                scanResultTv.setVisibility(View.GONE);
+                                youShuScanUtil.afterGetBookInfo(data);
+                                break;
                         }
                         allBookData.clear();
                         allBookData.addAll(allBookDataFromScan);

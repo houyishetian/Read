@@ -1,9 +1,12 @@
 package com.lin.read.utils;
 
+import com.lin.read.R;
 import com.lin.read.filter.scan.ScanTypeInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lisonglin on 2017/10/15.
@@ -42,11 +45,19 @@ public class Constants {
     public static final String WEB_ZONGHENG="纵横";
     public static final String WEB_17K="17k";
     public static final String WEB_YOU_SHU="优书";
+
+    public static Map<String,Integer> scanWebTypeLayoutIdsMap;
     static{
         scanWebTypeList=new ArrayList<>();
         scanWebTypeList.add(new ScanTypeInfo(WEB_QIDIAN, false, "1"));
-        scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
-        scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
+//        scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
+//        scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
         scanWebTypeList.add(new ScanTypeInfo(WEB_YOU_SHU, false, "4"));
+
+        scanWebTypeLayoutIdsMap = new HashMap<>();
+        scanWebTypeLayoutIdsMap.put(WEB_QIDIAN, R.id.layout_scan_qidian);
+        scanWebTypeLayoutIdsMap.put(WEB_ZONGHENG, R.id.layout_scan_zongheng);
+        scanWebTypeLayoutIdsMap.put(WEB_17K, R.id.layout_scan_17k);
+        scanWebTypeLayoutIdsMap.put(WEB_YOU_SHU, R.id.layout_scan_youshu);
     }
 }
