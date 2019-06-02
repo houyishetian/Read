@@ -298,7 +298,7 @@ public class ScanFragment extends Fragment {
                     showScanLayout(position);
                     if (Constants.WEB_QIDIAN.equals(scanWebTypeAdapter.getCheckedText())) {
                         String rankType=qiDianScanUtil.getRankType();
-                        if (rankType.equals(QiDianConstants.QD_RANK_RECOMMEND) || rankType.equals(QiDianConstants.QD_RANK_FINAL)) {
+                        if (rankType.equals(QiDianConstants.QD_RANK_RECOMMEND)) {
                             qiDianScanUtil.hideDateLayout(false);
                         }else{
                             qiDianScanUtil.hideDateLayout(true);

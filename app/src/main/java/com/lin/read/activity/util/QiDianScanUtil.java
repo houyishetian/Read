@@ -86,7 +86,7 @@ public class QiDianScanUtil {
             public void onItemClick(int position, String clickText) {
                 Log.e("Test", "current position:" + position);
                 if (!StringUtils.isEmpty(clickText)) {
-                    if (clickText.equals(QiDianConstants.QD_RANK_RECOMMEND) || clickText.equals(QiDianConstants.QD_RANK_FINAL)) {
+                    if (clickText.equals(QiDianConstants.QD_RANK_RECOMMEND)) {
                         scanDateLinearLayout.setVisibility(View.VISIBLE);
                         scanDateTypeAdapter.setDefaultChecked(QiDianConstants.QD_DATE_WEEK);
                         scanDateTypeAdapter.notifyDataSetChanged();

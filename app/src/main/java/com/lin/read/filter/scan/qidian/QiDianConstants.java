@@ -12,10 +12,8 @@ public class QiDianConstants {
 
 	public static final String QD_RANK_YUE_PIAO ="月票";
 	public static final String QD_RANK_HOT_SALE ="热销";
-	public static final String QD_RANK_VIP_CLICK ="会员";
 	public static final String QD_RANK_RECOMMEND ="推荐";
 	public static final String QD_RANK_COLLECT ="收藏";
-	public static final String QD_RANK_FINAL ="完本";
 	public static final String QD_RANK_SIGN_NEW ="签约";
 	public static final String QD_RANK_PUBLIC_NEW ="公众";
 
@@ -36,16 +34,14 @@ public class QiDianConstants {
 	public static final String QD_BOOK_TI_YU ="体育";
 	public static final String QD_BOOK_KE_HUAN ="科幻";
 	public static final String QD_BOOK_LING_YI ="灵异";
-	public static final String QD_BOOK_ER_CI_YUAN ="二次元";
+	public static final String QD_BOOK_ER_CI_YUAN ="轻小说";
 
 	static{
 		scanRankTypeList=new ArrayList<>();
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_YUE_PIAO, false, "yuepiao"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_HOT_SALE, false, "hotsales"));
-		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_VIP_CLICK, false, "click"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_RECOMMEND, false, "recom"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_COLLECT, false, "collect"));
-		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_FINAL, false, "fin"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_SIGN_NEW, false, "signnewbook"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_PUBLIC_NEW, false, "pubnewbook"));
 
