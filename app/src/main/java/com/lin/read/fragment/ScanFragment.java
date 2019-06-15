@@ -18,18 +18,12 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.util.QiDianScanUtil;
 import com.lin.read.activity.util.YouShuScanUtil;
-import com.lin.read.activity.util.ZongHengScanUtil;
 import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.decoration.ScanBooksItemDecoration;
@@ -37,15 +31,14 @@ import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.activity.MainActivity;
 import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.scan.ScanTypeInfo;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.utils.Constants;
-import com.lin.read.utils.MessageUtils;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.filter.BookComparator;
+import com.lin.read.view.ScanTypeRecyclerViewUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,12 +67,9 @@ public class ScanFragment extends Fragment {
 
     private Button scanOK;
 
-    private View[] allScanLayouts;
-
     private Handler handler;
 
     private QiDianScanUtil qiDianScanUtil;
-    private ZongHengScanUtil zongHengScanUtil;
     private YouShuScanUtil youShuScanUtil;
 
     private BookComparatorUtil bookComparatorUtil;
@@ -96,6 +86,8 @@ public class ScanFragment extends Fragment {
 
     private boolean isSoftInputDisplay = false;
 
+    public ScanTypeRecyclerViewUtil scanTypeRecyclerViewUtil;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_scan, null);
@@ -104,12 +96,11 @@ public class ScanFragment extends Fragment {
     }
 
     private void initView(View view) {
+        scanTypeRecyclerViewUtil = ScanTypeRecyclerViewUtil.Companion.getInstance(getActivity(),(LinearLayout) (view.findViewById(R.id.ll_filter_layout)));
+
         handler=new Handler();
         qiDianScanUtil=new QiDianScanUtil();
         qiDianScanUtil.initQiDianViews(this,view,handler);
-
-        zongHengScanUtil = new ZongHengScanUtil();
-        zongHengScanUtil.initQiDianViews(this,view);
 
         youShuScanUtil = new YouShuScanUtil();
         youShuScanUtil.initYouShuViews(this,view,handler);
@@ -133,11 +124,6 @@ public class ScanFragment extends Fragment {
 
         emptyTv = (TextView) view.findViewById(R.id.empty_view);
 
-        allScanLayouts = new View[Constants.scanWebTypeList.size()];
-        for (int i = 0; i < Constants.scanWebTypeList.size(); i++) {
-            ScanTypeInfo item = Constants.scanWebTypeList.get(i);
-            allScanLayouts[i] = view.findViewById(Constants.scanWebTypeLayoutIdsMap.get(item.getText()));
-        }
         setAdapter();
 
         scanFilterTv.setOnClickListener(new NoDoubleClickListener() {
@@ -147,7 +133,7 @@ public class ScanFragment extends Fragment {
                     Toast.makeText(getActivity(), "没有该功能!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                showScanLayout(scanWebTypeAdapter.getCheckedPosition());
+                scanTypeRecyclerViewUtil.showWebLayout(scanWebTypeAdapter.getCheckedText());
                 Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_in);
                 scanFilterLayout.startAnimation(anim);
                 scanFilterLayout.setVisibility(View.VISIBLE);
@@ -170,9 +156,6 @@ public class ScanFragment extends Fragment {
                 switch (scanWebTypeAdapter.getCheckedText()){
                     case Constants.WEB_QIDIAN:
                         searchInfo = qiDianScanUtil.getSearchInfo();
-                        break;
-                    case Constants.WEB_ZONGHENG:
-                        searchInfo = zongHengScanUtil.getSearchInfo();
                         break;
                     case Constants.WEB_YOU_SHU:
                         searchInfo = youShuScanUtil.getSearchInfo();
@@ -281,7 +264,6 @@ public class ScanFragment extends Fragment {
         allBookAdapter=new ScanBookItemAdapter(getActivity(),allBookData);
 
         scanWebTypeRcv.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        scanWebTypeAdapter.setDefaultChecked(Constants.WEB_QIDIAN);
         scanWebTypeRcv.addItemDecoration(new ScanTypeItemDecoration(getActivity(), 15));
         scanWebTypeRcv.setAdapter(scanWebTypeAdapter);
 
@@ -295,8 +277,8 @@ public class ScanFragment extends Fragment {
                 Log.e("Test", "current position:" + position);
                 if(!StringUtils.isEmpty(clickText)){
                     hideSoft();
-                    showScanLayout(position);
-                    if (Constants.WEB_QIDIAN.equals(scanWebTypeAdapter.getCheckedText())) {
+                    scanTypeRecyclerViewUtil.showWebLayout(clickText);
+                    if (Constants.WEB_QIDIAN.equals(clickText)) {
                         String rankType=qiDianScanUtil.getRankType();
                         if (rankType.equals(QiDianConstants.QD_RANK_RECOMMEND)) {
                             qiDianScanUtil.hideDateLayout(false);
@@ -367,8 +349,6 @@ public class ScanFragment extends Fragment {
         switch (scanWebTypeAdapter.getCheckedText()){
             case Constants.WEB_QIDIAN:
                 return qiDianScanUtil.getFocusEt();
-            case Constants.WEB_ZONGHENG:
-                return zongHengScanUtil.getFocusEt();
         }
         return null;
     }
@@ -423,19 +403,6 @@ public class ScanFragment extends Fragment {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void showScanLayout(int layoutIndex) {
-        if (layoutIndex < 0 || allScanLayouts == null || layoutIndex >= allScanLayouts.length) {
-            return;
-        }
-        for (int i = 0; i < allScanLayouts.length; i++) {
-            if (i == layoutIndex) {
-                allScanLayouts[i].setVisibility(View.VISIBLE);
-            } else {
-                allScanLayouts[i].setVisibility(View.GONE);
-            }
-        }
     }
 
     public void refreshBookData(){

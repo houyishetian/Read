@@ -30,13 +30,11 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
     public ScanTypeAdapter(Context context, List<ScanTypeInfo> data) {
         this.context = context;
         this.data = data;
-        setDefaultChecked("");
     }
 
     public ScanTypeAdapter(Context context,List<ScanTypeInfo> data, int layoutId){
         this.context = context;
         this.data = data;
-        setDefaultChecked("");
         this.layoutId = layoutId;
     }
 
@@ -111,31 +109,6 @@ public class ScanTypeAdapter extends RecyclerView.Adapter<ScanTypeAdapter.ViewHo
             }
         }
         notifyDataSetChanged();
-    }
-
-    public void setDefaultChecked(String text) {
-        if (data == null || data.size() == 0) {
-            return;
-        }
-        if (TextUtils.isEmpty(text)) {
-            for (int i = 0; i < data.size(); i++) {
-                if (i == 0) {
-                    data.get(i).setChecked(true);
-                } else {
-                    data.get(i).setChecked(false);
-                }
-            }
-            return;
-        }
-        for (ScanTypeInfo item : data) {
-            if (text.equals(item.getText())) {
-                item.setChecked(true);
-                return;
-            } else {
-                item.setChecked(false);
-            }
-        }
-        data.get(0).setChecked(true);
     }
 
     public ScanTypeInfo getCheckedInfo() {

@@ -1,6 +1,7 @@
 package com.lin.read.utils;
 
 import android.content.Context;
+import android.util.TypedValue;
 
 /**
  * Created by lisonglin on 2017/10/13.
@@ -13,7 +14,6 @@ public class UIUtils {
     }
 
     public static int dip2px(Context context, float dpValue) {
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,context.getResources().getDisplayMetrics() );
     }
 }

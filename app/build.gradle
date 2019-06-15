@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     signingConfigs {
@@ -43,4 +45,6 @@ dependencies {
     implementation files('libs/cpdetector_1.0.10.jar')
     implementation files('libs/jargs-1.0.jar')
     implementation files('libs/pinyin4j-2.5.0.jar')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:latest.release"
 }

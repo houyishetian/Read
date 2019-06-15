@@ -211,11 +211,11 @@ public class SearchFragment extends Fragment {
         webTypeBean0.setCanDownload(false);
         webTypeBeenList.add(webTypeBean0);
 
-        WebTypeBean webTypeBean1=new WebTypeBean();
-        webTypeBean1.setWebName("80小说");
-        webTypeBean1.setTag(Constants.RESOLVE_FROM_NOVEL80);
-        webTypeBean1.setCanDownload(true);
-        webTypeBeenList.add(webTypeBean1);
+//        WebTypeBean webTypeBean1=new WebTypeBean();
+//        webTypeBean1.setWebName("80小说");
+//        webTypeBean1.setTag(Constants.RESOLVE_FROM_NOVEL80);
+//        webTypeBean1.setCanDownload(true);
+//        webTypeBeenList.add(webTypeBean1);
 
         WebTypeBean webTypeBean2=new WebTypeBean();
         webTypeBean2.setWebName("顶点");

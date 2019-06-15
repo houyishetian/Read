@@ -44,25 +44,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <include
-                    android:id="@+id/layout_scan_qidian"
-                    layout="@layout/layout_scan_in_qidian"
-                    android:visibility="gone" />
-
-                <include
-                    android:id="@+id/layout_scan_zongheng"
-                    layout="@layout/layout_scan_in_zongheng"
-                    android:visibility="gone" />
-
-                <include
-                    android:id="@+id/layout_scan_17k"
-                    layout="@layout/layout_scan_in_17k"
-                    android:visibility="gone" />
-
-                <include
-                        android:id="@+id/layout_scan_youshu"
-                        layout="@layout/layout_scan_in_youshu"
-                        android:visibility="gone" />
+                <LinearLayout
+                        android:id="@+id/ll_filter_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
 
                 <Button
                     android:id="@+id/scan_ok"

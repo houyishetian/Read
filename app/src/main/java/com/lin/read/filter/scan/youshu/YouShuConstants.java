@@ -3,6 +3,7 @@ package com.lin.read.filter.scan.youshu;
 import com.lin.read.filter.scan.ScanTypeInfo;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class YouShuConstants {
@@ -49,10 +50,18 @@ public class YouShuConstants {
     public static List<ScanTypeInfo> updateDateList;
     public static List<ScanTypeInfo> sortTypeList;
 
+    public static final String YS_FILTER_CATE = "分类";
+    public static final String YS_FILTER_WORDS = "字数";
+    public static final String YS_FILTER_STATUS = "状态";
+    public static final String YS_FILTER_UPDATE = "更新";
+    public static final String YS_FILTER_SORT = "排序";
+
+    public static LinkedHashMap<String,List<ScanTypeInfo>> filterMap;
+
     static{
         categoryList = new ArrayList<>();
         categoryList.add(new ScanTypeInfo(YS_CATE_ALL,false,"all"));
-        categoryList.add(new ScanTypeInfo(YS_CATE_FANTASY,false,"fantasy"));
+        categoryList.add(new ScanTypeInfo(YS_CATE_FANTASY,true,"fantasy"));
         categoryList.add(new ScanTypeInfo(YS_CATE_WUXIA,false,"wuxia"));
         categoryList.add(new ScanTypeInfo(YS_CATE_CITY,false,"city"));
         categoryList.add(new ScanTypeInfo(YS_CATE_HISTORY,false,"history"));
@@ -72,16 +81,16 @@ public class YouShuConstants {
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_3,false,"3"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_4,false,"4"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_5,false,"5"));
-        wordsNumList.add(new ScanTypeInfo(YS_WORDS_6,false,"6"));
+        wordsNumList.add(new ScanTypeInfo(YS_WORDS_6,true,"6"));
 
         bookStatusList = new ArrayList<>();
-        bookStatusList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,false,null));
+        bookStatusList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,true,null));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_1,false,"1"));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_2,false,"2"));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_3,false,"3"));
 
         updateDateList = new ArrayList<>();
-        updateDateList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,false,null));
+        updateDateList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,true,null));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_1,false,"1"));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_2,false,"2"));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_3,false,"3"));
@@ -91,6 +100,13 @@ public class YouShuConstants {
         sortTypeList.add(new ScanTypeInfo(YS_SORT_DEFAULT,false,null));
         sortTypeList.add(new ScanTypeInfo(YS_SORT_TOTAL,false,"total"));
         sortTypeList.add(new ScanTypeInfo(YS_SORT_WORD,false,"word"));
-        sortTypeList.add(new ScanTypeInfo(YS_SORT_RATE,false,"rate"));
+        sortTypeList.add(new ScanTypeInfo(YS_SORT_RATE,true,"rate"));
+
+        filterMap = new LinkedHashMap<>();
+        filterMap.put(YS_FILTER_CATE, categoryList);
+        filterMap.put(YS_FILTER_WORDS, wordsNumList);
+        filterMap.put(YS_FILTER_STATUS, bookStatusList);
+        filterMap.put(YS_FILTER_UPDATE, updateDateList);
+        filterMap.put(YS_FILTER_SORT, sortTypeList);
     }
 }

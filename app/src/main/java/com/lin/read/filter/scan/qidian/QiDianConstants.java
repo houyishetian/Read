@@ -2,6 +2,7 @@ package com.lin.read.filter.scan.qidian;
 import com.lin.read.filter.scan.ScanTypeInfo;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -36,23 +37,33 @@ public class QiDianConstants {
 	public static final String QD_BOOK_LING_YI ="灵异";
 	public static final String QD_BOOK_ER_CI_YUAN ="轻小说";
 
+	public static LinkedHashMap<String,List<ScanTypeInfo>> filterMap;
+
+	public static final String QD_FILTER_RANK = "榜单";
+	public static final String QD_FILTER_DATA = "日期";
+	public static final String QD_FILTER_TYPE = "类型";
+
+	public static final String QD_DEFAULT_RANK = QD_RANK_RECOMMEND;
+	public static final String QD_DEFAULT_DATE = QD_DATE_WEEK;
+	public static final String QD_DEFAULT_TYPE = QD_BOOK_XUAN_HUAN;
+
 	static{
 		scanRankTypeList=new ArrayList<>();
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_YUE_PIAO, false, "yuepiao"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_HOT_SALE, false, "hotsales"));
-		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_RECOMMEND, false, "recom"));
+		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_RECOMMEND, true, "recom"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_COLLECT, false, "collect"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_SIGN_NEW, false, "signnewbook"));
 		scanRankTypeList.add(new ScanTypeInfo(QD_RANK_PUBLIC_NEW, false, "pubnewbook"));
 
 		scanDateTypeList = new ArrayList<>();
-		scanDateTypeList.add(new ScanTypeInfo(QD_DATE_WEEK, false, "" + 1));
+		scanDateTypeList.add(new ScanTypeInfo(QD_DATE_WEEK, true, "" + 1));
 		scanDateTypeList.add(new ScanTypeInfo(QD_DATE_MONTH, false, "" + 2));
 		scanDateTypeList.add(new ScanTypeInfo(QD_DATE_TOTALLY, false, "" + 3));
 
 		scanBookTypeList=new ArrayList<>();
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_TOTALLY, false, "" + -1));
-		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_XUAN_HUAN, false, "" + 21));
+		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_XUAN_HUAN, true, "" + 21));
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_QI_HUAN, false, "" + 1));
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_WU_XIA, false, "" + 2));
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_XIAN_XIA, false, "" + 22));
@@ -65,5 +76,10 @@ public class QiDianConstants {
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_KE_HUAN, false, "" + 9));
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_LING_YI, false, "" + 10));
 		scanBookTypeList.add(new ScanTypeInfo(QD_BOOK_ER_CI_YUAN, false, "" + 12));
+
+		filterMap = new LinkedHashMap<>();
+		filterMap.put(QD_FILTER_RANK, scanRankTypeList);
+		filterMap.put(QD_FILTER_DATA, scanDateTypeList);
+		filterMap.put(QD_FILTER_TYPE, scanBookTypeList);
 	}
 }
