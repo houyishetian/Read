@@ -44,12 +44,6 @@ public class YouShuConstants {
     public static final String YS_SORT_WORD = "字数";
     public static final String YS_SORT_RATE = "评分";
 
-    public static List<ScanTypeInfo> categoryList;
-    public static List<ScanTypeInfo> wordsNumList;
-    public static List<ScanTypeInfo> bookStatusList;
-    public static List<ScanTypeInfo> updateDateList;
-    public static List<ScanTypeInfo> sortTypeList;
-
     public static final String YS_FILTER_CATE = "分类";
     public static final String YS_FILTER_WORDS = "字数";
     public static final String YS_FILTER_STATUS = "状态";
@@ -59,7 +53,7 @@ public class YouShuConstants {
     public static LinkedHashMap<String,List<ScanTypeInfo>> filterMap;
 
     static{
-        categoryList = new ArrayList<>();
+        List<ScanTypeInfo> categoryList = new ArrayList<>();
         categoryList.add(new ScanTypeInfo(YS_CATE_ALL,false,"all"));
         categoryList.add(new ScanTypeInfo(YS_CATE_FANTASY,true,"fantasy"));
         categoryList.add(new ScanTypeInfo(YS_CATE_WUXIA,false,"wuxia"));
@@ -74,7 +68,7 @@ public class YouShuConstants {
         categoryList.add(new ScanTypeInfo(YS_CATE_LITERATURE,false,"literature"));
         categoryList.add(new ScanTypeInfo(YS_CATE_NIJI,false,"niji"));
 
-        wordsNumList = new ArrayList<>();
+        List<ScanTypeInfo> wordsNumList = new ArrayList<>();
         wordsNumList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,false,null));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_1,false,"1"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_2,false,"2"));
@@ -83,20 +77,20 @@ public class YouShuConstants {
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_5,false,"5"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_6,true,"6"));
 
-        bookStatusList = new ArrayList<>();
+        List<ScanTypeInfo> bookStatusList = new ArrayList<>();
         bookStatusList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,true,null));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_1,false,"1"));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_2,false,"2"));
         bookStatusList.add(new ScanTypeInfo(YS_STATUS_3,false,"3"));
 
-        updateDateList = new ArrayList<>();
+        List<ScanTypeInfo> updateDateList = new ArrayList<>();
         updateDateList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,true,null));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_1,false,"1"));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_2,false,"2"));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_3,false,"3"));
         updateDateList.add(new ScanTypeInfo(YS_UPDATE_4,false,"4"));
 
-        sortTypeList = new ArrayList<>();
+        List<ScanTypeInfo> sortTypeList = new ArrayList<>();
         sortTypeList.add(new ScanTypeInfo(YS_SORT_DEFAULT,false,null));
         sortTypeList.add(new ScanTypeInfo(YS_SORT_TOTAL,false,"total"));
         sortTypeList.add(new ScanTypeInfo(YS_SORT_WORD,false,"word"));

@@ -1,46 +1,18 @@
 package com.lin.read.activity.util;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Handler;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
-import com.lin.read.R;
-import com.lin.read.activity.LoadingDialogActivity;
-import com.lin.read.activity.MainActivity;
 import com.lin.read.adapter.ScanTypeAdapter;
-import com.lin.read.decoration.ScanTypeItemDecoration;
-import com.lin.read.filter.BookComparatorUtil;
-import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.SearchInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.utils.Constants;
-import com.lin.read.utils.NoDoubleClickListener;
-import com.lin.read.utils.NumberInputFilter;
-import com.lin.read.filter.BookComparator;
-import com.lin.read.utils.ScoreInputFilter;
 import com.lin.read.view.ScanTypeRecyclerViewUtil;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by lisonglin on 2018/4/5.

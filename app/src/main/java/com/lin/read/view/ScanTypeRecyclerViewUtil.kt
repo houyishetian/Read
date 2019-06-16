@@ -60,7 +60,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             for ((key, item) in YouShuConstants.filterMap) {
                 val scanTypeView: ScanTypeView
                 when (key) {
-                    YouShuConstants.YS_FILTER_CATE, YouShuConstants.YS_FILTER_WORDS -> scanTypeView = ScanTypeView(context, item, spanCount = 3, layoutId = R.layout.item_scan_type_4_chars)
+                    YouShuConstants.YS_FILTER_CATE, YouShuConstants.YS_FILTER_WORDS -> scanTypeView = ScanTypeView(context, item, 3, true)
                     else -> scanTypeView = ScanTypeView(context, item)
                 }
                 scanTypeView.promptTv.setText(key)
@@ -82,7 +82,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
         }
     }
 
-    class ScanTypeView @JvmOverloads constructor(var context: Context, var data: List<ScanTypeInfo>,var spanCount: Int = 4, var layoutId: Int = R.layout.item_scan_type) {
+    class ScanTypeView @JvmOverloads constructor(var context: Context, var data: List<ScanTypeInfo>,var spanCount: Int = 4, var use4Words: Boolean = false) {
         lateinit var promptTv: TextView
         lateinit var recyclerView: RecyclerView
         lateinit var parent: LinearLayout
@@ -111,7 +111,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             recyclerView.addItemDecoration(ScanTypeItemDecoration(context, 15));
             parent.addView(recyclerView)
 
-            adapter = ScanTypeAdapter(context, data, layoutId)
+            adapter = ScanTypeAdapter(context, data, use4Words)
             recyclerView.adapter = adapter
         }
     }
