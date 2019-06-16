@@ -1,5 +1,11 @@
 package com.lin.read.filter.scan.qidian;
+
+import android.text.InputFilter;
+import com.lin.read.filter.scan.ScanInputInfo;
 import com.lin.read.filter.scan.ScanTypeInfo;
+import com.lin.read.utils.NumberInputFilter;
+import com.lin.read.utils.ScanInputTypeEnum;
+import com.lin.read.utils.ScoreInputFilter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,6 +44,7 @@ public class QiDianConstants {
 	public static final String QD_BOOK_ER_CI_YUAN ="轻小说";
 
 	public static LinkedHashMap<String,List<ScanTypeInfo>> filterMap;
+	public static List<ScanInputInfo> inputInfoList;
 
 	public static final String QD_FILTER_RANK = "榜单";
 	public static final String QD_FILTER_DATA = "日期";
@@ -46,6 +53,10 @@ public class QiDianConstants {
 	public static final String QD_DEFAULT_RANK = QD_RANK_RECOMMEND;
 	public static final String QD_DEFAULT_DATE = QD_DATE_WEEK;
 	public static final String QD_DEFAULT_TYPE = QD_BOOK_XUAN_HUAN;
+
+	public static final String QD_INPUT_SCORE = "分数";
+	public static final String QD_INPUT_SCORE_NUM = "人数";
+	public static final String QD_INPUT_WORDS = "字数";
 
 	static{
 		scanRankTypeList=new ArrayList<>();
@@ -81,5 +92,10 @@ public class QiDianConstants {
 		filterMap.put(QD_FILTER_RANK, scanRankTypeList);
 		filterMap.put(QD_FILTER_DATA, scanDateTypeList);
 		filterMap.put(QD_FILTER_TYPE, scanBookTypeList);
+
+		inputInfoList = new ArrayList<>();
+		inputInfoList.add(new ScanInputInfo(QD_INPUT_SCORE, "8.0-10", "分", ScanInputTypeEnum.FLOAT, new InputFilter[]{new ScoreInputFilter()}));
+		inputInfoList.add(new ScanInputInfo(QD_INPUT_SCORE_NUM, "300", "人评分", ScanInputTypeEnum.INT, new InputFilter[]{new NumberInputFilter(6)}));
+		inputInfoList.add(new ScanInputInfo(QD_INPUT_WORDS, "200", "万字", ScanInputTypeEnum.INT, new InputFilter[]{new NumberInputFilter(4)}));
 	}
 }

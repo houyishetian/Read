@@ -19,10 +19,9 @@ import com.lin.read.view.ScanTypeRecyclerViewUtil;
  */
 
 public class QiDianScanUtil {
-//    private EditText scoreEt;
-//    private EditText scoreNumEt;
-//    private EditText wordsNumEt;
-//    private EditText recommendEt;
+    private EditText scoreEt;
+    private EditText scoreNumEt;
+    private EditText wordsNumEt;
 
     private Activity activity;
 
@@ -37,12 +36,9 @@ public class QiDianScanUtil {
         dateView = scanFragment.scanTypeRecyclerViewUtil.qiDianScanTypeViews.get(QiDianConstants.QD_FILTER_DATA);
         typeView = scanFragment.scanTypeRecyclerViewUtil.qiDianScanTypeViews.get(QiDianConstants.QD_FILTER_TYPE);
 
-//        scoreEt = (EditText) view.findViewById(R.id.et_socre);
-//        scoreNumEt = (EditText) view.findViewById(R.id.et_socre_num);
-//        wordsNumEt = (EditText) view.findViewById(R.id.et_words_num);
-//        recommendEt = (EditText) view.findViewById(R.id.et_recommend);
-
-        setInputFilter();
+        scoreEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_SCORE).inputEt;
+        scoreNumEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_SCORE_NUM).inputEt;
+        wordsNumEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_WORDS).inputEt;
 
         rankView.adapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
             @Override
@@ -73,31 +69,21 @@ public class QiDianScanUtil {
         }
     }
 
-    private void setInputFilter() {
-//        scoreEt.setFilters(new InputFilter[]{new ScoreInputFilter()});
-//        scoreNumEt.setFilters(new InputFilter[]{new NumberInputFilter(6)});
-//        wordsNumEt.setFilters(new InputFilter[]{new NumberInputFilter(4)});
-//        recommendEt.setFilters(new InputFilter[]{new NumberInputFilter(4)});
-    }
-
     /**
      * 获取触发键盘时获取焦点的view
      *
      * @return
      */
     public EditText getFocusEt() {
-//        if (scoreEt.hasFocus()) {
-//            return scoreEt;
-//        }
-//        if (scoreNumEt.hasFocus()) {
-//            return scoreNumEt;
-//        }
-//        if (wordsNumEt.hasFocus()) {
-//            return wordsNumEt;
-//        }
-//        if (recommendEt.hasFocus()) {
-//            return recommendEt;
-//        }
+        if (scoreEt.hasFocus()) {
+            return scoreEt;
+        }
+        if (scoreNumEt.hasFocus()) {
+            return scoreNumEt;
+        }
+        if (wordsNumEt.hasFocus()) {
+            return wordsNumEt;
+        }
         return null;
     }
 
@@ -110,27 +96,19 @@ public class QiDianScanUtil {
             searchInfo.setDateType(dateView.adapter.getCheckedInfo().getId());
         }
 
-//        String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(), "8.0", StringUtils.INPUTTYPE_FLOAT);
-//        String scoreNum = StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(), "300", StringUtils.INPUTTYPE_INTEGER);
-//        String wordsNum = StringUtils.setQiDianDefaultValue(wordsNumEt.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
-//        String recommend = StringUtils.setQiDianDefaultValue(recommendEt.getText().toString(), "50", StringUtils.INPUTTYPE_INTEGER);
+        String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(), "8.0", StringUtils.INPUTTYPE_FLOAT);
+        String scoreNum = StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(), "300", StringUtils.INPUTTYPE_INTEGER);
+        String wordsNum = StringUtils.setQiDianDefaultValue(wordsNumEt.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
 
-        String score = "8.0";
-        String scoreNum = "300";
-        String wordsNum = "200";
-        String recommend = "50";
-
-        if (score == null || scoreNum == null || wordsNum == null || recommend == null) {
+        if (score == null || scoreNum == null || wordsNum == null) {
             return null;
         }
-//        scoreEt.setText(score);
-//        scoreNumEt.setText(scoreNum);
-//        wordsNumEt.setText(wordsNum);
-//        recommendEt.setText(recommend);
+        scoreEt.setText(score);
+        scoreNumEt.setText(scoreNum);
+        wordsNumEt.setText(wordsNum);
         searchInfo.setScore(score);
         searchInfo.setScoreNum(scoreNum);
         searchInfo.setWordsNum(wordsNum);
-        searchInfo.setRecommend(recommend);
         return searchInfo;
     }
 }

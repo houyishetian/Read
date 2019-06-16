@@ -1,12 +1,9 @@
 package com.lin.read.utils;
 
-import com.lin.read.R;
 import com.lin.read.filter.scan.ScanTypeInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lisonglin on 2017/10/15.

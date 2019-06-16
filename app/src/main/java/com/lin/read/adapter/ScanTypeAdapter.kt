@@ -30,27 +30,27 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
         isBinding = true
         holder?.text?.text = data[position].text
         holder?.text?.tag = position
-        holder?.checkBox?.isChecked = data[position].isChecked
+        holder?.checkBox?.isChecked = data[position].checked
         isBinding = false
     }
 
     fun getCheckedInfo(): ScanTypeInfo? {
         for(item in data){
-            if(item.isChecked) return item
+            if(item.checked) return item
         }
         return null
     }
 
     fun getCheckedText():String?{
         for(item in data){
-            if(item.isChecked) return item.text
+            if(item.checked) return item.text
         }
         return null
     }
 
     private fun setCheckedStatus(text:String){
         for(item in data){
-            item.isChecked = text.equals(item.text)
+            item.checked = text.equals(item.text)
         }
         notifyDataSetChanged()
     }
