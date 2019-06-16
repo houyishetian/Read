@@ -32,13 +32,13 @@ public class QiDianScanUtil {
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
         activity = scanFragment.getActivity();
 
-        rankView = scanFragment.scanTypeRecyclerViewUtil.qiDianScanTypeViews.get(QiDianConstants.QD_FILTER_RANK);
-        dateView = scanFragment.scanTypeRecyclerViewUtil.qiDianScanTypeViews.get(QiDianConstants.QD_FILTER_DATA);
-        typeView = scanFragment.scanTypeRecyclerViewUtil.qiDianScanTypeViews.get(QiDianConstants.QD_FILTER_TYPE);
+        rankView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_RANK);
+        dateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_DATA);
+        typeView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_TYPE);
 
-        scoreEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_SCORE).inputEt;
-        scoreNumEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_SCORE_NUM).inputEt;
-        wordsNumEt = scanFragment.scanTypeRecyclerViewUtil.qiDianScanInputViews.get(QiDianConstants.QD_INPUT_WORDS).inputEt;
+        scoreEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE).inputEt;
+        scoreNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE_NUM).inputEt;
+        wordsNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_WORDS).inputEt;
 
         rankView.adapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
             @Override

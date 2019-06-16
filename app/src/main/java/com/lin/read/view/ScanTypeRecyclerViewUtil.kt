@@ -14,77 +14,75 @@ import com.lin.read.adapter.ScanTypeAdapter
 import com.lin.read.decoration.ScanTypeItemDecoration
 import com.lin.read.filter.scan.ScanInputInfo
 import com.lin.read.filter.scan.ScanTypeInfo
-import com.lin.read.filter.scan.qidian.QiDianConstants
-import com.lin.read.filter.scan.youshu.YouShuConstants
-import com.lin.read.utils.Constants
 import com.lin.read.utils.ScanInputTypeEnum
 import com.lin.read.utils.UIUtils
+import java.util.LinkedHashMap
 
-class ScanTypeRecyclerViewUtil private constructor(var context: Context, var parentLayout: LinearLayout) {
-    lateinit var qiDianScanTypeViews: HashMap<String, ScanTypeView>
-    lateinit var qiDianScanInputViews: HashMap<String, ScanInputView>
-    lateinit var youShuScanTypeViews: HashMap<String, ScanTypeView>
+class ScanTypeRecyclerViewUtil private constructor(var context: Context, var parentLayout: LinearLayout, val scanWebTypeList: List<ScanTypeInfo>, val allScanTypeData: java.util.HashMap<String, LinkedHashMap<String, List<ScanTypeInfo>>>, val allScanInputData: java.util.HashMap<String, List<ScanInputInfo>>) {
+    var scanTypeViews: HashMap<String, HashMap<String, ScanTypeView>>
+    var scanInputViews: HashMap<String, HashMap<String, ScanInputView>>
 
     companion object {
         @Volatile
         private var instance: ScanTypeRecyclerViewUtil? = null
 
-        fun getInstance(context: Context, parentLayout: LinearLayout): ScanTypeRecyclerViewUtil {
+        fun getInstance(context: Context, parentLayout: LinearLayout, scanWebTypeList: List<ScanTypeInfo>, allScanTypeData: java.util.HashMap<String, LinkedHashMap<String, List<ScanTypeInfo>>>, allScanInputData: java.util.HashMap<String, List<ScanInputInfo>>): ScanTypeRecyclerViewUtil {
             if (instance == null)
                 synchronized(ScanTypeRecyclerViewUtil::class) {
-                    if (instance == null) instance = ScanTypeRecyclerViewUtil(context, parentLayout)
+                    if (instance == null) instance = ScanTypeRecyclerViewUtil(context, parentLayout, scanWebTypeList, allScanTypeData, allScanInputData)
                 }
             return instance!!
         }
     }
 
     init {
-        initQiDianView()
-        initQiDianInputViews()
-        initYouShuView()
+        scanTypeViews = hashMapOf();
+        scanInputViews = hashMapOf();
+
+        for(item in scanWebTypeList){
+            initTypeViews(item.text)
+            initInputViews(item.text)
+        }
     }
 
-    private fun initQiDianView() {
-        qiDianScanTypeViews = hashMapOf()
-        if (!QiDianConstants.filterMap.isEmpty()) {
-            for ((key, item) in QiDianConstants.filterMap) {
+    private fun initTypeViews(webType: String){
+        if(!containsWeb(webType) || !allScanTypeData.containsKey(webType)){
+            return;
+        }
+        if (!allScanTypeData.get(webType)!!.isEmpty()) {
+            val scanTypeViews: HashMap<String, ScanTypeView> = hashMapOf()
+            for ((key, item) in allScanTypeData.get(webType)!!) {
                 val scanTypeView = ScanTypeView(context, item)
                 scanTypeView.promptTv.setText(key)
-                scanTypeView.parent.tag = Constants.WEB_QIDIAN
+                scanTypeView.parent.tag = webType
                 parentLayout.addView(scanTypeView.parent)
                 scanTypeView.parent.visibility = View.GONE
-                qiDianScanTypeViews.put(key, scanTypeView)
+                scanTypeViews.put(key, scanTypeView)
             }
+            this.scanTypeViews.put(webType,scanTypeViews)
         }
     }
 
-    private fun initYouShuView() {
-        youShuScanTypeViews = hashMapOf()
-        if (!YouShuConstants.filterMap.isEmpty()) {
-            for ((key, item) in YouShuConstants.filterMap) {
-                val scanTypeView: ScanTypeView
-                when (key) {
-                    YouShuConstants.YS_FILTER_CATE, YouShuConstants.YS_FILTER_WORDS -> scanTypeView = ScanTypeView(context, item, 3, true)
-                    else -> scanTypeView = ScanTypeView(context, item)
-                }
-                scanTypeView.promptTv.setText(key)
-                scanTypeView.parent.setTag(Constants.WEB_YOU_SHU)
-                parentLayout.addView(scanTypeView.parent)
-                scanTypeView.parent.visibility = View.GONE
-                youShuScanTypeViews.put(key, scanTypeView)
-            }
+    private fun containsWeb(webType: String): Boolean {
+        for (item in scanWebTypeList) {
+            if (item.text.equals(webType)) return true;
         }
+        return false;
     }
 
-    private fun initQiDianInputViews(){
-        qiDianScanInputViews = hashMapOf()
+    private fun initInputViews(webType:String){
+        if(!containsWeb(webType) || !allScanInputData.containsKey(webType)){
+            return;
+        }
+        val scanInputViews: HashMap<String, ScanInputView> = hashMapOf()
 
         val parent = LinearLayout(context)
         val parentParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         parent.orientation = LinearLayout.HORIZONTAL
         parentParams.setMargins(UIUtils.dip2px(context, 10f), UIUtils.dip2px(context, 15f), 0, 0)
-        parent.tag = Constants.WEB_QIDIAN
+        parent.tag = webType
         parent.layoutParams = parentParams
+        parent.visibility = View.GONE
         parentLayout.addView(parent)
 
         val promptTv = TextView(context)
@@ -102,7 +100,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
         parent.addView(inputParent)
 
         var subParent: LinearLayout? = null
-        for ((index, item) in QiDianConstants.inputInfoList.withIndex()) {
+        for ((index, item) in allScanInputData.get(webType)!!.withIndex()) {
             if (index % 2 == 0) {
                 subParent = LinearLayout(context)
                 val subParentParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, UIUtils.dip2px(context, 25f))
@@ -112,9 +110,10 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
                 inputParent.addView(subParent)
             }
             val scanInputView = ScanInputView(context, item)
-            qiDianScanInputViews.put(item.tag, scanInputView)
+            scanInputViews.put(item.tag, scanInputView)
             subParent?.addView(scanInputView.inputLayout)
         }
+        this.scanInputViews.put(webType,scanInputViews)
     }
 
     fun showWebLayout(webType: String) {
@@ -127,7 +126,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
         }
     }
 
-    class ScanTypeView @JvmOverloads constructor(var context: Context, var data: List<ScanTypeInfo>, var spanCount: Int = 4, var use4Words: Boolean = false) {
+    class ScanTypeView (var context: Context, var data: List<ScanTypeInfo>) {
         lateinit var promptTv: TextView
         lateinit var recyclerView: RecyclerView
         lateinit var parent: LinearLayout
@@ -149,6 +148,10 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             promptParams.setMargins(0, UIUtils.dip2px(context, 5f), 0, 0)
             promptTv.layoutParams = promptParams
             parent.addView(promptTv)
+
+            val use4Words = data[0].use4Words
+            var spanCount = 4
+            if (use4Words) spanCount = 3
 
             recyclerView = RecyclerView(context)
             recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)

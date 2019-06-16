@@ -96,7 +96,7 @@ public class ScanFragment extends Fragment {
     }
 
     private void initView(View view) {
-        scanTypeRecyclerViewUtil = ScanTypeRecyclerViewUtil.Companion.getInstance(getActivity(),(LinearLayout) (view.findViewById(R.id.ll_filter_layout)));
+        scanTypeRecyclerViewUtil = ScanTypeRecyclerViewUtil.Companion.getInstance(getActivity(), (LinearLayout) (view.findViewById(R.id.ll_filter_layout)), Constants.scanWebTypeList, Constants.allScanTypeData, Constants.allScanInputData);
 
         handler=new Handler();
         qiDianScanUtil=new QiDianScanUtil();

@@ -1,8 +1,13 @@
 package com.lin.read.utils;
 
+import com.lin.read.filter.scan.ScanInputInfo;
 import com.lin.read.filter.scan.ScanTypeInfo;
+import com.lin.read.filter.scan.qidian.QiDianConstants;
+import com.lin.read.filter.scan.youshu.YouShuConstants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -43,11 +48,21 @@ public class Constants {
     public static final String WEB_17K="17k";
     public static final String WEB_YOU_SHU="优书";
 
+    public static HashMap<String, LinkedHashMap<String,List<ScanTypeInfo>>> allScanTypeData;
+    public static HashMap<String,List<ScanInputInfo>> allScanInputData;
+
     static{
         scanWebTypeList=new ArrayList<>();
         scanWebTypeList.add(new ScanTypeInfo(WEB_QIDIAN, true, "1"));
 //        scanWebTypeList.add(new ScanTypeInfo(WEB_ZONGHENG, false, "2"));
 //        scanWebTypeList.add(new ScanTypeInfo(WEB_17K, false, "3"));
         scanWebTypeList.add(new ScanTypeInfo(WEB_YOU_SHU, false, "4"));
+
+        allScanTypeData = new HashMap<>();
+        allScanTypeData.put(WEB_QIDIAN, QiDianConstants.filterMap);
+        allScanTypeData.put(WEB_YOU_SHU, YouShuConstants.filterMap);
+
+        allScanInputData = new HashMap<>();
+        allScanInputData.put(WEB_QIDIAN,QiDianConstants.inputInfoList);
     }
 }

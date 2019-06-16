@@ -54,7 +54,7 @@ public class YouShuConstants {
 
     static{
         List<ScanTypeInfo> categoryList = new ArrayList<>();
-        categoryList.add(new ScanTypeInfo(YS_CATE_ALL,false,"all"));
+        categoryList.add(new ScanTypeInfo(YS_CATE_ALL,false,"all", true));
         categoryList.add(new ScanTypeInfo(YS_CATE_FANTASY,true,"fantasy"));
         categoryList.add(new ScanTypeInfo(YS_CATE_WUXIA,false,"wuxia"));
         categoryList.add(new ScanTypeInfo(YS_CATE_CITY,false,"city"));
@@ -69,7 +69,7 @@ public class YouShuConstants {
         categoryList.add(new ScanTypeInfo(YS_CATE_NIJI,false,"niji"));
 
         List<ScanTypeInfo> wordsNumList = new ArrayList<>();
-        wordsNumList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,false,null));
+        wordsNumList.add(new ScanTypeInfo(YS_TYPE_UNLIMIT,false,null,true));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_1,false,"1"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_2,false,"2"));
         wordsNumList.add(new ScanTypeInfo(YS_WORDS_3,false,"3"));

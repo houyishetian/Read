@@ -44,11 +44,11 @@ public class YouShuScanUtil {
         activity = scanFragment.getActivity();
         this.scanFragment = scanFragment;
 
-        cateView = scanFragment.scanTypeRecyclerViewUtil.youShuScanTypeViews.get(YouShuConstants.YS_FILTER_CATE);
-        wordsView = scanFragment.scanTypeRecyclerViewUtil.youShuScanTypeViews.get(YouShuConstants.YS_FILTER_WORDS);
-        statusView = scanFragment.scanTypeRecyclerViewUtil.youShuScanTypeViews.get(YouShuConstants.YS_FILTER_STATUS);
-        updateView = scanFragment.scanTypeRecyclerViewUtil.youShuScanTypeViews.get(YouShuConstants.YS_FILTER_UPDATE);
-        sortView = scanFragment.scanTypeRecyclerViewUtil.youShuScanTypeViews.get(YouShuConstants.YS_FILTER_SORT);
+        cateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_CATE);
+        wordsView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_WORDS);
+        statusView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_STATUS);
+        updateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_UPDATE);
+        sortView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_SORT);
 
         scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
         scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
