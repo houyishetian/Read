@@ -31,18 +31,19 @@ public class LoadingDialogActivity extends Activity {
     private TextView tvScanBookResultState;
 
     private int totalNum=0;
+    private int alreadyFind;
+    private int alreadyFinish;
 
-    private Handler handlerFromScan;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_dialog);
+        alreadyFind = 0;
+        alreadyFinish = 0;
 
         initView();
 
         initHandler();
-
-        scanBook();
     }
 
     private void initView(){
@@ -52,6 +53,18 @@ public class LoadingDialogActivity extends Activity {
         tvProgress.setVisibility(View.INVISIBLE);
         tvScanBookState.setVisibility(View.INVISIBLE);
         tvScanBookResultState.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                scanBook();
+            }
+        }.start();
     }
 
     private void initHandler(){
@@ -75,62 +88,55 @@ public class LoadingDialogActivity extends Activity {
                         tvScanBookResultState.setText(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_START);
                         break;
                     case MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE:
-                        tvProgress.setText((msg.arg1*100/totalNum)+"%");
+                        alreadyFinish ++;
+                        tvProgress.setText((alreadyFinish*100/totalNum)+"%");
                         break;
                     case MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE:
-                        tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE,msg.arg1));
+                        alreadyFind++;
+                        tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE, alreadyFind));
                         break;
                     case MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END:
                         ArrayList<BookInfo> result=msg.getData().getParcelableArrayList(MessageUtils.BOOK_LIST);
                         tvScanBookResultState.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_BY_CONDITION_END,result.size()));
                         break;
                     case MessageUtils.SCAN_YOUSHU_END:
-                            break;
+                         break;
                 }
             }
         };
     }
 
     private void scanBook(){
-        final SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
-
-        ReadGetBookInfoFactory.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo, new ReadGetBookInfoFactory.OnGetBookInfoListener() {
-            @Override
-            public void succ(Object allBookInfo) {
-                ArrayList<BookInfo> allBooks;
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                if (allBookInfo == null) {
-                    allBooks = new ArrayList<>();
-                } else {
-                    if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebType())) {
-                        ArrayList<Object> allInfos = (ArrayList<Object>) allBookInfo;
-                        int totalPage = Integer.parseInt(allInfos.get(0).toString());
-                        intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
-                        intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getCurrentPage());
-                        allInfos.remove(0);
-                        allBooks = new ArrayList<>();
-                        for (Object item : allInfos) {
-                            allBooks.add((BookInfo) item);
-                        }
-                    } else {
-                        allBooks = (ArrayList<BookInfo>) allBookInfo;
-                    }
+        SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
+        List<Object> result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo);
+        ArrayList<BookInfo> allBooks;
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        if (result == null || result.size() == 0) {
+            allBooks = new ArrayList<>();
+        } else {
+            if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebType())) {
+                int totalPage = Integer.parseInt(result.get(0).toString());
+                intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
+                intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getCurrentPage());
+                result.remove(0);
+                allBooks = new ArrayList<>();
+                for (Object item : result) {
+                    allBooks.add((BookInfo) item);
                 }
-                Log.e("Test", "共：" + ((List) allBookInfo).size());
-                bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
-                Log.e("Test", "传递：" + allBooks.toString());
-                intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
-                setResult(Constants.SCAN_RESPONSE_SUCC, intent);
-                finish();
+            } else {
+                allBooks = new ArrayList<>();
+                for (Object item : result) {
+                    allBooks.add((BookInfo) item);
+                }
             }
-
-            @Override
-            public void failed(int code) {
-                setResult(Constants.SCAN_RESPONSE_FAILED);
-                finish();
-            }
-        });
+        }
+        Log.e("Test", "共：" + ((List) result).size());
+        bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
+        Log.e("Test", "传递：" + allBooks.toString());
+        intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
+        setResult(Constants.SCAN_RESPONSE_SUCC, intent);
+        finish();
     }
 
     @Override
