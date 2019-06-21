@@ -1,5 +1,6 @@
 package com.lin.read.utils
 
+import java.lang.Exception
 import java.util.concurrent.*
 
 class ConcurrentExecutorUtil {
@@ -14,9 +15,14 @@ class ConcurrentExecutorUtil {
                 service.execute {
                     readyLatch.countDown()
                     startLatch.await()
-                    val t = item.call()
-                    if (t != null) result.add(t)
-                    endLatch.countDown()
+                    try {
+                        val t = item.call()
+                        if (t != null) result.add(t)
+                    } catch (e: Exception) {
+                        e.printStackTrace();
+                    } finally {
+                        endLatch.countDown()
+                    }
                 }
             }
             readyLatch.await()

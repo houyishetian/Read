@@ -4,7 +4,7 @@ import android.os.Handler
 import com.lin.read.utils.Constants
 
 abstract class ReadGetBookInfoFactory {
-    abstract fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any>
+    abstract fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any>?
 
     companion object {
         fun getInstance(type: String): ReadGetBookInfoFactory? {

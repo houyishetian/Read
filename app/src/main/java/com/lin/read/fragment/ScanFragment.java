@@ -388,13 +388,23 @@ public class ScanFragment extends Fragment {
                                 break;
                         }
                         allBookData.clear();
-                        allBookData.addAll(allBookDataFromScan);
-                        Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));
-                        allBookAdapter.notifyDataSetChanged();
-                        allBooksRcv.smoothScrollToPosition(0);
-                        bookComparatorUtil = new BookComparatorUtil();
-                        bookComparatorUtil.setLastClickItem(SortInfo.ID_SORT_BY_DEFAULT);
-                        Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
+                        if(allBookDataFromScan == null){
+                            scanResultYouShuLl.setVisibility(View.GONE);
+                            scanResultTv.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(),"未扫描到数据!",Toast.LENGTH_SHORT).show();
+                        }else if(allBookDataFromScan.size() == 0){
+                            scanResultYouShuLl.setVisibility(View.GONE);
+                            scanResultTv.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(),"扫描失败!",Toast.LENGTH_SHORT).show();
+                        }else{
+                            allBookData.addAll(allBookDataFromScan);
+                            Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));
+                            allBookAdapter.notifyDataSetChanged();
+                            allBooksRcv.smoothScrollToPosition(0);
+                            bookComparatorUtil = new BookComparatorUtil();
+                            bookComparatorUtil.setLastClickItem(SortInfo.ID_SORT_BY_DEFAULT);
+                            Toast.makeText(getActivity(),"扫描结束!",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         emptyTv.setVisibility(View.VISIBLE);
                         allBooksRcv.setVisibility(View.GONE);

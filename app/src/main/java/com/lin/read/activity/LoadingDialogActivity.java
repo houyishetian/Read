@@ -131,9 +131,7 @@ public class LoadingDialogActivity extends Activity {
                 }
             }
         }
-        Log.e("Test", "共：" + ((List) result).size());
         bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
-        Log.e("Test", "传递：" + allBooks.toString());
         intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
         setResult(Constants.SCAN_RESPONSE_SUCC, intent);
         finish();

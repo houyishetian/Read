@@ -8,6 +8,7 @@ import com.lin.read.filter.scan.qidian.QiDianHttpUtils
 import com.lin.read.utils.ConcurrentExecutorUtil
 import com.lin.read.utils.Constants
 import com.lin.read.utils.MessageUtils
+import java.lang.Exception
 import java.util.ArrayList
 import java.util.concurrent.Callable
 
@@ -15,27 +16,32 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
     val tag = ReadGetQiDianBookInfoFactory::class.java.simpleName
     lateinit var searchInfo: SearchInfo
     lateinit var handler: Handler
-    override fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any> {
+    override fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any>? {
         this.searchInfo = searchInfo
         this.handler = handler
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_START)
         Log.e(tag, "scan start")
-        val scanBookBeans = mutableListOf<ScanBookBean>()
-        val firstPageInfo = ConcurrentExecutorUtil.execute(getBookInfoCallables(searchInfo))
-        val maxPage = (firstPageInfo[0][0] as String).toInt()
-        firstPageInfo[0].removeAt(0)
-        scanBookBeans.addAll(firstPageInfo[0].map { it as ScanBookBean })
-        val otherPageInfo = ConcurrentExecutorUtil.execute(getBookInfoCallables(searchInfo, 2, maxPage))
-        otherPageInfo.forEach { scanBookBeans.addAll(it.map { it as ScanBookBean }) }
-        MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, scanBookBeans.size)
-        Log.e(tag, "scan end, pending for filting")
+        try {
+            val scanBookBeans = mutableListOf<ScanBookBean>()
+            val firstPageInfo = ConcurrentExecutorUtil.execute(getBookInfoCallables(searchInfo))
+            val maxPage = (firstPageInfo[0][0] as String).toInt()
+            firstPageInfo[0].removeAt(0)
+            scanBookBeans.addAll(firstPageInfo[0].map { it as ScanBookBean })
+            val otherPageInfo = ConcurrentExecutorUtil.execute(getBookInfoCallables(searchInfo, 2, maxPage))
+            otherPageInfo.forEach { scanBookBeans.addAll(it.map { it as ScanBookBean }) }
+            MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, scanBookBeans.size)
+            Log.e(tag, "scan end, pending for filting")
 
-        MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
-        val filterBookInfo = ConcurrentExecutorUtil.execute(getBookDetailsCallables(searchInfo, scanBookBeans))
-        filterBookInfo.forEach { it.webName = Constants.WEB_QIDIAN }
-        MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, filterBookInfo as ArrayList<BookInfo>)
-        Log.e(tag,"totally "+filterBookInfo.size)
-        return filterBookInfo
+            MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
+            val filterBookInfo = ConcurrentExecutorUtil.execute(getBookDetailsCallables(searchInfo, scanBookBeans))
+            filterBookInfo.forEach { it.webName = Constants.WEB_QIDIAN }
+            MessageUtils.sendMessageOfArrayList(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_END, filterBookInfo as ArrayList<BookInfo>)
+            Log.e(tag,"totally "+filterBookInfo.size)
+            return filterBookInfo
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return null
     }
 
     private fun getBookInfoCallables(searchInfo: SearchInfo, firstPage: Int = 1, maxPage: Int = 1): MutableList<Callable<MutableList<Any>>> {
