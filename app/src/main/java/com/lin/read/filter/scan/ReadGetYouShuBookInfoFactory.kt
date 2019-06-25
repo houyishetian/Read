@@ -19,7 +19,7 @@ class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
             }))[0]
         }catch (e:Exception){
             e.printStackTrace()
-            return null
+            throw e
         }
     }
 }

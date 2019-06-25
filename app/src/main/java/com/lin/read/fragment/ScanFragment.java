@@ -388,14 +388,10 @@ public class ScanFragment extends Fragment {
                                 break;
                         }
                         allBookData.clear();
-                        if(allBookDataFromScan == null){
+                        if(allBookDataFromScan == null || allBookDataFromScan.size() == 0){
                             scanResultYouShuLl.setVisibility(View.GONE);
                             scanResultTv.setVisibility(View.GONE);
                             Toast.makeText(getActivity(),"未扫描到数据!",Toast.LENGTH_SHORT).show();
-                        }else if(allBookDataFromScan.size() == 0){
-                            scanResultYouShuLl.setVisibility(View.GONE);
-                            scanResultTv.setVisibility(View.GONE);
-                            Toast.makeText(getActivity(),"扫描失败!",Toast.LENGTH_SHORT).show();
                         }else{
                             allBookData.addAll(allBookDataFromScan);
                             Collections.sort(allBookData,new BookComparator(BookComparator.SortType.ASCEND, BookComparator.BookType.POSTION));

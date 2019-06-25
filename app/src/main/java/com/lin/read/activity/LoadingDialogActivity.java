@@ -108,13 +108,20 @@ public class LoadingDialogActivity extends Activity {
 
     private void scanBook(){
         SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
-        List<Object> result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo);
+        List<Object> result;
+        try{
+            result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo);
+        }catch (Exception e){
+            result = null;
+        }
         ArrayList<BookInfo> allBooks;
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        if (result == null || result.size() == 0) {
+        if (result == null) {
             allBooks = new ArrayList<>();
+            setResult(Constants.SCAN_RESPONSE_FAILED, intent);
         } else {
+            setResult(Constants.SCAN_RESPONSE_SUCC, intent);
             if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebType())) {
                 int totalPage = Integer.parseInt(result.get(0).toString());
                 intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
@@ -133,7 +140,6 @@ public class LoadingDialogActivity extends Activity {
         }
         bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
         intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
-        setResult(Constants.SCAN_RESPONSE_SUCC, intent);
         finish();
     }
 

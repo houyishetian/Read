@@ -16,6 +16,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
     val tag = ReadGetQiDianBookInfoFactory::class.java.simpleName
     lateinit var searchInfo: SearchInfo
     lateinit var handler: Handler
+    private var maxNumInFirstPage:Int = 0
     override fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any>? {
         this.searchInfo = searchInfo
         this.handler = handler
@@ -30,6 +31,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
             val otherPageInfo = ConcurrentExecutorUtil.execute(getBookInfoCallables(searchInfo, 2, maxPage))
             otherPageInfo.forEach { scanBookBeans.addAll(it.map { it as ScanBookBean }) }
             MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, scanBookBeans.size)
+            maxNumInFirstPage = firstPageInfo[0].size
             Log.e(tag, "scan end, pending for filting")
 
             MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
@@ -40,8 +42,8 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
             return filterBookInfo
         }catch (e:Exception){
             e.printStackTrace()
+            throw e
         }
-        return null
     }
 
     private fun getBookInfoCallables(searchInfo: SearchInfo, firstPage: Int = 1, maxPage: Int = 1): MutableList<Callable<MutableList<Any>>> {
@@ -66,6 +68,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         for (item in scanbookBeans) {
             val callable = Callable {
                 val bookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo, item.url)
+                bookInfo?.position = item.page * maxNumInFirstPage + item.position
                 MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE)
                 if (bookInfo != null) MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE)
                 bookInfo
