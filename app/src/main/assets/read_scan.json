@@ -1,7 +1,7 @@
 {
 	"webs": [
-		{"webNname": "起点","key": "qidian","id": "1","default": true},
-		{"webNname": "优书","key": "youshu","id": "2"}
+		{"webName": "起点","key": "qidian","id": "1","default": true},
+		{"webName": "优书","key": "youshu","id": "2"}
 	],
 	"qidian": {
 		"scanTypes": [
@@ -55,9 +55,9 @@
 		"inputTypes": {
                 "typeName": "筛选",
                 "data": [
-                   {"key":"score","inputTpye": "float","hint": "8.0-10","unitPrompt": "分"},
-                   {"key":"scoreNum","inputTpye": "int","hint": "300","unitPrompt": "人评分"},
-                   {"key":"wordsNum","inputTpye": "int","hint": "200","unitPrompt": "万字"}
+                   {"key":"score","inputType": "float","hint": "8.0-10","unitPrompt": "分"},
+                   {"key":"scoreNum","inputType": "int","hint": "300","unitPrompt": "人评分"},
+                   {"key":"wordsNum","inputType": "int","hint": "200","unitPrompt": "万字"}
                 ]
         }
 	},
