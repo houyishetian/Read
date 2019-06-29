@@ -1,0 +1,141 @@
+{
+	"webs": [
+		{"webNname": "起点","key": "qidian","id": "1","default": true},
+		{"webNname": "优书","key": "youshu","id": "2"}
+	],
+	"qidian": {
+		"scanTypes": [
+			{
+				"typeName": "榜单",
+                "key": "rankType",
+				"roleInUrl":"path",
+				"data":[
+					{"name":"月票","roleValueInUrl":"yuepiao","hasNoSubItems":["recomDate"]},
+					{"name":"热销","roleValueInUrl":"hotsales","hasNoSubItems":["recomDate"]},
+					{"name":"推荐","roleValueInUrl":"recom","default":true},
+					{"name":"收藏","roleValueInUrl":"collect","hasNoSubItems":["recomDate"]},
+					{"name":"签约","roleValueInUrl":"signnewbook","hasNoSubItems":["recomDate"]},
+					{"name":"公众","roleValueInUrl":"pubnewbook","hasNoSubItems":["recomDate"]}
+				]
+			},
+			{
+				"typeName": "日期",
+                "key": "recomDate",
+                "roleInUrl":"param",
+                "roleKeyInUrl":"dateType",
+				"data":[
+					{"name":"周","roleValueInUrl":"1","default":true},
+					{"name":"月","roleValueInUrl":"2"},
+					{"name":"总","roleValueInUrl":"3"}
+				]
+			},
+			{
+				"typeName": "类型",
+                "key": "bookType",
+                "roleInUrl":"param",
+                "roleKeyInUrl":"chn",
+				"data":[
+					{"name":"全部","roleValueInUrl":"-1"},
+					{"name":"玄幻","roleValueInUrl":"21"},
+					{"name":"奇幻","roleValueInUrl":"1","default":true},
+					{"name":"武侠","roleValueInUrl":"2"},
+					{"name":"仙侠","roleValueInUrl":"22"},
+					{"name":"都市","roleValueInUrl":"4"},
+					{"name":"现实","roleValueInUrl":"15"},
+					{"name":"军事","roleValueInUrl":"6"},
+					{"name":"历史","roleValueInUrl":"5"},
+					{"name":"游戏","roleValueInUrl":"7"},
+					{"name":"体育","roleValueInUrl":"8"},
+					{"name":"科幻","roleValueInUrl":"9"},
+					{"name":"灵异","roleValueInUrl":"10"},
+					{"name":"轻小说","roleValueInUrl":"12"}
+				]
+			}
+		],
+		"inputTypes": {
+                "typeName": "筛选",
+                "data": [
+                   {"key":"score","inputTpye": "float","hint": "8.0-10","unitPrompt": "分"},
+                   {"key":"scoreNum","inputTpye": "int","hint": "300","unitPrompt": "人评分"},
+                   {"key":"wordsNum","inputTpye": "int","hint": "200","unitPrompt": "万字"}
+                ]
+        }
+	},
+	"youshu": {
+		"scanTypes": [
+			{
+				"typeName": "分类",
+                "key": "bookType",
+				"roleInUrl":"path",
+				"data":[
+					{"name":"全部分类","roleValueInUrl":"all"},
+					{"name":"玄幻奇幻","roleValueInUrl":"fantasy","default":true},
+					{"name":"仙侠武侠","roleValueInUrl":"wuxia"},
+					{"name":"现代都市","roleValueInUrl":"city"},
+					{"name":"历史军事","roleValueInUrl":"history"},
+					{"name":"游戏竞技","roleValueInUrl":"game"},
+					{"name":"科幻灵异","roleValueInUrl":"future"},
+					{"name":"同人短篇","roleValueInUrl":"doujin"},
+					{"name":"古代言情","roleValueInUrl":"love"},
+					{"name":"现代言情","roleValueInUrl":"romance"},
+					{"name":"玄幻言情","roleValueInUrl":"fantasylove"},
+					{"name":"文学艺术","roleValueInUrl":"literature"},
+					{"name":"二次元",  "roleValueInUrl":"niji"}
+				]
+			},
+			{
+				"typeName": "字数",
+                "key": "wordsType",
+				"roleInUrl":"param",
+                "roleKeyInUrl":"wordnum",
+				"data":[
+					{"name":"不限制","roleValueInUrl":null},
+					{"name":"10万-","roleValueInUrl":"1"},
+					{"name":"10-30万","roleValueInUrl":"2"},
+					{"name":"30-50万","roleValueInUrl":"3"},
+					{"name":"50-100万","roleValueInUrl":"4"},
+					{"name":"100-200万","roleValueInUrl":"5"},
+					{"name":"200万+","roleValueInUrl":"6","default":true}
+				]
+			},
+			{
+				"typeName": "状态",
+                "key": "bookStatus",
+				"roleInUrl":"param",
+                "roleKeyInUrl":"status",
+				"data":[
+					{"name":"不限制","roleValueInUrl":null,"default":true},
+					{"name":"更新中","roleValueInUrl":"1"},
+					{"name":"已完结","roleValueInUrl":"2"},
+					{"name":"已断更","roleValueInUrl":"3"}
+				]
+			},
+			{
+				"typeName": "更新",
+                "key": "updateStatus",
+				"roleInUrl":"param",
+                "roleKeyInUrl":"update",
+				"data":[
+					{"name":"不限制","roleValueInUrl":null,"default":true},
+					{"name":"三日内","roleValueInUrl":"1"},
+					{"name":"七日内","roleValueInUrl":"2"},
+					{"name":"一月内","roleValueInUrl":"3"},
+					{"name":"六月内","roleValueInUrl":"4"}
+				]
+			},
+			{
+				"typeName": "排序",
+                "key": "sortType",
+				"roleInUrl":"param",
+                "roleKeyInUrl":"sort",
+				"data":[
+					{"name":"默认","roleValueInUrl":null},
+					{"name":"综合","roleValueInUrl":"total"},
+					{"name":"字数","roleValueInUrl":"word"},
+					{"name":"评分","roleValueInUrl":"rate","default":true}
+				]
+			}
+		]
+	},
+	"zongheng": {}
+}
