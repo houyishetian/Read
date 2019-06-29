@@ -12,10 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.filter.scan.SearchInfo;
-import com.lin.read.filter.scan.youshu.YouShuConstants;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
@@ -41,33 +39,33 @@ public class YouShuScanUtil {
 
 
     public void initYouShuViews(final ScanFragment scanFragment, View view, final Handler handler) {
-        activity = scanFragment.getActivity();
-        this.scanFragment = scanFragment;
-
-        cateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_CATE);
-        wordsView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_WORDS);
-        statusView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_STATUS);
-        updateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_UPDATE);
-        sortView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_SORT);
-
-        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
-        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
-        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
-        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
-        scanSkipTv = (TextView) view.findViewById(R.id.scan_ys_skip);
-
-        initListener();
+//        activity = scanFragment.getActivity();
+//        this.scanFragment = scanFragment;
+//
+//        cateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_CATE);
+//        wordsView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_WORDS);
+//        statusView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_STATUS);
+//        updateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_UPDATE);
+//        sortView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_SORT);
+//
+//        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
+//        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
+//        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
+//        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
+//        scanSkipTv = (TextView) view.findViewById(R.id.scan_ys_skip);
+//
+//        initListener();
     }
 
     public SearchInfo getSearchInfo(){
         SearchInfo searchInfo = new SearchInfo();
-        searchInfo.setCurrentPage(currentPage);
-        searchInfo.setWebType(Constants.WEB_YOU_SHU);
-        searchInfo.setCategoryInfo(cateView.adapter.getCheckedInfo());
-        searchInfo.setWordsNumInfo(wordsView.adapter.getCheckedInfo());
-        searchInfo.setBookStatusInfo(statusView.adapter.getCheckedInfo());
-        searchInfo.setUpdateDateInfo(updateView.adapter.getCheckedInfo());
-        searchInfo.setSortTypeInfo(sortView.adapter.getCheckedInfo());
+//        searchInfo.setCurrentPage(currentPage);
+//        searchInfo.setWebType(Constants.WEB_YOU_SHU);
+//        searchInfo.setCategoryInfo(cateView.adapter.getCheckedInfo());
+//        searchInfo.setWordsNumInfo(wordsView.adapter.getCheckedInfo());
+//        searchInfo.setBookStatusInfo(statusView.adapter.getCheckedInfo());
+//        searchInfo.setUpdateDateInfo(updateView.adapter.getCheckedInfo());
+//        searchInfo.setSortTypeInfo(sortView.adapter.getCheckedInfo());
         return searchInfo;
     }
 

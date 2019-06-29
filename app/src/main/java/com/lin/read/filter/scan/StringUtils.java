@@ -2,7 +2,6 @@ package com.lin.read.filter.scan;
 
 import android.util.Log;
 
-import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.filter.BookInfo;
 
 import java.io.BufferedReader;
@@ -15,10 +14,6 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

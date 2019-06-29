@@ -11,7 +11,7 @@ data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: St
 
 //{
 //   "webs":[
-//      {"webName": "起点","key": "qidian","id": "1","default": true}
+//      {"name": "起点","key": "qidian","id": "1","default": true}
 //   ],
 //   "qidian":{
 //      "scanTypes":[
@@ -20,6 +20,7 @@ data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: St
 //            "key": "rankType",
 //            "roleInUrl":"path",
 //            "roleKeyInUrl":"chn",
+//			  "use4Words": "true",
 //            "data":[
 //                {"name":"月票","roleValueInUrl":"yuepiao","hasNoSubItems":["recomDate"]}
 //            ]
@@ -34,12 +35,17 @@ data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: St
 //      }
 //   }
 // }
-data class ReadScanBean(@Expose val webs: List<ReadScanWebInfo>, @Expose val qidian: ReadScanDetailsInfo, @Expose val youshu: ReadScanDetailsInfo) : Serializable
+data class ReadScanBean(@Expose val webs: List<ReadScanTypeData>, @Expose val qidian: ReadScanDetailsInfo, @Expose val youshu: ReadScanDetailsInfo) : Serializable
 
-data class ReadScanWebInfo(@Expose val webName: String, @Expose val key: String, @Expose val id: String, @Expose val default: Boolean = false): Serializable
-data class ReadScanDetailsInfo(@Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean): Serializable
-data class ReadScanTypeBean(@Expose val typeName: String, @Expose val key: String, @Expose val roleInUrl: String, @Expose val roleKeyInUrl: String, @Expose val data: List<ReadScanTypeData>): Serializable
-data class ReadScanTypeData(@Expose val name: String, @Expose val roleValueInUrl: String, @Expose val hasNoSubItems: List<String>? = null, @Expose val default: Boolean = false): Serializable
-data class ReadScanInputBean(@Expose val typeName: String, @Expose val data: List<ReadScanInputData>): Serializable
-data class ReadScanInputData(@Expose val key: String, @Expose val inputType: String, @Expose val hint: String, @Expose val unitPrompt: String): Serializable
+//data class ReadScanWebInfo(@Expose val webName: String, @Expose val key: String, @Expose val id: String, @Expose val default: Boolean = false) : Serializable
+data class ReadScanDetailsInfo(@Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean?) : Serializable
+data class ReadScanTypeBean(@Expose val typeName: String, @Expose val key: String, @Expose val roleInUrl: String, @Expose val roleKeyInUrl: String?, @Expose val use4Words: Boolean = false, @Expose val data: List<ReadScanTypeData>) : Serializable
+data class ReadScanTypeData(@Expose val name: String,@Expose val key: String, @Expose val roleValueInUrl: String, @Expose val hasNoSubItems: List<String>?, @Expose val default: Boolean = false) : Serializable{
+    var checked:Boolean
+    init {
+        checked = false
+    }
+}
+data class ReadScanInputBean(@Expose val typeName: String, @Expose val data: List<ReadScanInputData>) : Serializable
+data class ReadScanInputData(@Expose val key: String, @Expose val inputType: String, @Expose val hint: String, @Expose val unitPrompt: String) : Serializable
 

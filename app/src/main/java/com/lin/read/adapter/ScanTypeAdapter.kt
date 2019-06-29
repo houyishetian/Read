@@ -8,15 +8,21 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import com.lin.read.R
-import com.lin.read.filter.scan.ScanTypeInfo
+import com.lin.read.filter.scan.ReadScanTypeData
 
-class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: List<ScanTypeInfo>, val use4Words: Boolean = false) : RecyclerView.Adapter<ScanTypeAdapter.ViewHolder>() {
+class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: List<ReadScanTypeData>, val use4Words: Boolean = false) : RecyclerView.Adapter<ScanTypeAdapter.ViewHolder>() {
     var isBinding = false
     var layoutId: Int
     var onScanItemClickListener:OnScanItemClickListener? = null
+    val onScanItemClickListenerMap:HashMap<String,OnScanItemClickListener>
 
     init {
         if (use4Words) layoutId = R.layout.item_scan_type_4_chars else layoutId = R.layout.item_scan_type
+        onScanItemClickListenerMap = hashMapOf()
+        initCheckedStatus()
+        if(getCheckedInfo() == null && data.isNotEmpty()){
+            data[0].checked = true
+        }
     }
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(layoutId, null))
@@ -28,13 +34,13 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         isBinding = true
-        holder?.text?.text = data[position].text
+        holder?.text?.text = data[position].name
         holder?.text?.tag = position
         holder?.checkBox?.isChecked = data[position].checked
         isBinding = false
     }
 
-    fun getCheckedInfo(): ScanTypeInfo? {
+    fun getCheckedInfo(): ReadScanTypeData? {
         for(item in data){
             if(item.checked) return item
         }
@@ -43,16 +49,22 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
 
     fun getCheckedText():String?{
         for(item in data){
-            if(item.checked) return item.text
+            if(item.checked) return item.name
         }
         return null
     }
 
     private fun setCheckedStatus(text:String){
         for(item in data){
-            item.checked = text.equals(item.text)
+            item.checked = text.equals(item.name)
         }
         notifyDataSetChanged()
+    }
+
+    private fun initCheckedStatus(){
+        data.forEach{
+            it.checked = it.default
+        }
     }
 
     interface OnScanItemClickListener {
@@ -68,8 +80,11 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
             checkBox.setOnTouchListener { _, _ -> checkBox.isChecked }
             checkBox.setOnCheckedChangeListener { _, isChecked ->
                 if(!isBinding){
-                    if(isChecked) onScanItemClickListener?.onItemClick(text.tag as Int, text.text.toString())
                     setCheckedStatus(text.text.toString())
+                    if (isChecked) {
+                        onScanItemClickListener?.onItemClick(text.tag as Int, text.text.toString())
+                        if (isChecked) onScanItemClickListenerMap[text.text.toString()]?.onItemClick(text.tag as Int, text.text.toString())
+                    }
                 }
             }
         }

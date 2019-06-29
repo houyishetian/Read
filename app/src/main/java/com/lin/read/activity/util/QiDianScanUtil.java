@@ -2,16 +2,11 @@ package com.lin.read.activity.util;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.lin.read.adapter.ScanTypeAdapter;
 import com.lin.read.filter.scan.SearchInfo;
-import com.lin.read.filter.scan.StringUtils;
-import com.lin.read.filter.scan.qidian.QiDianConstants;
 import com.lin.read.fragment.ScanFragment;
-import com.lin.read.utils.Constants;
 import com.lin.read.view.ScanTypeRecyclerViewUtil;
 
 /**
@@ -30,30 +25,30 @@ public class QiDianScanUtil {
     private ScanTypeRecyclerViewUtil.ScanTypeView typeView;
 
     public void initQiDianViews(final ScanFragment scanFragment, View view, final Handler handler) {
-        activity = scanFragment.getActivity();
-
-        rankView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_RANK);
-        dateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_DATA);
-        typeView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_TYPE);
-
-        scoreEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE).inputEt;
-        scoreNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE_NUM).inputEt;
-        wordsNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_WORDS).inputEt;
-
-        rankView.adapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
-            @Override
-            public void onItemClick(int position, String clickText) {
-                Log.e("Test", "current position:" + position);
-                if (!StringUtils.isEmpty(clickText)) {
-                    if (clickText.equals(QiDianConstants.QD_RANK_RECOMMEND)) {
-                        dateView.parent.setVisibility(View.VISIBLE);
-                        dateView.adapter.notifyDataSetChanged();
-                    } else {
-                        dateView.parent.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
+//        activity = scanFragment.getActivity();
+//
+//        rankView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_RANK);
+//        dateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_DATA);
+//        typeView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_FILTER_TYPE);
+//
+//        scoreEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE).inputEt;
+//        scoreNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_SCORE_NUM).inputEt;
+//        wordsNumEt = scanFragment.scanTypeRecyclerViewUtil.getScanInputViews().get(Constants.WEB_QIDIAN).get(QiDianConstants.QD_INPUT_WORDS).inputEt;
+//
+//        rankView.adapter.setOnScanItemClickListener(new ScanTypeAdapter.OnScanItemClickListener() {
+//            @Override
+//            public void onItemClick(int position, String clickText) {
+//                Log.e("Test", "current position:" + position);
+////                if (!StringUtils.isEmpty(clickText)) {
+////                    if (clickText.equals(QiDianConstants.QD_RANK_RECOMMEND)) {
+////                        dateView.parent.setVisibility(View.VISIBLE);
+////                        dateView.adapter.notifyDataSetChanged();
+////                    } else {
+////                        dateView.parent.setVisibility(View.GONE);
+////                    }
+////                }
+//            }
+//        });
     }
 
     public String getRankType() {
@@ -88,27 +83,28 @@ public class QiDianScanUtil {
     }
 
     public SearchInfo getSearchInfo() {
-        SearchInfo searchInfo = new SearchInfo();
-        searchInfo.setWebType(Constants.WEB_QIDIAN);
-        searchInfo.setRankType(rankView.adapter.getCheckedInfo().getId());
-        searchInfo.setBookType(typeView.adapter.getCheckedInfo().getId());
-        if (dateView.parent.getVisibility() == View.VISIBLE) {
-            searchInfo.setDateType(dateView.adapter.getCheckedInfo().getId());
-        }
-
-        String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(), "8.0", StringUtils.INPUTTYPE_FLOAT);
-        String scoreNum = StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(), "300", StringUtils.INPUTTYPE_INTEGER);
-        String wordsNum = StringUtils.setQiDianDefaultValue(wordsNumEt.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
-
-        if (score == null || scoreNum == null || wordsNum == null) {
-            return null;
-        }
-        scoreEt.setText(score);
-        scoreNumEt.setText(scoreNum);
-        wordsNumEt.setText(wordsNum);
-        searchInfo.setScore(score);
-        searchInfo.setScoreNum(scoreNum);
-        searchInfo.setWordsNum(wordsNum);
-        return searchInfo;
+        return null;
+//        SearchInfo searchInfo = new SearchInfo();
+//        searchInfo.setWebType(Constants.WEB_QIDIAN);
+//        searchInfo.setRankType(rankView.adapter.getCheckedInfo().getId());
+//        searchInfo.setBookType(typeView.adapter.getCheckedInfo().getId());
+//        if (dateView.parent.getVisibility() == View.VISIBLE) {
+//            searchInfo.setDateType(dateView.adapter.getCheckedInfo().getId());
+//        }
+//
+//        String score = StringUtils.setQiDianDefaultValue(scoreEt.getText().toString(), "8.0", StringUtils.INPUTTYPE_FLOAT);
+//        String scoreNum = StringUtils.setQiDianDefaultValue(scoreNumEt.getText().toString(), "300", StringUtils.INPUTTYPE_INTEGER);
+//        String wordsNum = StringUtils.setQiDianDefaultValue(wordsNumEt.getText().toString(), "200", StringUtils.INPUTTYPE_INTEGER);
+//
+//        if (score == null || scoreNum == null || wordsNum == null) {
+//            return null;
+//        }
+//        scoreEt.setText(score);
+//        scoreNumEt.setText(scoreNum);
+//        wordsNumEt.setText(wordsNum);
+//        searchInfo.setScore(score);
+//        searchInfo.setScoreNum(scoreNum);
+//        searchInfo.setWordsNum(wordsNum);
+//        return searchInfo;
     }
 }

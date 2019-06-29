@@ -1,7 +1,7 @@
 {
 	"webs": [
-		{"webName": "起点","key": "qidian","id": "1","default": true},
-		{"webName": "优书","key": "youshu","id": "2"}
+		{"name": "起点","key": "qidian","id": "1","default": true},
+		{"name": "优书","key": "youshu","id": "2"}
 	],
 	"qidian": {
 		"scanTypes": [
@@ -67,6 +67,7 @@
 				"typeName": "分类",
                 "key": "bookType",
 				"roleInUrl":"path",
+				"use4Words": "true",
 				"data":[
 					{"name":"全部分类","roleValueInUrl":"all"},
 					{"name":"玄幻奇幻","roleValueInUrl":"fantasy","default":true},
@@ -88,6 +89,7 @@
                 "key": "wordsType",
 				"roleInUrl":"param",
                 "roleKeyInUrl":"wordnum",
+				"use4Words": "true",
 				"data":[
 					{"name":"不限制","roleValueInUrl":null},
 					{"name":"10万-","roleValueInUrl":"1"},
@@ -103,6 +105,7 @@
                 "key": "bookStatus",
 				"roleInUrl":"param",
                 "roleKeyInUrl":"status",
+				"use4Words": "true",
 				"data":[
 					{"name":"不限制","roleValueInUrl":null,"default":true},
 					{"name":"更新中","roleValueInUrl":"1"},
@@ -115,6 +118,7 @@
                 "key": "updateStatus",
 				"roleInUrl":"param",
                 "roleKeyInUrl":"update",
+				"use4Words": "true",
 				"data":[
 					{"name":"不限制","roleValueInUrl":null,"default":true},
 					{"name":"三日内","roleValueInUrl":"1"},
