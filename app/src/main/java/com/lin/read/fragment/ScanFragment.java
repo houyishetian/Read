@@ -241,6 +241,7 @@ public class ScanFragment extends Fragment {
                 }
                 if(item.getInputType() != null){
                     switch (item.getInputType()) {
+                        case Constants.INPUT_INT:
                         case Constants.INPUT_FLOAT:
                             if (item.getMin() != null && Float.parseFloat(item.getValue().toString()) < Float.parseFloat(item.getMin().toString())) {
                                 wrongField = item.getTypeName();
@@ -251,21 +252,12 @@ public class ScanFragment extends Fragment {
                                 break;
                             }
                             break;
-                        case Constants.INPUT_INT:
-                            if (item.getMin() != null && Integer.parseInt(item.getValue().toString()) < Integer.parseInt(item.getMin().toString())) {
-                                wrongField = item.getTypeName();
-                                break;
-                            }
-                            if (item.getMax() != null && Integer.parseInt(item.getValue().toString()) > Integer.parseInt(item.getMax().toString())) {
-                                wrongField = item.getTypeName();
-                                break;
-                            }
                     }
                 }
-            }
-            if(wrongField != null){
-                Toast.makeText(getActivity(), wrongField+"输入有误", Toast.LENGTH_SHORT).show();
-                return null;
+                if(wrongField != null){
+                    Toast.makeText(getActivity(), wrongField+"输入有误", Toast.LENGTH_SHORT).show();
+                    return null;
+                }
             }
         }
         return scanInfo;
