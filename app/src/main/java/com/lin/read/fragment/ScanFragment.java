@@ -167,7 +167,6 @@ public class ScanFragment extends Fragment {
                 if (scanInfo != null) {
                     scanInfo.setPage(page);
                 }
-                hideFilterLayout();
                 startScanning(scanInfo);
             }
         });
