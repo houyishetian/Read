@@ -70,11 +70,7 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         }else{
             switch (bookInfo.getWebName()) {
                 case Constants.WEB_QIDIAN:
-                    holder.viewScoreInfos.setVisibility(View.VISIBLE);
-                    holder.viewCommentInfos.setVisibility(View.INVISIBLE);
-                    holder.score.setText(bookInfo.getScore());
-                    holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
-                    break;
+                case Constants.WEB_QIDIAN_FINISH:
                 case Constants.WEB_YOU_SHU:
                     holder.viewScoreInfos.setVisibility(View.VISIBLE);
                     holder.viewCommentInfos.setVisibility(View.INVISIBLE);

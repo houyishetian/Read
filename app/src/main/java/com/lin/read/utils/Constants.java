@@ -33,6 +33,7 @@ public class Constants {
     public static final String EXCEPTION_GET_CONN_ERROR="EXCEPTION_GET_CONN_ERROR";
 
     public static final String WEB_QIDIAN="起点";
+    public static final String WEB_QIDIAN_FINISH="完本";
     public static final String WEB_ZONGHENG="纵横";
     public static final String WEB_17K="17k";
     public static final String WEB_YOU_SHU="优书";

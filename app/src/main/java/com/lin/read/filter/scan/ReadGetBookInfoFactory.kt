@@ -10,7 +10,7 @@ abstract class ReadGetBookInfoFactory {
         fun getInstance(type: String): ReadGetBookInfoFactory? {
             return when (type) {
                 Constants.WEB_YOU_SHU -> ReadGetYouShuBookInfoFactory()
-                Constants.WEB_QIDIAN -> ReadGetQiDianBookInfoFactory()
+                Constants.WEB_QIDIAN,Constants.WEB_QIDIAN_FINISH -> ReadGetQiDianBookInfoFactory()
                 else -> null
             }
         }

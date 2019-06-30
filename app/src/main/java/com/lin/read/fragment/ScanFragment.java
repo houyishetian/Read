@@ -401,6 +401,7 @@ public class ScanFragment extends Fragment {
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
                         switch (scanWebTypeAdapter.getCheckedText()){
                             case Constants.WEB_QIDIAN:
+                            case Constants.WEB_QIDIAN_FINISH:
                                 scanResultTv.setVisibility(View.VISIBLE);
                                 scanResultYouShuLl.setVisibility(View.GONE);
                                 Log.e("Test", "接收:" + allBookDataFromScan);
