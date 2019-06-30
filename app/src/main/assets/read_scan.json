@@ -4,6 +4,7 @@
 		{"name": "优书","key": "youshu","id": "2"}
 	],
 	"qidian": {
+		"mainUrl": "https://www.qidian.com/rank/%s",
 		"scanTypes": [
 			{
 				"typeName": "榜单",
@@ -36,8 +37,8 @@
                 "roleKeyInUrl":"chn",
 				"data":[
 					{"name":"全部","roleValueInUrl":"-1"},
-					{"name":"玄幻","roleValueInUrl":"21"},
-					{"name":"奇幻","roleValueInUrl":"1","default":true},
+					{"name":"玄幻","roleValueInUrl":"21","default":true},
+					{"name":"奇幻","roleValueInUrl":"1"},
 					{"name":"武侠","roleValueInUrl":"2"},
 					{"name":"仙侠","roleValueInUrl":"22"},
 					{"name":"都市","roleValueInUrl":"4"},
@@ -55,13 +56,14 @@
 		"inputTypes": {
                 "typeName": "筛选",
                 "data": [
-                   {"key":"score","inputType": "float","hint": "8.0-10","unitPrompt": "分"},
-                   {"key":"scoreNum","inputType": "int","hint": "300","unitPrompt": "人评分"},
-                   {"key":"wordsNum","inputType": "int","hint": "200","unitPrompt": "万字"}
+                   {"typeName": "分数","key":"score","inputType": "float","hint": "8.0-10","unitPrompt": "分","default": 8.0,"min": 8.0,"max": 10.0},
+                   {"typeName": "评分人数","key":"scoreNum","inputType": "int","hint": "300","unitPrompt": "人评分","default": 300,"min": 300},
+                   {"typeName": "字数","key":"wordsNum","inputType": "int","hint": "200","unitPrompt": "万字","default": 200,"min": 200}
                 ]
         }
 	},
 	"youshu": {
+		"mainUrl": "http://www.yousuu.com/category/%s",
 		"scanTypes": [
 			{
 				"typeName": "分类",

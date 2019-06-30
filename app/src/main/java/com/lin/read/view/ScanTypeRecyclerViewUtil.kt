@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -14,15 +15,16 @@ import com.lin.read.R
 import com.lin.read.adapter.ScanTypeAdapter
 import com.lin.read.decoration.ScanTypeItemDecoration
 import com.lin.read.filter.scan.*
+import com.lin.read.utils.Constants
 import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.UIUtils
 import java.util.*
 import kotlin.collections.HashMap
 
 class ScanTypeRecyclerViewUtil private constructor(var context: Context, var parentLayout: LinearLayout, val readScanBean: ReadScanBean) {
-    var scanTypeViews: HashMap<String, HashMap<String, ScanTypeView>>
-    var scanInputViews: HashMap<String, ScanInputView>
-    var scanViewVisis:HashMap<String,MutableList<Int>>
+    private var scanTypeViews: HashMap<String, HashMap<String, ScanTypeView>>
+    private var scanInputViews: HashMap<String, ScanInputView>
+    private var scanViewVisis:HashMap<String,MutableList<Int>>
 
     companion object {
         @Volatile
@@ -59,6 +61,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             currentScanType.forEach {
                 val scanTypeView = ScanTypeView(context, it)
                 scanTypeView.parent.tag = webType
+                scanTypeView.parent.setTag(R.integer.read_scan_view_id, it.key)
                 parentLayout.addView(scanTypeView.parent)
                 scanTypeViews.put(it.key, scanTypeView)
             }
@@ -166,6 +169,86 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
                 parentLayout.getChildAt(index).visibility = View.GONE
             }
         }
+    }
+
+    private fun getSelectedFields(webType: String):List<ReadScanSelectedBean>{
+        val result = mutableListOf<ReadScanSelectedBean>()
+        for (index in 0 until parentLayout.childCount) {
+            if (parentLayout.getChildAt(index).tag == webType && parentLayout.getChildAt(index).visibility == View.VISIBLE) {
+                val scanTypeView = scanTypeViews[webType]?.get(parentLayout.getChildAt(index).getTag(R.integer.read_scan_view_id))
+                if (scanTypeView != null) {
+                    val selectedItem = scanTypeView.adapter.getCheckedInfo()
+                    if (selectedItem != null) {
+                        val typeName = scanTypeView.readScanTypeBean.typeName
+                        val key = scanTypeView.readScanTypeBean.key
+                        val name = selectedItem.name
+                        val roleInUrl = scanTypeView.readScanTypeBean.roleInUrl
+                        val roleKeyInUrl = scanTypeView.readScanTypeBean.roleKeyInUrl
+                        val roleValueInUrl = selectedItem.roleValueInUrl
+                        result.add(ReadScanSelectedBean(typeName, key, name, roleInUrl, roleKeyInUrl, roleValueInUrl))
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    private fun getInputtedFields(webType: String): List<ReadScanInputtedBean> {
+        val result = mutableListOf<ReadScanInputtedBean>()
+        scanInputViews[webType]?.inputViews?.forEach { (key, editText) ->
+            var dataItem: ReadScanInputData? = null
+            scanInputViews[webType]?.readScanInputBean?.data?.forEach ergodic@{
+                if (it.key == key) {
+                    dataItem = it
+                    return@ergodic
+                }
+            }
+            if (dataItem != null) {
+                if (TextUtils.isEmpty(editText.text.toString())) {
+                    editText.setText(dataItem!!.default?.toString())
+                }
+                var value:Number? = null
+                if(!TextUtils.isEmpty(editText.text.toString())){
+                    when(dataItem!!.inputType){
+                        Constants.INPUT_FLOAT -> value = editText.text.toString().toFloat()
+                        Constants.INPUT_INT -> value = editText.text.toString().toInt()
+                    }
+                }
+                result.add(ReadScanInputtedBean(dataItem!!.typeName, dataItem!!.key, dataItem!!.inputType, value, dataItem!!.min, dataItem!!.max))
+            }
+        }
+        return result
+    }
+
+    private fun getWebName(webType: String):String?{
+        readScanBean.webs?.forEach{
+            if(it.key == webType) return it.name
+        }
+        return null
+    }
+
+    fun getSearchInfo(webType: String): ScanInfo? {
+        val typeFields = getSelectedFields(webType)
+        var rolePathValue: String? = null
+        var roleParamPairs: MutableList<String> = mutableListOf()
+        typeFields.forEach {
+            when (it.roleInUrl) {
+                Constants.ROLE_PATH -> rolePathValue = it.roleValueInUrl
+                Constants.ROLE_PARAM -> {
+                    if (it.roleKeyInUrl != null && it.roleValueInUrl != null) {
+                        roleParamPairs.add(it.roleKeyInUrl + "=" + it.roleValueInUrl)
+                    }
+                }
+            }
+        }
+        return ScanInfo(getWebName(webType), ReflectUtil.getProperty(readScanBean, webType, ReadScanDetailsInfo::class.java)?.mainUrl, rolePathValue, roleParamPairs, getInputtedFields(webType))
+    }
+
+    fun getFocusOfEditText(webType: String):EditText?{
+        scanInputViews[webType]?.inputViews?.forEach { (_, editText) ->
+            if(editText.hasFocus()) return editText
+        }
+        return null
     }
 
     class ScanTypeView(var context: Context, var readScanTypeBean: ReadScanTypeBean) {

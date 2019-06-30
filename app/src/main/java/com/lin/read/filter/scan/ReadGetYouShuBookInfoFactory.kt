@@ -10,7 +10,7 @@ import java.util.concurrent.Callable
 
 class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
     val tag = ReadGetYouShuBookInfoFactory::class.java.simpleName
-    override fun getBookInfo(handler: Handler, searchInfo: SearchInfo): List<Any>? {
+    override fun getBookInfo(handler: Handler, searchInfo: ScanInfo): List<Any>? {
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_START)
         Log.e(tag, "scan start")
         try {

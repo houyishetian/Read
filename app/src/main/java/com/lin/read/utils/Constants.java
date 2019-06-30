@@ -36,4 +36,10 @@ public class Constants {
     public static final String WEB_ZONGHENG="纵横";
     public static final String WEB_17K="17k";
     public static final String WEB_YOU_SHU="优书";
+
+    public static final String INPUT_INT = "int";
+    public static final String INPUT_FLOAT = "float";
+
+    public static final String ROLE_PATH = "path";
+    public static final String ROLE_PARAM = "param";
 }

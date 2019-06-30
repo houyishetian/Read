@@ -23,7 +23,6 @@ import com.google.gson.GsonBuilder;
 import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
 import com.lin.read.activity.MainActivity;
-import com.lin.read.activity.util.QiDianScanUtil;
 import com.lin.read.activity.util.YouShuScanUtil;
 import com.lin.read.adapter.ScanBookItemAdapter;
 import com.lin.read.adapter.ScanTypeAdapter;
@@ -32,10 +31,7 @@ import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.filter.BookComparator;
 import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.scan.ReadScanBean;
-import com.lin.read.filter.scan.SearchInfo;
-import com.lin.read.filter.scan.SortInfo;
-import com.lin.read.filter.scan.StringUtils;
+import com.lin.read.filter.scan.*;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.view.ScanTypeRecyclerViewUtil;
@@ -71,7 +67,6 @@ public class ScanFragment extends Fragment {
 
     private Handler handler;
 
-    private QiDianScanUtil qiDianScanUtil;
     private YouShuScanUtil youShuScanUtil;
 
     private BookComparatorUtil bookComparatorUtil;
@@ -110,8 +105,6 @@ public class ScanFragment extends Fragment {
             scanTypeRecyclerViewUtil = ScanTypeRecyclerViewUtil.Companion.getInstance(getActivity(), (LinearLayout) (view.findViewById(R.id.ll_filter_layout)), readScanBean);
         }
         handler=new Handler();
-        qiDianScanUtil=new QiDianScanUtil();
-        qiDianScanUtil.initQiDianViews(this,view,handler);
 
         youShuScanUtil = new YouShuScanUtil();
         youShuScanUtil.initYouShuViews(this,view,handler);
@@ -163,19 +156,19 @@ public class ScanFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 hideFilterLayout();
-                SearchInfo searchInfo = null;
-                switch (scanWebTypeAdapter.getCheckedText()){
-                    case Constants.WEB_QIDIAN:
-                        searchInfo = qiDianScanUtil.getSearchInfo();
-                        break;
-                    case Constants.WEB_YOU_SHU:
-                        searchInfo = youShuScanUtil.getSearchInfo();
-                        searchInfo.setCurrentPage(1);
-                        break;
-                    default:
-                        return;
+                startScanning(getSearchInfo());
+            }
+        });
+
+        youShuScanUtil.setOnStartScanYouShuListener(new YouShuScanUtil.OnStartScanYouShuListener() {
+            @Override
+            public void startScan(int page) {
+                ScanInfo scanInfo = getSearchInfo();
+                if (scanInfo != null) {
+                    scanInfo.setPage(page);
                 }
-                startScanning(searchInfo);
+                hideFilterLayout();
+                startScanning(scanInfo);
             }
         });
 
@@ -235,6 +228,48 @@ public class ScanFragment extends Fragment {
                 }
             }
         };
+    }
+
+    private ScanInfo getSearchInfo(){
+        ScanInfo scanInfo = scanTypeRecyclerViewUtil.getSearchInfo(scanWebTypeAdapter.getCheckedInfo().getKey());
+        Log.e("Test", "selected:" + scanInfo);
+        if(scanInfo != null && scanInfo.getInputtedBeans()!=null){
+            String wrongField = null;
+            for(ReadScanInputtedBean item:scanInfo.getInputtedBeans()){
+                if(item.getValue()==null){
+                    wrongField = item.getTypeName();
+                    break;
+                }
+                if(item.getInputType() != null){
+                    switch (item.getInputType()) {
+                        case Constants.INPUT_FLOAT:
+                            if (item.getMin() != null && Float.parseFloat(item.getValue().toString()) < Float.parseFloat(item.getMin().toString())) {
+                                wrongField = item.getTypeName();
+                                break;
+                            }
+                            if (item.getMax() != null && Float.parseFloat(item.getValue().toString()) > Float.parseFloat(item.getMax().toString())) {
+                                wrongField = item.getTypeName();
+                                break;
+                            }
+                            break;
+                        case Constants.INPUT_INT:
+                            if (item.getMin() != null && Integer.parseInt(item.getValue().toString()) < Integer.parseInt(item.getMin().toString())) {
+                                wrongField = item.getTypeName();
+                                break;
+                            }
+                            if (item.getMax() != null && Integer.parseInt(item.getValue().toString()) > Integer.parseInt(item.getMax().toString())) {
+                                wrongField = item.getTypeName();
+                                break;
+                            }
+                    }
+                }
+            }
+            if(wrongField != null){
+                Toast.makeText(getActivity(), wrongField+"输入有误", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+        return scanInfo;
     }
 
     /**
@@ -338,22 +373,18 @@ public class ScanFragment extends Fragment {
     public void hideSoft() {
         if (isSoftInputDisplay) {
             View view = getFocusEt();
-            if(view!=null){
-                InputMethodManager inputMethodManager =
-                        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 //                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            if (view != null) {
                 view.clearFocus();
             }
         }
     }
 
     public EditText getFocusEt() {
-//        switch (scanWebTypeAdapter.getCheckedText()){
-//            case Constants.WEB_QIDIAN:
-//                return qiDianScanUtil.getFocusEt();
-//        }
-        return null;
+        return scanTypeRecyclerViewUtil.getFocusOfEditText(scanWebTypeAdapter.getCheckedInfo().getKey());
     }
 
 
@@ -377,19 +408,19 @@ public class ScanFragment extends Fragment {
                         emptyTv.setVisibility(View.GONE);
                         allBooksRcv.setVisibility(View.VISIBLE);
                         ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
-//                        switch (scanWebTypeAdapter.getCheckedText()){
-//                            case Constants.WEB_QIDIAN:
-//                                scanResultTv.setVisibility(View.VISIBLE);
-//                                scanResultYouShuLl.setVisibility(View.GONE);
-//                                Log.e("Test", "接收:" + allBookDataFromScan);
-//                                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
-//                                break;
-//                            case Constants.WEB_YOU_SHU:
-//                                scanResultYouShuLl.setVisibility(View.VISIBLE);
-//                                scanResultTv.setVisibility(View.GONE);
-//                                youShuScanUtil.afterGetBookInfo(data);
-//                                break;
-//                        }
+                        switch (scanWebTypeAdapter.getCheckedText()){
+                            case Constants.WEB_QIDIAN:
+                                scanResultTv.setVisibility(View.VISIBLE);
+                                scanResultYouShuLl.setVisibility(View.GONE);
+                                Log.e("Test", "接收:" + allBookDataFromScan);
+                                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                                break;
+                            case Constants.WEB_YOU_SHU:
+                                scanResultYouShuLl.setVisibility(View.VISIBLE);
+                                scanResultTv.setVisibility(View.GONE);
+                                youShuScanUtil.afterGetBookInfo(data);
+                                break;
+                        }
                         allBookData.clear();
                         if(allBookDataFromScan == null || allBookDataFromScan.size() == 0){
                             scanResultYouShuLl.setVisibility(View.GONE);
@@ -419,7 +450,7 @@ public class ScanFragment extends Fragment {
         allBooksRcv.smoothScrollToPosition(0);
     }
 
-    private void startScanning(SearchInfo searchInfo){
+    private void startScanning(ScanInfo searchInfo){
         if (searchInfo != null) {
             Log.e("Test", searchInfo.toString());
             Intent intent = new Intent(getActivity(), LoadingDialogActivity.class);

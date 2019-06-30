@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.lin.read.R;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.ReadGetBookInfoFactory;
-import com.lin.read.filter.scan.SearchInfo;
+import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
 
@@ -107,11 +106,12 @@ public class LoadingDialogActivity extends Activity {
     }
 
     private void scanBook(){
-        SearchInfo searchInfo= (SearchInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
+        ScanInfo searchInfo= (ScanInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
         List<Object> result;
         try{
-            result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebType()).getBookInfo(handler,searchInfo);
+            result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebName()).getBookInfo(handler,searchInfo);
         }catch (Exception e){
+            e.printStackTrace();
             result = null;
         }
         ArrayList<BookInfo> allBooks;
@@ -122,10 +122,10 @@ public class LoadingDialogActivity extends Activity {
             setResult(Constants.SCAN_RESPONSE_FAILED, intent);
         } else {
             setResult(Constants.SCAN_RESPONSE_SUCC, intent);
-            if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebType())) {
+            if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebName())) {
                 int totalPage = Integer.parseInt(result.get(0).toString());
                 intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
-                intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getCurrentPage());
+                intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getPage());
                 result.remove(0);
                 allBooks = new ArrayList<>();
                 for (Object item : result) {

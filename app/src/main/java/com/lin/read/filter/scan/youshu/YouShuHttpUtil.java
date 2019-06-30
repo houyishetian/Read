@@ -3,10 +3,11 @@ package com.lin.read.filter.scan.youshu;
 import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.scan.SearchInfo;
+import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,11 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class YouShuHttpUtil {
-    public static ArrayList<Object> getAllBookInfo(SearchInfo searchInfo) throws Exception {
+    public static ArrayList<Object> getAllBookInfo(ScanInfo searchInfo) throws Exception {
         if (searchInfo == null) {
             return null;
         }
-        String url = YouShuRegexUtil.getYouShuUrl(searchInfo);
+        String url = StringKtUtil.Companion.getRequestUrlByScanInfo(searchInfo, searchInfo.getPage());
         Log.d("you shu url:", url);
         HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
         if (conn == null) {
@@ -55,7 +56,7 @@ public class YouShuHttpUtil {
                     BookInfo bookInfo = new BookInfo();
                     bookInfo.setBookName(item.get(0));
                     bookInfo.setWebName(Constants.WEB_YOU_SHU);
-                    bookInfo.setWebType(searchInfo.getWebType());
+                    bookInfo.setWebType(searchInfo.getWebName());
                     bookInfo.setScoreNum(item.get(1));
                     bookInfo.setAuthorName(item.get(2));
                     bookInfo.setWordsNum(item.get(3));

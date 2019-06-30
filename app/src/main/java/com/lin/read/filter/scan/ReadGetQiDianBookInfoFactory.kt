@@ -14,10 +14,10 @@ import java.util.concurrent.Callable
 
 class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
     val tag = ReadGetQiDianBookInfoFactory::class.java.simpleName
-    lateinit var searchInfo: SearchInfo
+    lateinit var searchInfo: ScanInfo
     lateinit var handler: Handler
     private var maxNumInFirstPage:Int = 0
-    override fun getBookInfo(handler: Handler, searchInfo: SearchInfo):List<Any>? {
+    override fun getBookInfo(handler: Handler, searchInfo: ScanInfo):List<Any>? {
         this.searchInfo = searchInfo
         this.handler = handler
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_START)
@@ -46,7 +46,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         }
     }
 
-    private fun getBookInfoCallables(searchInfo: SearchInfo, firstPage: Int = 1, maxPage: Int = 1): MutableList<Callable<MutableList<Any>>> {
+    private fun getBookInfoCallables(searchInfo: ScanInfo, firstPage: Int = 1, maxPage: Int = 1): MutableList<Callable<MutableList<Any>>> {
         val result = mutableListOf<Callable<MutableList<Any>>>()
         if (maxPage <= 0 || maxPage < firstPage) return result
         for (item in firstPage..maxPage) {
@@ -63,7 +63,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         return result
     }
 
-    private fun getBookDetailsCallables(searchInfo: SearchInfo, scanbookBeans: MutableList<ScanBookBean>): MutableList<Callable<BookInfo>> {
+    private fun getBookDetailsCallables(searchInfo: ScanInfo, scanbookBeans: MutableList<ScanBookBean>): MutableList<Callable<BookInfo>> {
         val result = mutableListOf<Callable<BookInfo>>()
         for (item in scanbookBeans) {
             val callable = Callable {

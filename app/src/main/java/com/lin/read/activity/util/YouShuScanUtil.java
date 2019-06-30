@@ -12,8 +12,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.lin.read.R;
 import com.lin.read.activity.LoadingDialogActivity;
-import com.lin.read.filter.scan.SearchInfo;
+import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.fragment.ScanFragment;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
@@ -31,42 +32,20 @@ public class YouShuScanUtil {
     private int totalPage;
     private int currentPage = 1;
 
-    private ScanTypeRecyclerViewUtil.ScanTypeView cateView;
-    private ScanTypeRecyclerViewUtil.ScanTypeView wordsView;
-    private ScanTypeRecyclerViewUtil.ScanTypeView statusView;
-    private ScanTypeRecyclerViewUtil.ScanTypeView updateView;
-    private ScanTypeRecyclerViewUtil.ScanTypeView sortView;
+    private OnStartScanYouShuListener onStartScanYouShuListener;
 
 
     public void initYouShuViews(final ScanFragment scanFragment, View view, final Handler handler) {
-//        activity = scanFragment.getActivity();
-//        this.scanFragment = scanFragment;
-//
-//        cateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_CATE);
-//        wordsView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_WORDS);
-//        statusView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_STATUS);
-//        updateView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_UPDATE);
-//        sortView = scanFragment.scanTypeRecyclerViewUtil.getScanTypeViews().get(Constants.WEB_YOU_SHU).get(YouShuConstants.YS_FILTER_SORT);
-//
-//        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
-//        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
-//        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
-//        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
-//        scanSkipTv = (TextView) view.findViewById(R.id.scan_ys_skip);
-//
-//        initListener();
-    }
+        activity = scanFragment.getActivity();
+        this.scanFragment = scanFragment;
 
-    public SearchInfo getSearchInfo(){
-        SearchInfo searchInfo = new SearchInfo();
-//        searchInfo.setCurrentPage(currentPage);
-//        searchInfo.setWebType(Constants.WEB_YOU_SHU);
-//        searchInfo.setCategoryInfo(cateView.adapter.getCheckedInfo());
-//        searchInfo.setWordsNumInfo(wordsView.adapter.getCheckedInfo());
-//        searchInfo.setBookStatusInfo(statusView.adapter.getCheckedInfo());
-//        searchInfo.setUpdateDateInfo(updateView.adapter.getCheckedInfo());
-//        searchInfo.setSortTypeInfo(sortView.adapter.getCheckedInfo());
-        return searchInfo;
+        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
+        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
+        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
+        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
+        scanSkipTv = (TextView) view.findViewById(R.id.scan_ys_skip);
+
+        initListener();
     }
 
     public void afterGetBookInfo(Intent data) {
@@ -151,12 +130,8 @@ public class YouShuScanUtil {
         hideSoft();
         try {
             currentPage = page;
-            SearchInfo searchInfo = getSearchInfo();
-            if (searchInfo != null) {
-                Log.e("Test", searchInfo.toString());
-                Intent intent = new Intent(activity, LoadingDialogActivity.class);
-                intent.putExtra(Constants.KEY_SEARCH_INFO, searchInfo);
-                scanFragment.startActivityForResult(intent, Constants.SCAN_REQUEST_CODE);
+            if(onStartScanYouShuListener!=null){
+                onStartScanYouShuListener.startScan(currentPage);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,5 +142,13 @@ public class YouShuScanUtil {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(scanYsSkipPageEt.getWindowToken(), 0);
+    }
+
+    public interface OnStartScanYouShuListener{
+        void startScan(int page);
+    }
+
+    public void setOnStartScanYouShuListener(OnStartScanYouShuListener onStartScanYouShuListener) {
+        this.onStartScanYouShuListener = onStartScanYouShuListener;
     }
 }

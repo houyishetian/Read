@@ -1,19 +1,14 @@
 package com.lin.read.filter.scan
 
-import android.text.InputFilter
 import com.google.gson.annotations.Expose
-import com.lin.read.utils.ScanInputTypeEnum
 import java.io.Serializable
-
-data class ScanTypeInfo @JvmOverloads constructor(var text: String, var checked: Boolean, var id: String?, val use4Words: Boolean = false) : Serializable
-data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: String?, var unit: String, var inputType: ScanInputTypeEnum = ScanInputTypeEnum.INT, var inputFilters: Array<InputFilter>? = null) : Serializable
-
 
 //{
 //   "webs":[
 //      {"name": "起点","key": "qidian","id": "1","default": true}
 //   ],
 //   "qidian":{
+//      "mainUrl": "https://www.qidian.com/rank/%s",
 //      "scanTypes":[
 //         {
 //            "typeName": "榜单",
@@ -29,7 +24,7 @@ data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: St
 //      "inputTypes":{
 //          "typeName": "筛选",
 //          "data": [
-//              {"key":"score","inputType": "float","hint": "8.0-10","unitPrompt": "分"}
+//              {"typeName": "分数","key":"score","inputType": "float","hint": "8.0-10","unitPrompt": "分","default": 8.0,"min": 8.0,"max": 10.0}
 //          ]
 //
 //      }
@@ -37,8 +32,7 @@ data class ScanInputInfo @JvmOverloads constructor(var tag: String, var hint: St
 // }
 data class ReadScanBean(@Expose val webs: List<ReadScanTypeData>, @Expose val qidian: ReadScanDetailsInfo, @Expose val youshu: ReadScanDetailsInfo) : Serializable
 
-//data class ReadScanWebInfo(@Expose val webName: String, @Expose val key: String, @Expose val id: String, @Expose val default: Boolean = false) : Serializable
-data class ReadScanDetailsInfo(@Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean?) : Serializable
+data class ReadScanDetailsInfo(@Expose val mainUrl: String, @Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean?) : Serializable
 data class ReadScanTypeBean(@Expose val typeName: String, @Expose val key: String, @Expose val roleInUrl: String, @Expose val roleKeyInUrl: String?, @Expose val use4Words: Boolean = false, @Expose val data: List<ReadScanTypeData>) : Serializable
 data class ReadScanTypeData(@Expose val name: String,@Expose val key: String, @Expose val roleValueInUrl: String, @Expose val hasNoSubItems: List<String>?, @Expose val default: Boolean = false) : Serializable{
     var checked:Boolean
@@ -47,5 +41,9 @@ data class ReadScanTypeData(@Expose val name: String,@Expose val key: String, @E
     }
 }
 data class ReadScanInputBean(@Expose val typeName: String, @Expose val data: List<ReadScanInputData>) : Serializable
-data class ReadScanInputData(@Expose val key: String, @Expose val inputType: String, @Expose val hint: String, @Expose val unitPrompt: String) : Serializable
+data class ReadScanInputData(@Expose val typeName: String?, @Expose val key: String, @Expose val inputType: String, @Expose val hint: String, @Expose val unitPrompt: String, @Expose val default:Number?, @Expose val min:Number?, @Expose val max:Number?) : Serializable
 
+data class ReadScanSelectedBean(val typeName: String, val key: String, val name: String, val roleInUrl: String, val roleKeyInUrl: String?, val roleValueInUrl: String?) : Serializable
+data class ReadScanInputtedBean(val typeName: String?, val key: String, val inputType: String, val value: Number?, val min: Number?, val max: Number?) : Serializable
+
+data class ScanInfo(val webName: String?, val mainUrl: String?, val rolePathValue: String?, val roleParamPairs: List<String>?, val inputtedBeans: List<ReadScanInputtedBean>?, var page: Int = 1) : Serializable
