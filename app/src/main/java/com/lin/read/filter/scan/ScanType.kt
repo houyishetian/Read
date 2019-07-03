@@ -8,7 +8,7 @@ import java.io.Serializable
 //      {"name": "起点","key": "qidian","id": "1","default": true}
 //   ],
 //   "qidian":{
-//      "mainUrl": "https://www.qidian.com/rank/%s",
+//      "mainUrl": ["http://www.yousuu.com/"],
 //      "scanTypes":[
 //         {
 //            "typeName": "榜单",
@@ -32,7 +32,7 @@ import java.io.Serializable
 // }
 data class ReadScanBean(@Expose val webs: List<ReadScanTypeData>, @Expose val qidian: ReadScanDetailsInfo, @Expose val youshu: ReadScanDetailsInfo, @Expose val qidianfinish: ReadScanDetailsInfo) : Serializable
 
-data class ReadScanDetailsInfo(@Expose val mainUrl: String, @Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean?) : Serializable
+data class ReadScanDetailsInfo(@Expose val mainUrl: List<String>, @Expose val scanTypes: List<ReadScanTypeBean>, @Expose val inputTypes: ReadScanInputBean?) : Serializable
 data class ReadScanTypeBean(@Expose val typeName: String, @Expose val key: String, @Expose val roleInUrl: String, @Expose val roleKeyInUrl: String?, @Expose val use4Words: Boolean = false, @Expose val data: List<ReadScanTypeData>) : Serializable
 data class ReadScanTypeData(@Expose val name: String,@Expose val key: String, @Expose val roleValueInUrl: String, @Expose val hasNoSubItems: List<String>?, @Expose val default: Boolean = false) : Serializable{
     var checked:Boolean
@@ -46,4 +46,6 @@ data class ReadScanInputData(@Expose val typeName: String?, @Expose val key: Str
 data class ReadScanSelectedBean(val typeName: String, val key: String, val name: String, val roleInUrl: String, val roleKeyInUrl: String?, val roleValueInUrl: String?) : Serializable
 data class ReadScanInputtedBean(val typeName: String?, val key: String, val inputType: String, val value: Number?, val min: Number?, val max: Number?) : Serializable
 
-data class ScanInfo(val webName: String?, val mainUrl: String?, val rolePathValue: String?, val roleParamPairs: List<String>?, val inputtedBeans: List<ReadScanInputtedBean>?, var page: Int = 1) : Serializable
+data class ScanInfo(val webName: String?, val mainUrl: List<String>?, val rolePathValue: String?, val roleParamPairs: Map<String,String>?, val inputtedBeans: List<ReadScanInputtedBean>?, var page: Int = 1) : Serializable
+
+data class BookLinkInfo(val bookLink: String, var page: Int?, var position: Int?) : Serializable

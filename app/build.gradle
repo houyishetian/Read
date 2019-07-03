@@ -47,4 +47,15 @@ dependencies {
     implementation files('libs/pinyin4j-2.5.0.jar')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:latest.release"
+
+    // for retrofit
+    implementation 'com.squareup.retrofit2:retrofit:latest.release'
+    implementation ('com.squareup.retrofit2:converter-gson:2.1.0'){
+        exclude group: 'com.google.code.gson'
+    }
+    implementation 'com.squareup.retrofit2:adapter-rxjava:latest.release'
+    implementation 'com.squareup.okhttp3:logging-interceptor:latest.release'
+    implementation 'com.squareup.okhttp:okhttp-urlconnection:latest.release'
+    implementation 'io.reactivex:rxjava:latest.release'
+    implementation 'io.reactivex:rxandroid:latest.release'
 }

@@ -1,25 +1,11 @@
 package com.lin.read.utils
 
+import android.util.Log
 import com.lin.read.filter.BookInfo
 import com.lin.read.filter.scan.ScanInfo
-import java.lang.Exception
 
 class StringKtUtil {
     companion object {
-        @JvmOverloads
-        fun getRequestUrlByScanInfo(scanInfo: ScanInfo, page: Int = 1, pageKey: String = "page"): String? {
-            if (scanInfo.mainUrl == null) {
-                return null;
-            }
-            val path = String.format(scanInfo.mainUrl, scanInfo.rolePathValue) + "?"
-            var params = StringBuffer()
-            scanInfo.roleParamPairs?.forEach {
-                params.append(it).append("&")
-            }
-            params.append(pageKey).append("=").append(page)
-            return path + params.toString()
-        }
-
         /**
          * @param scanInfo standard value
          * @param bookInfo pending for compare
@@ -46,6 +32,16 @@ class StringKtUtil {
                 e.printStackTrace()
             }
             return false
+        }
+
+        fun printLog(log:String?){
+            if(log == null){
+                return
+            }
+            for(index in 0 until log.length step 3000){
+                var next = if(index + 3000 <= log.length-1) index+3000 else log.length-1
+                Log.e("Test index","${log.substring(index,next)}")
+            }
         }
     }
 }

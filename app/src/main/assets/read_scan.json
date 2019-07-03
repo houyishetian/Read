@@ -5,7 +5,7 @@
 		{"name": "优书","key": "youshu","id": "3"}
 	],
 	"qidian": {
-		"mainUrl": "https://www.qidian.com/rank/%s",
+		"mainUrl": ["https://www.qidian.com/","https://m.qidian.com/"],
 		"scanTypes": [
 			{
 				"typeName": "榜单",
@@ -69,7 +69,7 @@
         }
 	},
 	"youshu": {
-		"mainUrl": "http://www.yousuu.com/category/%s",
+		"mainUrl": ["http://www.yousuu.com/"],
 		"scanTypes": [
 			{
 				"typeName": "分类",
@@ -150,7 +150,7 @@
 		]
 	},
 	"qidianfinish": {
-		"mainUrl": "https://www.qidian.com/finish",
+		"mainUrl": ["https://www.qidian.com/","https://m.qidian.com/"],
 		"scanTypes": [
 			{
 				"typeName": "类型",

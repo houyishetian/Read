@@ -14,6 +14,7 @@ import com.lin.read.utils.StringKtUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,53 +49,53 @@ public class QiDianHttpUtils {
 	 * get max page num and book info url from rank page
 	 * @return 0--max page num
 	 */
-	public static List<Object> getMaxPageAndBookInfoFromRankPage(ScanInfo searchInfo, int page) throws IOException {
-		if(searchInfo==null){
-			return null;
-		}
-		String urlLink = StringKtUtil.Companion.getRequestUrlByScanInfo(searchInfo,page);
-		Log.e("Test","execute start:"+urlLink);
-		HttpURLConnection conn = HttpUtils.getConn(urlLink,3);
-		List<Object> maxPageAndBookUrlList = new ArrayList<Object>();
-		BufferedReader reader = null;
-		if(conn==null){
-			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
-		}else{
-			String unicodeType="UTF-8";
-			reader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream(), unicodeType));
-			String current = null;
-			// whether already get max page
-			boolean getMaxPage = false;
-			int position=0;
-			while ((current = reader.readLine()) != null) {
-				String bookUrl = QiDianRegexUtils
-						.getBookUrlFromRankPage(current);
-				if (bookUrl != null) {
-					ScanBookBean scanBookBean=new ScanBookBean();
-					scanBookBean.setUrl(bookUrl);
-					scanBookBean.setPage(page);
-					scanBookBean.setPosition(position);
-					position++;
-					maxPageAndBookUrlList.add(scanBookBean);
-				} else {
-					if (!getMaxPage) {
-						String maxPage = QiDianRegexUtils
-								.getMaxPage(current);
-						if (maxPage != null) {
-							getMaxPage = true;
-							maxPageAndBookUrlList.add(0, maxPage);
-							break;
-						}
-					}
-				}
-			}
-			if (!getMaxPage) {
-				maxPageAndBookUrlList.add(0, null);
-			}
-			return maxPageAndBookUrlList;
-		}
-	}
+//	public static List<Object> getMaxPageAndBookInfoFromRankPage(ScanInfo searchInfo, int page) throws IOException {
+//		if(searchInfo==null){
+//			return null;
+//		}
+//		String urlLink = StringKtUtil.Companion.getRequestUrlByScanInfo(searchInfo,page);
+//		Log.e("Test","execute start:"+urlLink);
+//		HttpURLConnection conn = HttpUtils.getConn(urlLink,3);
+//		List<Object> maxPageAndBookUrlList = new ArrayList<Object>();
+//		BufferedReader reader = null;
+//		if(conn==null){
+//			throw new IOException(Constants.EXCEPTION_GET_CONN_ERROR);
+//		}else{
+//			String unicodeType="UTF-8";
+//			reader = new BufferedReader(new InputStreamReader(
+//					conn.getInputStream(), unicodeType));
+//			String current = null;
+//			// whether already get max page
+//			boolean getMaxPage = false;
+//			int position=0;
+//			while ((current = reader.readLine()) != null) {
+//				String bookUrl = QiDianRegexUtils
+//						.getBookUrlFromRankPage(current);
+//				if (bookUrl != null) {
+//					ScanBookBean scanBookBean=new ScanBookBean();
+//					scanBookBean.setUrl(bookUrl);
+//					scanBookBean.setPage(page);
+//					scanBookBean.setPosition(position);
+//					position++;
+//					maxPageAndBookUrlList.add(scanBookBean);
+//				} else {
+//					if (!getMaxPage) {
+//						String maxPage = QiDianRegexUtils
+//								.getMaxPage(current);
+//						if (maxPage != null) {
+//							getMaxPage = true;
+//							maxPageAndBookUrlList.add(0, maxPage);
+//							break;
+//						}
+//					}
+//				}
+//			}
+//			if (!getMaxPage) {
+//				maxPageAndBookUrlList.add(0, null);
+//			}
+//			return maxPageAndBookUrlList;
+//		}
+//	}
 
 //	/**
 //	 * get max page num and book info url from rank page
@@ -220,36 +221,22 @@ public class QiDianHttpUtils {
 //		}
 //	}
 
-	public static BookInfo getBookDetailsInfo(ScanInfo searchInfo, String bookUrl) throws IOException {
-		if (searchInfo == null || StringUtils.isEmpty(bookUrl)) {
-			return null;
-		}
-		//book.qidian.com/info/1005263115
-		String url = StringUtils.getBookDetailsInfo(StringUtils.getBookId(bookUrl));
-		if (StringUtils.isEmpty(url)) {
-			return null;
-		}
-		HttpURLConnection conn = HttpUtils.getConn(url,3);
-		if (conn == null) {
-			return null;
-		}
-		BufferedReader reader = null;
-		String unicodeType="UTF-8";
-		reader = new BufferedReader(new InputStreamReader(
-				conn.getInputStream(), unicodeType));
+	public static BookInfo getBookDetailsInfo(ScanInfo searchInfo, Reader inputReader) throws IOException {
+		BufferedReader reader= new BufferedReader(inputReader);
 		String current = null;
 		boolean isResolvingScore = false;
 		BookInfo bookInfo = new BookInfo();
 		while ((current = reader.readLine()) != null) {
 			current = current.trim();
 			/*resolve book last update start*/
-			//<p class="gray ell" id="ariaMuLu" role="option">2小时前<span class="char-dot">·</span>连载至第717章 外来的和尚会念经（求月票）</p>
-			List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "id=\"ariaMuLu\" role=\"option\">([^\n]{1,})<span class=\"char-dot\">·</span>连载至([^\n]{1,})</p>", Arrays.asList(new Integer[]{1,2}));
+			//<p class="gray ell" id="ariaMuLu" role="option">2小时前<span class="char-dot">·</span>连载至第717章 外来的尚</p>
+			List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "id=\"ariaMuLu\" role=\"option\">([^\n]{1,})<span class=\"char-dot\">·</span>连载至([^\n]{1,})</p>", Arrays.asList(new Integer[]{1, 2}));
 			if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
 				bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
 				bookInfo.setLastChapter(resolveLastUpdateResult.get(1));
 				continue;
 			}
+
 			/*resolve book last update end*/
 
 			/*resolve book words num start*/

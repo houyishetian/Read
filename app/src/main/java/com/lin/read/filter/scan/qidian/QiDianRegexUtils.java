@@ -4,6 +4,8 @@ import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.utils.ChapterHandleUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,15 +91,26 @@ public class QiDianRegexUtils {
      * @param data
      * @return
      */
-    public static String getMaxPage(String data) {
-//		data-pageMax="25"
+    public static List<String> getCurrentAndMaxPage(String data) {
+//		data-page="2" data-pageMax="5"></div>
+//       id="page-container" data-pageMax="5" data-page="1"
         if (StringUtils.isEmpty(data)) {
             return null;
         }
-        Pattern p = Pattern.compile("data-pageMax=\"(\\d+)\"");
+        List<String> result = new ArrayList<>();
+        Pattern p = Pattern.compile("data-page=\"(\\d+)\" data-pageMax=\"(\\d+)\"");
         Matcher m = p.matcher(data);
         if (m.find()) {
-            return m.group(1);
+            result.add(m.group(1));
+            result.add(m.group(2));
+            return result;
+        }
+        p = Pattern.compile("data-pageMax=\"(\\d+)\" data-page=\"(\\d+)\"");
+        m = p.matcher(data);
+        if (m.find()) {
+            result.add(m.group(2));
+            result.add(m.group(1));
+            return result;
         }
         return null;
     }

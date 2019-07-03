@@ -12,27 +12,16 @@ import com.lin.read.utils.StringKtUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class YouShuHttpUtil {
-    public static ArrayList<Object> getAllBookInfo(ScanInfo searchInfo) throws Exception {
-        if (searchInfo == null) {
-            return null;
-        }
-        String url = StringKtUtil.Companion.getRequestUrlByScanInfo(searchInfo, searchInfo.getPage());
-        Log.d("you shu url:", url);
-        HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
-        if (conn == null) {
-            throw new IOException();
-        }
+    public static ArrayList<Object> getAllBookInfo(ScanInfo searchInfo, Reader charReader) throws Exception {
         ArrayList<Object> result = new ArrayList<>();
-        BufferedReader reader = null;
-        String unicodeType = StringUtils.getCharSet(conn);
-        reader = new BufferedReader(new InputStreamReader(
-                conn.getInputStream(), unicodeType));
+        BufferedReader reader = new BufferedReader(charReader);
         String current = null;
         while ((current = reader.readLine()) != null) {
             current = current.trim();
@@ -52,7 +41,8 @@ public class YouShuHttpUtil {
             List<List<String>> bookinfos = RegexUtils.getDataByRegexManyData(current, regex, allGroups);
             if (bookinfos != null && bookinfos.size() > 0) {
                 Log.e("Test，共：", "" + bookinfos.size());
-                for (List<String> item : bookinfos) {
+                for (int i = 0; i < bookinfos.size(); i++) {
+                    List<String> item = bookinfos.get(i);
                     BookInfo bookInfo = new BookInfo();
                     bookInfo.setBookName(item.get(0));
                     bookInfo.setWebName(Constants.WEB_YOU_SHU);
@@ -62,10 +52,13 @@ public class YouShuHttpUtil {
                     bookInfo.setWordsNum(item.get(3));
                     bookInfo.setLastUpdate(item.get(4));
                     bookInfo.setScore(item.get(5));
+                    bookInfo.setPosition(i);
                     result.add(bookInfo);
                 }
             }
         }
+        reader.close();
+        charReader.close();
         return result;
     }
 }

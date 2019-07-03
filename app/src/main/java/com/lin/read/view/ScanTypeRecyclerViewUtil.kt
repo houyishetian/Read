@@ -17,6 +17,7 @@ import com.lin.read.decoration.ScanTypeItemDecoration
 import com.lin.read.filter.scan.*
 import com.lin.read.utils.Constants
 import com.lin.read.utils.ReflectUtil
+import com.lin.read.utils.SingleInstanceHolderWith3Params
 import com.lin.read.utils.UIUtils
 import java.util.*
 import kotlin.collections.HashMap
@@ -26,18 +27,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     private var scanInputViews: HashMap<String, ScanInputView>
     private var scanViewVisis:HashMap<String,MutableList<Int>>
 
-    companion object {
-        @Volatile
-        private var instance: ScanTypeRecyclerViewUtil? = null
-
-        fun getInstance(context: Context, parentLayout: LinearLayout, readScanBean: ReadScanBean): ScanTypeRecyclerViewUtil {
-            if (instance == null)
-                synchronized(ScanTypeRecyclerViewUtil::class) {
-                    if (instance == null) instance = ScanTypeRecyclerViewUtil(context, parentLayout, readScanBean)
-                }
-            return instance!!
-        }
-    }
+    companion object : SingleInstanceHolderWith3Params<ScanTypeRecyclerViewUtil, Context, LinearLayout, ReadScanBean>(::ScanTypeRecyclerViewUtil)
 
     init {
         scanTypeViews = hashMapOf();
@@ -230,13 +220,13 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     fun getSearchInfo(webType: String): ScanInfo? {
         val typeFields = getSelectedFields(webType)
         var rolePathValue: String? = null
-        var roleParamPairs: MutableList<String> = mutableListOf()
+        var roleParamPairs: HashMap<String,String> = hashMapOf()
         typeFields.forEach {
             when (it.roleInUrl) {
                 Constants.ROLE_PATH -> rolePathValue = it.roleValueInUrl
                 Constants.ROLE_PARAM -> {
                     if (it.roleKeyInUrl != null && it.roleValueInUrl != null) {
-                        roleParamPairs.add(it.roleKeyInUrl + "=" + it.roleValueInUrl)
+                        roleParamPairs.put(it.roleKeyInUrl,it.roleValueInUrl)
                     }
                 }
             }

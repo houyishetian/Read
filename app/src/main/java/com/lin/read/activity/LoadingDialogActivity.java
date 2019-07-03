@@ -15,6 +15,7 @@ import com.lin.read.filter.scan.ReadGetBookInfoFactory;
 import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,41 +107,33 @@ public class LoadingDialogActivity extends Activity {
     }
 
     private void scanBook(){
-        ScanInfo searchInfo= (ScanInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
-        List<Object> result;
-        try{
-            result = ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebName()).getBookInfo(handler,searchInfo);
-        }catch (Exception e){
-            e.printStackTrace();
-            result = null;
-        }
-        ArrayList<BookInfo> allBooks;
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        if (result == null) {
-            allBooks = new ArrayList<>();
-            setResult(Constants.SCAN_RESPONSE_FAILED, intent);
-        } else {
-            setResult(Constants.SCAN_RESPONSE_SUCC, intent);
-            if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebName())) {
-                int totalPage = Integer.parseInt(result.get(0).toString());
-                intent.putExtra(MessageUtils.TOTAL_PAGE,totalPage);
-                intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getPage());
-                result.remove(0);
-                allBooks = new ArrayList<>();
-                for (Object item : result) {
-                    allBooks.add((BookInfo) item);
+        final ScanInfo searchInfo= (ScanInfo) getIntent().getSerializableExtra(Constants.KEY_SEARCH_INFO);
+        ReadGetBookInfoFactory.Companion.getInstance(searchInfo.getWebName()).getBookInfo(this, handler, searchInfo, new ReadGetBookInfoFactory.OnScanResult() {
+            @Override
+            public void onSucceed(int totalNum, @NotNull List<? extends BookInfo> bookInfoList) {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                setResult(Constants.SCAN_RESPONSE_SUCC, intent);
+                ArrayList<BookInfo> result = new ArrayList<>();
+                result.addAll(bookInfoList);
+                if (Constants.WEB_YOU_SHU.equals(searchInfo.getWebName())) {
+                    intent.putExtra(MessageUtils.TOTAL_PAGE, totalNum);
+                    intent.putExtra(MessageUtils.CURRENT_PAGE, searchInfo.getPage());
                 }
-            } else {
-                allBooks = new ArrayList<>();
-                for (Object item : result) {
-                    allBooks.add((BookInfo) item);
-                }
+                bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, result);
+                intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
+                finish();
             }
-        }
-        bundle.putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, allBooks);
-        intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
-        finish();
+
+            @Override
+            public void onFailed(@org.jetbrains.annotations.Nullable Throwable e) {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                setResult(Constants.SCAN_RESPONSE_FAILED, intent);
+                intent.putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, bundle);
+                finish();
+            }
+        });
     }
 
     @Override
