@@ -41,6 +41,8 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
         addFragment(R.id.fragment_container, scanFragment).addFragment(R.id.fragment_container, searchFragment).addFragment(R.id.fragment_container, bookMarksFragment)
 
         showFragment(scanFragment)
+        hideFragment(searchFragment)
+        hideFragment(bookMarksFragment)
 
         rl_scan.setOnClickListener(this)
         rl_search.setOnClickListener(this)
@@ -82,7 +84,7 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
             scanFragment.hideFilterLayout()
             return
         }
-        if(bookMarksFragment.isEditMode){
+        if(bookMarksFragment.isEditMode()){
             bookMarksFragment.exitEditMode()
             return
         }
