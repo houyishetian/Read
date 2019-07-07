@@ -14,6 +14,7 @@ import com.lin.read.R
 import com.lin.read.activity.ReadBookActivity
 import com.lin.read.filter.BookInfo
 import com.lin.read.utils.Constants
+import kotlinx.android.synthetic.main.item_search_book.view.*
 
 class SearchBookItemAdapter(val context: Context, val allBookData: List<BookInfo>) : RecyclerView.Adapter<SearchBookItemAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -26,21 +27,21 @@ class SearchBookItemAdapter(val context: Context, val allBookData: List<BookInfo
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         allBookData[position].run {
-            holder?.bookName?.text = bookName
-            holder?.authorName?.text = authorName
-            holder?.bookType?.text = bookType
-            holder?.lastUpdate?.text = lastUpdate
-            holder?.lastContent?.text = lastChapter
-            holder?.download?.setEnabled(!TextUtils.isEmpty(downloadLink));
+            holder?.itemView?.book_item_bookname?.text = bookName
+            holder?.itemView?.book_item_authorname?.text = authorName
+            holder?.itemView?.book_item_booktype?.text = bookType
+            holder?.itemView?.book_item_lastupdate?.text = lastUpdate
+            holder?.itemView?.book_item_lastcontent?.text = lastChapter
+            holder?.itemView?.book_item_download?.setEnabled(!TextUtils.isEmpty(downloadLink));
 
-            holder?.download?.setOnClickListener {
+            holder?.itemView?.book_item_download?.setOnClickListener {
                 val intent = Intent()
                 intent.setAction("android.intent.action.VIEW")
                 val content_url = Uri.parse(downloadLink)
                 intent.setData(content_url)
                 context.startActivity(intent)
             }
-            holder?.read?.setOnClickListener {
+            holder?.itemView?.book_item_read?.setOnClickListener {
                 val intent = Intent(context, ReadBookActivity::class.java)
                 intent.putExtra(Constants.KEY_SKIP_TO_READ, this)
                 context.startActivity(intent)
@@ -48,25 +49,5 @@ class SearchBookItemAdapter(val context: Context, val allBookData: List<BookInfo
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var bookName: TextView
-        var authorName: TextView
-        var bookType: TextView
-        var lastUpdate: TextView
-        var lastContent: TextView
-        var download: Button
-        var read: Button
-
-        init {
-            with(itemView) {
-                bookName = findViewById(R.id.book_item_bookname) as TextView
-                authorName = findViewById(R.id.book_item_authorname) as TextView
-                bookType = findViewById(R.id.book_item_booktype) as TextView
-                lastUpdate = findViewById(R.id.book_item_lastupdate) as TextView
-                lastContent = findViewById(R.id.book_item_lastcontent) as TextView
-                download = findViewById(R.id.book_item_download) as Button
-                read = findViewById(R.id.book_item_read) as Button
-            }
-        }
-    }
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
