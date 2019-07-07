@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.fragment_search.*
 class SearchFragment : Fragment() {
     private lateinit var webBeansList: List<SearchWebBean>
     private lateinit var allBookInfo: MutableList<BookInfo>
-    private var isFromScanFragment: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_search, null)?.apply {
@@ -149,17 +148,7 @@ class SearchFragment : Fragment() {
     }
 
     fun setSearchType(bookInfo: BookInfo) {
-        isFromScanFragment = true
         et_search_bookname.setText(bookInfo.bookName)
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            if (isFromScanFragment) {
-                isFromScanFragment = false
-                btn_search.performClick()
-            }
-        }
+        btn_search.performClick()
     }
 }
