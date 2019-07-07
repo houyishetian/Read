@@ -76,14 +76,15 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
         var checkBox: CheckBox
         init {
             text = view.findViewById(R.id.scan_type_text) as TextView
-            checkBox = view.findViewById(R.id.scan_type_checkbox) as CheckBox
-            checkBox.setOnTouchListener { _, _ -> checkBox.isChecked }
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                if(!isBinding){
-                    setCheckedStatus(text.text.toString())
-                    if (isChecked) {
-                        onScanItemClickListener?.onItemClick(text.tag as Int, text.text.toString())
-                        if (isChecked) onScanItemClickListenerMap[text.text.toString()]?.onItemClick(text.tag as Int, text.text.toString())
+            checkBox = (view.findViewById(R.id.scan_type_checkbox) as CheckBox).apply {
+                setOnTouchListener { _, _ -> isChecked }
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (!isBinding) {
+                        setCheckedStatus(this@ViewHolder.text.text.toString())
+                        if (isChecked) {
+                            onScanItemClickListener?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
+                            if (isChecked) onScanItemClickListenerMap[this@ViewHolder.text.text.toString()]?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
+                        }
                     }
                 }
             }

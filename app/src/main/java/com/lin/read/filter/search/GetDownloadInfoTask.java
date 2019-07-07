@@ -29,7 +29,7 @@ public class GetDownloadInfoTask extends AsyncTask<String, Void, List<BookInfo>>
     private Activity activity;
     private String webType;
 
-    public GetDownloadInfoTask(Activity activity, WebTypeBean currentResolveType, OnTaskListener onTaskListener) {
+    public GetDownloadInfoTask(Activity activity, SearchWebBean currentResolveType, OnTaskListener onTaskListener) {
         this.onTaskListener = onTaskListener;
         this.activity=activity;
         this.webType=currentResolveType.getTag();

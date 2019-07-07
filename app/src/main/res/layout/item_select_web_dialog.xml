@@ -30,11 +30,4 @@
             android:text="下载"/>
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/dialog_web_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#8B7D7B" />
-
 </LinearLayout>

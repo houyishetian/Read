@@ -11,23 +11,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.lin.read.R;
 import com.lin.read.activity.ReadBookActivity;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.utils.Constants;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lisonglin on 2017/10/17.
  */
 
 public class SearchBookItemAdapter extends RecyclerView.Adapter<SearchBookItemAdapter.ViewHolder> {
-    private ArrayList<BookInfo> allBookData;
+    private List<BookInfo> allBookData;
     private Context context;
 
-    public SearchBookItemAdapter(Context context, ArrayList<BookInfo> allBookData) {
+    public SearchBookItemAdapter(Context context, List<BookInfo> allBookData) {
         this.allBookData = allBookData;
         this.context = context;
     }

@@ -26,14 +26,11 @@
             android:layout_height="1dp"
             android:background="#8B7D7B" />
 
-        <ListView
-            android:id="@+id/dialog_select_web_lv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null"
-            android:cacheColorHint="@null">
-
-        </ListView>
+        <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:id="@+id/dialog_select_web_rcv"/>
 
     </LinearLayout>
 </LinearLayout>

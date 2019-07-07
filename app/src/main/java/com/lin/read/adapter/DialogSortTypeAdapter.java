@@ -6,11 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.lin.read.R;
-import com.lin.read.filter.BookComparator;
 import com.lin.read.filter.scan.SortInfo;
-import com.lin.read.filter.search.WebTypeBean;
 import com.lin.read.utils.NoDoubleClickListener;
 
 import java.util.List;
