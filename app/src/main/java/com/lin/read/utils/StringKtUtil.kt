@@ -33,15 +33,5 @@ class StringKtUtil {
             }
             return false
         }
-
-        fun printLog(log:String?){
-            if(log == null){
-                return
-            }
-            for(index in 0 until log.length step 3000){
-                var next = if(index + 3000 <= log.length-1) index+3000 else log.length-1
-                Log.e("Test index","${log.substring(index,next)}")
-            }
-        }
     }
 }

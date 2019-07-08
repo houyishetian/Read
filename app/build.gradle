@@ -11,6 +11,9 @@ android {
             storePassword 'android'
         }
     }
+    androidExtensions {
+        experimental = true
+    }
     compileSdkVersion 25
     buildToolsVersion '28.0.3'
     defaultConfig {
@@ -46,7 +49,7 @@ dependencies {
     implementation files('libs/jargs-1.0.jar')
     implementation files('libs/pinyin4j-2.5.0.jar')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:latest.release"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.kotlinVersion"
 
     // for retrofit
     implementation 'com.squareup.retrofit2:retrofit:latest.release'
