@@ -1,6 +1,7 @@
 package com.lin.read.filter.scan.qidian
 
 import com.lin.read.filter.scan.BookLinkInfo
+import com.lin.read.utils.StringKtUtil
 import java.io.BufferedReader
 import java.io.Reader
 
@@ -15,17 +16,16 @@ class QiDianResolveUtil {
             var maxPage = 0
             val result = mutableListOf<Any>()
             while (current != null) {
-                val bookLink = QiDianRegexUtils.getBookUrlFromRankPage(current)
+                val bookLink = StringKtUtil.getBookLinkFromRankPageForQiDian(current)
                 if (bookLink != null) {
                     val bookLinkInfo = BookLinkInfo(bookLink, null, position)
                     result.add(bookLinkInfo)
                     position++
                 } else {
-                    if (!alreadyGetMaxPage && current.contains("page-container")) {
-                        val currentAndMaxPage = QiDianRegexUtils.getCurrentAndMaxPage(current)
-                        if (currentAndMaxPage != null && currentAndMaxPage.isNotEmpty()) {
-                            currentPage = currentAndMaxPage[0].toInt()
-                            maxPage = currentAndMaxPage[1].toInt()
+                    current.takeIf { !alreadyGetMaxPage && it.contains("page-container") }?.apply {
+                        StringKtUtil.getCurrentAndMaxPageForQiDian(this)?.takeIf { it.isNotEmpty() }?.apply {
+                            currentPage = this[0].toInt()
+                            maxPage = this[1].toInt()
                             alreadyGetMaxPage = true
                         }
                     }

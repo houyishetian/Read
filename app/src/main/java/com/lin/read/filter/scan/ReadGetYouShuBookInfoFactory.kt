@@ -6,13 +6,12 @@ import android.os.Handler
 import android.util.Log
 import com.lin.read.filter.BookInfo
 import com.lin.read.filter.scan.youshu.YouShuHttpUtil
-import com.lin.read.retrofit.NullResponseException
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
 import com.lin.read.utils.MessageUtils
 import okhttp3.ResponseBody
-import rx.schedulers.Schedulers
 import rx.Observer
+import rx.schedulers.Schedulers
 
 class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
     val tag = ReadGetYouShuBookInfoFactory::class.java.simpleName
@@ -39,20 +38,16 @@ class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
                         }
 
                         override fun onNext(t: ResponseBody?) {
-                            if (t == null) {
-                                (context as Activity).runOnUiThread{
-                                    onScanResult.onFailed(NullResponseException())
-                                }
-                                return
-                            }
-                            val result = YouShuHttpUtil.getAllBookInfo(searchInfo,t.charStream())
-                            if(result != null && result.isNotEmpty()){
-                                val maxNum = result[0].toString().toInt()
-                                result.removeAt(0)
-                                val books = mutableListOf<BookInfo>()
-                                result.forEach{books.add(it as BookInfo)}
-                                (context as Activity).runOnUiThread{
-                                    onScanResult.onSucceed(maxNum,books)
+                            t?.run {
+                                val result = YouShuHttpUtil.getAllBookInfo(searchInfo, charStream())
+                                if (result != null && result.isNotEmpty()) {
+                                    val maxNum = result[0].toString().toInt()
+                                    result.removeAt(0)
+                                    val books = mutableListOf<BookInfo>()
+                                    result.forEach { books.add(it as BookInfo) }
+                                    (context as Activity).runOnUiThread {
+                                        onScanResult.onSucceed(maxNum, books)
+                                    }
                                 }
                             }
                         }

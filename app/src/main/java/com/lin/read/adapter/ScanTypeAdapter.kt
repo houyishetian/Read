@@ -20,9 +20,7 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
         if (use4Words) layoutId = R.layout.item_scan_type_4_chars else layoutId = R.layout.item_scan_type
         onScanItemClickListenerMap = hashMapOf()
         initCheckedStatus()
-        if(getCheckedInfo() == null && data.isNotEmpty()){
-            data[0].checked = true
-        }
+        data.takeIf { getCheckedInfo() == null && it.isNotEmpty() }?.run { this[0].checked = true }
     }
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(layoutId, null))
@@ -83,7 +81,7 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
                         setCheckedStatus(this@ViewHolder.text.text.toString())
                         if (isChecked) {
                             onScanItemClickListener?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
-                            if (isChecked) onScanItemClickListenerMap[this@ViewHolder.text.text.toString()]?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
+                            onScanItemClickListenerMap[this@ViewHolder.text.text.toString()]?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
                         }
                     }
                 }

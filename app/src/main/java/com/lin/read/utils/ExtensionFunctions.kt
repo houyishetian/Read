@@ -35,16 +35,3 @@ fun FragmentActivity.hideFragment(fragment: Fragment){
 fun Activity.makeMsg(msg: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, msg, duration).show()
 }
-
-fun Any?.printContent() {
-    this ?: Log.d("debug", "${this}")
-    this?.run {
-        var tag = 0
-        for (index in 0 until toString().length step 3000) {
-            val next = if (index + 3000 <= toString().length - 1) index + 3000 else toString().length - 1
-            Log.d("debug", "${toString().substring(index, next)}")
-            tag++
-        }
-    }
-}
-

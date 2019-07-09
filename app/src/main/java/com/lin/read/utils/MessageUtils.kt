@@ -24,24 +24,24 @@ class MessageUtils {
         }
 
         fun sendMessageOfInteger(handler: Handler?, what: Int, message: Int) {
-            if (handler != null) {
-                val msg = handler.obtainMessage()
+            handler?.run {
+                val msg = obtainMessage()
                 msg.what = what
                 msg.arg1 = message
-                handler.sendMessage(msg)
+                sendMessage(msg)
             }
         }
 
 
         fun sendMessageOfArrayList(handler: Handler?, what: Int, allData: ArrayList<BookInfo>,count:Int = -1) {
-            if (handler != null) {
-                val msg = handler.obtainMessage()
+            handler?.run {
+                val msg = obtainMessage()
                 msg.what = what
                 if(count != -1) msg.arg1 = count
                 val bundle = Bundle()
                 bundle.putParcelableArrayList(BOOK_LIST, allData)
                 msg.data = bundle
-                handler.sendMessage(msg)
+                sendMessage(msg)
             }
         }
     }

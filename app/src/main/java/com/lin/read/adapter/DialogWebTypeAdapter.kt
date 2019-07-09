@@ -21,14 +21,16 @@ class DialogWebTypeAdapter(val context: Context,val webInfos:List<SearchWebBean>
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         webInfos[position].run {
-            holder?.webName?.text = webName
-            holder?.downloadText?.visibility = if (canDownload) View.VISIBLE else View.GONE
-            holder?.webName?.setOnClickListener(View.OnClickListener {
-                onItemWebClickListener?.onItemWebClick(this)
-                webInfos.forEach {
-                    if(this === it) it.checked = true else it.checked = false
+            holder?.let {
+                it.webName.text = webName
+                it.downloadText.visibility = if (canDownload) View.VISIBLE else View.GONE
+                it.webName.setOnClickListener{
+                    onItemWebClickListener?.onItemWebClick(this)
+                    webInfos.forEach {
+                        if(this === it) it.checked = true else it.checked = false
+                    }
                 }
-            })
+            }
         }
     }
 
