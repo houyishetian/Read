@@ -43,4 +43,6 @@ public class Constants {
 
     public static final String ROLE_PATH = "path";
     public static final String ROLE_PARAM = "param";
+
+    public static final int CHAPTER_NUM_FOR_EACH_PAGE = 30;
 }

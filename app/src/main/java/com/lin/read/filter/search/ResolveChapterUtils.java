@@ -78,6 +78,11 @@ public class ResolveChapterUtils {
         Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
         //for Ai Shu Wang start
         boolean isStart=false;
+        String webType = bookInfo.getWebType();
+        String webName = bookInfo.getWebName();
+        String chapterLink;
+        String chapterName;
+        String chapterNameOri;
         //for Ai Shu Wang end
         while ((current = reader.readLine()) != null) {
             current = current.trim();
@@ -86,12 +91,10 @@ public class ResolveChapterUtils {
                 if (currentResult != null && currentResult.size() > 0) {
                     for (List<String> item : currentResult) {
                         if (item != null && item.size() == allGroups.size()) {
-                            BookChapterInfo bookChapterInfo = new BookChapterInfo();
-                            bookChapterInfo.setWebType(bookInfo.getWebType());
-                            bookChapterInfo.setChapterLink(bookInfo.getBookLink() + item.get(0));
-                            String oriChapterName = item.get(1);
-                            bookChapterInfo.setChapterNameOri(oriChapterName);
-                            bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                            chapterLink = bookInfo.getBookLink() + item.get(0);
+                            chapterNameOri = item.get(1);
+                            chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                            BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                             result.add(bookChapterInfo);
                         }
                     }
@@ -107,12 +110,10 @@ public class ResolveChapterUtils {
                     if (currentResult != null && currentResult.size() > 0) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
-                                BookChapterInfo bookChapterInfo = new BookChapterInfo();
-                                bookChapterInfo.setWebType(bookInfo.getWebType());
-                                bookChapterInfo.setChapterLink(AiShuWangParseLinkUtils.parseLink(item.get(0)));
-                                String oriChapterName = item.get(1);
-                                bookChapterInfo.setChapterNameOri(oriChapterName);
-                                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                                chapterLink = AiShuWangParseLinkUtils.parseLink(item.get(0));
+                                chapterNameOri = item.get(1);
+                                chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                                BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                                 result.add(bookChapterInfo);
                             }
                         }
@@ -133,12 +134,10 @@ public class ResolveChapterUtils {
                     if (currentResult != null && currentResult.size() > 0) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
-                                BookChapterInfo bookChapterInfo = new BookChapterInfo();
-                                bookChapterInfo.setWebType(bookInfo.getWebType());
-                                bookChapterInfo.setChapterLink(item.get(0));
-                                String oriChapterName = item.get(1);
-                                bookChapterInfo.setChapterNameOri(oriChapterName);
-                                bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+                                chapterLink = item.get(0);
+                                chapterNameOri = item.get(1);
+                                chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                                BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                                 result.add(bookChapterInfo);
                             }
                         }
@@ -147,12 +146,11 @@ public class ResolveChapterUtils {
             }else{
                 List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
                 if (currentResult != null && currentResult.size() == allGroups.size()) {
-                    BookChapterInfo bookChapterInfo=new BookChapterInfo();
-                    bookChapterInfo.setWebType(bookInfo.getWebType());
-                    bookChapterInfo.setChapterLink(currentResult.get(0));
-                    String oriChapterName = currentResult.get(1);
-                    bookChapterInfo.setChapterNameOri(oriChapterName);
-                    bookChapterInfo.setChapterName(ChapterHandleUtils.handleUpdateStr(oriChapterName));
+
+                    chapterLink = currentResult.get(0);
+                    chapterNameOri = currentResult.get(1);
+                    chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                    BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                     result.add(bookChapterInfo);
                 }
             }

@@ -1,5 +1,10 @@
 package com.lin.read.utils
 
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+
 class ReflectUtil {
     companion object {
         fun <T> getProperty(obj: Any, propertyName: String, returnClz: Class<T>): T? {
@@ -24,6 +29,20 @@ class ReflectUtil {
                 }
             }
             return null
+        }
+
+
+        fun <T> deepCopy(src: T): T {
+            val byteOut = ByteArrayOutputStream()
+            ObjectOutputStream(byteOut).writeObject(src)
+            return ObjectInputStream(ByteArrayInputStream(byteOut.toByteArray())).readObject() as T
+        }
+
+        fun <T : Any> copyProperteries(src: T, des: T) {
+            src.javaClass.declaredFields.forEach {
+                it.isAccessible = true
+                it.set(des, it[src])
+            }
         }
     }
 }

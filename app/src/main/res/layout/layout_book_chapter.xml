@@ -77,7 +77,7 @@
                     android:layout_weight="1">
 
                     <EditText
-                        android:id="@+id/chapter_skip_page"
+                        android:id="@+id/page_skip_et"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@null"
@@ -102,7 +102,7 @@
                         android:layout_weight="1"/>
                 </LinearLayout>
                 <TextView
-                    android:id="@+id/chapter_skip"
+                    android:id="@+id/page_skip"
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:text="Go"

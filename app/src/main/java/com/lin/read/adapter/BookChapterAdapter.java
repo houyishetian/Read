@@ -7,25 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.lin.read.R;
 import com.lin.read.filter.search.BookChapterInfo;
-import com.lin.read.filter.search.GetChapterInfoTask;
+import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lisonglin on 2018/3/19.
  */
 
 public class BookChapterAdapter extends BaseAdapter {
-    private ArrayList<BookChapterInfo> allInfo;
+    private List<BookChapterInfo> allInfo;
     private Context context;
+    private BookChapterInfo currentBookInfo;
 
-    public BookChapterAdapter(Context context, ArrayList<BookChapterInfo> allInfo) {
+    public BookChapterAdapter(Context context, List<BookChapterInfo> allInfo, BookChapterInfo currentBookInfo) {
         this.allInfo = allInfo;
         this.context = context;
+        this.currentBookInfo = currentBookInfo;
     }
 
     @Override
@@ -60,10 +61,10 @@ public class BookChapterAdapter extends BaseAdapter {
         } else {
             holder.chapterDivider.setVisibility(View.VISIBLE);
         }
-        if(info.isCurrentReading()){
-            holder.chapterName.setTextColor(context.getResources().getColor(android.R.color.holo_blue_light));
+        if (position == (currentBookInfo.getIndex() - Constants.CHAPTER_NUM_FOR_EACH_PAGE * currentBookInfo.getPage()) && info.getChapterName().equals(currentBookInfo.getChapterName())) {
+            holder.chapterName.setTextColor(context.getColor(android.R.color.holo_blue_light));
         }else{
-            holder.chapterName.setTextColor(context.getResources().getColor(android.R.color.black));
+            holder.chapterName.setTextColor(context.getColor(android.R.color.black));
         }
         holder.chapterName.setOnClickListener(new NoDoubleClickListener() {
             @Override
@@ -94,34 +95,5 @@ public class BookChapterAdapter extends BaseAdapter {
             chapterName = (TextView) itemView.findViewById(R.id.item_chapter_name);
             chapterDivider = itemView.findViewById(R.id.item_chapter_divider);
         }
-    }
-
-    public void notifyData(int currentPage, BookChapterInfo currentChapterInfo){
-        setCurrentReading(currentPage, currentChapterInfo);
-        notifyDataSetChanged();
-    }
-
-    private void setCurrentReading(int currentPage, BookChapterInfo currentChapterInfo) {
-        if (currentChapterInfo == null || currentChapterInfo.getIndex() < 0 || currentChapterInfo.getPage() < 0 || currentPage != currentChapterInfo.getPage()) {
-            for (int i = 0; i < allInfo.size(); i++) {
-                allInfo.get(i).setCurrentReading(false);
-            }
-            return;
-        }
-        int readingPositon = currentChapterInfo.getIndex() - currentChapterInfo.getPage() * GetChapterInfoTask.eachLen;
-        for (int i = 0; i < allInfo.size(); i++) {
-            if (i == readingPositon) {
-                allInfo.get(i).setCurrentReading(true);
-            } else {
-                allInfo.get(i).setCurrentReading(false);
-            }
-        }
-    }
-
-    public int getCurrentPosition(int currentPage, BookChapterInfo currentChapterInfo) {
-        if (currentChapterInfo == null || currentChapterInfo.getIndex() < 0 || currentChapterInfo.getPage() < 0 || currentPage != currentChapterInfo.getPage()) {
-            return 0;
-        }
-        return currentChapterInfo.getIndex() - currentChapterInfo.getPage() * GetChapterInfoTask.eachLen;
     }
 }
