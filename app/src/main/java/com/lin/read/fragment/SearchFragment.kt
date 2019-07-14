@@ -45,12 +45,9 @@ class SearchFragment : Fragment() {
         webBeansList = getWebTypeBeans()
         allBookInfo = mutableListOf()
         //set default value
-        select_web.text = webBeansList.let loop@{
-            it.forEach {
-                if (it.default) return@loop it.webName
-            }
-            it[0].default = true
-            return@loop it[0].webName
+        select_web.text = webBeansList.firstOrNull { it.default }?.webName ?: let {
+            webBeansList[0].default = true
+            webBeansList[0].webName
         }
         select_web.setOnClickListener(View.OnClickListener {
             showSelectWebDialog()
@@ -116,10 +113,9 @@ class SearchFragment : Fragment() {
             return
         }
         DialogUtil.getInstance().showLoadingDialog(this.getActivity());
-        val currentSelectWeb = webBeansList.let loop@{
-            it.forEach { if (it.checked!!) return@loop it }
-            it[0].checked = true
-            return@loop it[0]
+        val currentSelectWeb = webBeansList.firstOrNull { it.checked!! } ?: let {
+            webBeansList[0].checked = true
+            webBeansList[0]
         }
         GetDownloadInfoTask(activity, currentSelectWeb, object : GetDownloadInfoTask.OnTaskListener {
             override fun onSucc(allBooks: MutableList<BookInfo>?) {

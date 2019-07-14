@@ -1,8 +1,7 @@
 {
 	"webs": [
 		{"name": "起点","key": "qidian","id": "1","default": true},
-		{"name": "完本","key": "qidianfinish","id": "2"},
-		{"name": "优书","key": "youshu","id": "3"}
+		{"name": "完本","key": "qidianfinish","id": "2"}
 	],
 	"qidian": {
 		"mainUrl": ["https://www.qidian.com/","https://m.qidian.com/"],

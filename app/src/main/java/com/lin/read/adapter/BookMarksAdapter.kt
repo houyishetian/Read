@@ -68,12 +68,8 @@ class BookMarksAdapter(val fragment: Fragment, val bookMarksData: List<BookMarkB
         fun onCheckBoxClick()
     }
 
-    fun getAllSelectedItems():List<BookMarkBean>{
-        val result = mutableListOf<BookMarkBean>()
-        bookMarksData.forEach{
-            if(it.isChecked) result.add(it)
-        }
-        return result
+    fun getAllSelectedItems(): List<BookMarkBean> {
+        return bookMarksData.filter { it.isChecked }
     }
 
     interface OnItemLongClickListener{

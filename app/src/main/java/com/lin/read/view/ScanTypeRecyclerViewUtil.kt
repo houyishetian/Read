@@ -46,31 +46,39 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
 
     private fun initTypeViews(webType: String) {
         val currentScanType = ReflectUtil.getProperty(readScanBean, webType, ReadScanDetailsInfo::class.java)?.scanTypes
-        if (currentScanType?.isNotEmpty()!!) {
+        currentScanType?.takeIf { it.isNotEmpty() }?.run {
             val scanTypeViews: HashMap<String, ScanTypeView> = hashMapOf()
-            currentScanType.forEach {
+            this.forEach {
                 val scanTypeView = ScanTypeView(context, it)
                 scanTypeView.parent.tag = webType
                 scanTypeView.parent.setTag(R.integer.read_scan_view_id, it.key)
                 parentLayout.addView(scanTypeView.parent)
                 scanTypeViews.put(it.key, scanTypeView)
             }
-            this.scanTypeViews.put(webType, scanTypeViews)
+            this@ScanTypeRecyclerViewUtil.scanTypeViews.put(webType, scanTypeViews)
         }
     }
 
     private fun initInputViews(webType: String) {
         val currentScanInputBean = ReflectUtil.getProperty(readScanBean, webType, ReadScanDetailsInfo::class.java)
-        if (currentScanInputBean != null && currentScanInputBean.inputTypes != null) {
-            val scanInputView = ScanInputView(context, currentScanInputBean.inputTypes)
+        currentScanInputBean?.inputTypes?.run {
+            val scanInputView = ScanInputView(context, this)
             scanInputView.parent.tag = webType
             parentLayout.addView(scanInputView.parent)
-            this.scanInputViews.put(webType, scanInputView)
+            this@ScanTypeRecyclerViewUtil.scanInputViews.put(webType, scanInputView)
         }
     }
 
     private fun saveScanViewVisis(webType: String? = null) {
-        if(webType == null){
+        webType?.run {
+            //only save the web data
+            scanViewVisis[this]?.clear()
+            for (index in 0 until parentLayout.childCount) {
+                if (parentLayout.getChildAt(index).tag == this) {
+                    scanViewVisis[parentLayout.getChildAt(index).tag]?.add(parentLayout.getChildAt(index).visibility)
+                }
+            }
+        } ?: let {
             //save all data
             //clear old data
             scanViewVisis.forEach { (_, item) ->
@@ -78,14 +86,6 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             }
             for (index in 0 until parentLayout.childCount) {
                 scanViewVisis[parentLayout.getChildAt(index).tag]?.add(parentLayout.getChildAt(index).visibility)
-            }
-        }else{
-            //only save the web data
-            scanViewVisis[webType]?.clear()
-            for (index in 0 until parentLayout.childCount) {
-                if(parentLayout.getChildAt(index).tag == webType){
-                    scanViewVisis[parentLayout.getChildAt(index).tag]?.add(parentLayout.getChildAt(index).visibility)
-                }
             }
         }
     }
@@ -99,10 +99,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     }
 
     private fun getDefaultChecked(scanTypeData:List<ReadScanTypeData>):ReadScanTypeData?{
-        scanTypeData.forEach{
-            if(it.default) return it
-        }
-        return null
+        return scanTypeData.firstOrNull { it.default }
     }
 
     private fun setScanTypeClickListener(){
@@ -161,20 +158,17 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
         }
     }
 
-    private fun getSelectedFields(webType: String):List<ReadScanSelectedBean>{
+    private fun getSelectedFields(webType: String): List<ReadScanSelectedBean> {
         val result = mutableListOf<ReadScanSelectedBean>()
         for (index in 0 until parentLayout.childCount) {
-            if (parentLayout.getChildAt(index).tag == webType && parentLayout.getChildAt(index).visibility == View.VISIBLE) {
-                val scanTypeView = scanTypeViews[webType]?.get(parentLayout.getChildAt(index).getTag(R.integer.read_scan_view_id))
-                if (scanTypeView != null) {
-                    val selectedItem = scanTypeView.adapter.getCheckedInfo()
-                    if (selectedItem != null) {
-                        val typeName = scanTypeView.readScanTypeBean.typeName
-                        val key = scanTypeView.readScanTypeBean.key
-                        val name = selectedItem.name
-                        val roleInUrl = scanTypeView.readScanTypeBean.roleInUrl
-                        val roleKeyInUrl = scanTypeView.readScanTypeBean.roleKeyInUrl
-                        val roleValueInUrl = selectedItem.roleValueInUrl
+            parentLayout.getChildAt(index).takeIf { it.tag == webType && it.visibility == View.VISIBLE }?.run {
+                scanTypeViews[webType]?.get(getTag(R.integer.read_scan_view_id))?.let {
+                    //only get the visible and selected items
+                    it.adapter.getCheckedInfo()?.run {
+                        val typeName = it.readScanTypeBean.typeName
+                        val key = it.readScanTypeBean.key
+                        val roleInUrl = it.readScanTypeBean.roleInUrl
+                        val roleKeyInUrl = it.readScanTypeBean.roleKeyInUrl
                         result.add(ReadScanSelectedBean(typeName, key, name, roleInUrl, roleKeyInUrl, roleValueInUrl))
                     }
                 }
@@ -186,41 +180,29 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     private fun getInputtedFields(webType: String): List<ReadScanInputtedBean> {
         val result = mutableListOf<ReadScanInputtedBean>()
         scanInputViews[webType]?.inputViews?.forEach { (key, editText) ->
-            var dataItem: ReadScanInputData? = null
-            scanInputViews[webType]?.readScanInputBean?.data?.forEach ergodic@{
-                if (it.key == key) {
-                    dataItem = it
-                    return@ergodic
-                }
-            }
-            if (dataItem != null) {
-                if (TextUtils.isEmpty(editText.text.toString())) {
-                    editText.setText(dataItem!!.default?.toString())
-                }
-                var value:Number? = null
-                if(!TextUtils.isEmpty(editText.text.toString())){
-                    when(dataItem!!.inputType){
-                        Constants.INPUT_FLOAT -> value = editText.text.toString().toFloat()
-                        Constants.INPUT_INT -> value = editText.text.toString().toInt()
+            scanInputViews[webType]?.readScanInputBean?.data?.firstOrNull { it.key == key }?.run {
+                editText.text.toString().takeIf { it.isEmpty() }?.let { editText.setText(this.default?.toString()) }
+                val value: Number = editText.text.toString().let {
+                    when (this.inputType) {
+                        Constants.INPUT_FLOAT -> it.toFloat()
+                        Constants.INPUT_INT -> it.toInt()
+                        else -> throw Exception("input type Error, this field must not be null!")
                     }
                 }
-                result.add(ReadScanInputtedBean(dataItem!!.typeName, dataItem!!.key, dataItem!!.inputType, value, dataItem!!.min, dataItem!!.max))
+                result.add(ReadScanInputtedBean(typeName, key, inputType, value, min, max))
             }
         }
         return result
     }
 
-    private fun getWebName(webType: String):String?{
-        readScanBean.webs?.forEach{
-            if(it.key == webType) return it.name
-        }
-        return null
+    private fun getWebName(webType: String): String? {
+        return readScanBean.webs.firstOrNull { it.key == webType }?.name
     }
 
     fun getSearchInfo(webType: String): ScanInfo? {
         val typeFields = getSelectedFields(webType)
         var rolePathValue: String? = null
-        var roleParamPairs: HashMap<String,String> = hashMapOf()
+        val roleParamPairs: HashMap<String,String> = hashMapOf()
         typeFields.forEach {
             when (it.roleInUrl) {
                 Constants.ROLE_PATH -> rolePathValue = it.roleValueInUrl
