@@ -2,6 +2,7 @@ package com.lin.read.filter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Point;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -25,13 +26,13 @@ import java.util.List;
 
 public class BookComparatorUtil {
 
-    private final int SORT_ASCEND = 1;
-    private final int SORT_DESCEND = 2;
+    private static final int SORT_ASCEND = 1;
+    private static final int SORT_DESCEND = 2;
 
     private int lastClickItem = -1;
     private int lastSortType = -1;
 
-    public BookComparator.SortType getSortType(int currentClickItem) {
+    private BookComparator.SortType getSortType(int currentClickItem) {
         if(currentClickItem==SortInfo.ID_SORT_BY_DEFAULT){
             lastSortType = SORT_ASCEND;
         }else{
@@ -56,7 +57,7 @@ public class BookComparatorUtil {
         return sortType;
     }
 
-    public BookComparator.BookType getSortBookType(int currentClickItem) {
+    private BookComparator.BookType getSortBookType(int currentClickItem) {
         BookComparator.BookType bookType = null;
         switch (currentClickItem) {
             case SortInfo.ID_SORT_BY_DEFAULT:
@@ -109,13 +110,15 @@ public class BookComparatorUtil {
         LayoutInflater inflater = LayoutInflater.from(activity);
         View viewDialog = inflater.inflate(R.layout.dialog_qidian_book_sort, null);
         Display display = activity.getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
+        Point point = new Point();
+        display.getSize(point);
+        int width = point.x;
+        int height = point.y;
         //设置dialog的宽高为屏幕的宽高
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         sortDialog.setContentView(viewDialog, layoutParams);
 
-        ListView sortListView = (ListView) viewDialog.findViewById(R.id.dialog_select_sort_type_lv);
+        ListView sortListView = viewDialog.findViewById(R.id.dialog_select_sort_type_lv);
         DialogSortTypeAdapter adapter = new DialogSortTypeAdapter(activity,allSortInfo);
         sortListView.setAdapter(adapter);
 

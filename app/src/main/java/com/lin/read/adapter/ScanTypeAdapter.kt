@@ -10,14 +10,14 @@ import android.widget.TextView
 import com.lin.read.R
 import com.lin.read.filter.scan.ReadScanTypeData
 
-class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: List<ReadScanTypeData>, val use4Words: Boolean = false) : RecyclerView.Adapter<ScanTypeAdapter.ViewHolder>() {
-    var isBinding = false
-    var layoutId: Int
+class ScanTypeAdapter @JvmOverloads constructor(private val context: Context, private val data: List<ReadScanTypeData>, use4Words: Boolean = false) : RecyclerView.Adapter<ScanTypeAdapter.ViewHolder>() {
+    private var isBinding = false
+    private var layoutId: Int
     var onScanItemClickListener:OnScanItemClickListener? = null
     val onScanItemClickListenerMap:HashMap<String,OnScanItemClickListener>
 
     init {
-        if (use4Words) layoutId = R.layout.item_scan_type_4_chars else layoutId = R.layout.item_scan_type
+        layoutId = if (use4Words) R.layout.item_scan_type_4_chars else R.layout.item_scan_type
         onScanItemClickListenerMap = hashMapOf()
         initCheckedStatus()
         data.takeIf { getCheckedInfo() == null && it.isNotEmpty() }?.run { this[0].checked = true }
@@ -54,7 +54,7 @@ class ScanTypeAdapter @JvmOverloads constructor(val context: Context, val data: 
 
     private fun setCheckedStatus(text:String){
         for(item in data){
-            item.checked = text.equals(item.name)
+            item.checked = text == item.name
         }
         notifyDataSetChanged()
     }

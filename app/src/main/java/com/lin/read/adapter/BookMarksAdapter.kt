@@ -14,14 +14,14 @@ import com.lin.read.utils.Constants
 import com.lin.read.utils.DateUtils
 import kotlinx.android.synthetic.main.item_book_mark.view.*
 
-class BookMarksAdapter(val fragment: Fragment, val bookMarksData: List<BookMarkBean>) : RecyclerView.Adapter<BookMarksAdapter.ViewHolder>() {
+class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData: List<BookMarkBean>) : RecyclerView.Adapter<BookMarksAdapter.ViewHolder>() {
     private var isBinding = false
     lateinit var onCheckBoxClickListener: OnCheckBoxClickListener
     lateinit var onItemLongClickListener: OnItemLongClickListener
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(fragment.activity as Context).inflate(R.layout.item_book_mark, null).apply {
             setOnLongClickListener{
-                onItemLongClickListener?.onItemLongClick(this)
+                onItemLongClickListener.onItemLongClick(this)
                 return@setOnLongClickListener true
             }
         })

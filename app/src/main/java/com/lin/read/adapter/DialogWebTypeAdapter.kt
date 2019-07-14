@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.lin.read.R
 import com.lin.read.filter.search.SearchWebBean
 
-class DialogWebTypeAdapter(val context: Context,val webInfos:List<SearchWebBean> ):RecyclerView.Adapter<DialogWebTypeAdapter.ViewHolder>(){
+class DialogWebTypeAdapter(private val context: Context, private val webInfos: List<SearchWebBean>) : RecyclerView.Adapter<DialogWebTypeAdapter.ViewHolder>() {
     lateinit var onItemWebClickListener:OnItemWebClickListener
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_select_web_dialog, null))
@@ -25,9 +25,9 @@ class DialogWebTypeAdapter(val context: Context,val webInfos:List<SearchWebBean>
                 it.webName.text = webName
                 it.downloadText.visibility = if (canDownload) View.VISIBLE else View.GONE
                 it.webName.setOnClickListener{
-                    onItemWebClickListener?.onItemWebClick(this)
+                    onItemWebClickListener.onItemWebClick(this)
                     webInfos.forEach {
-                        if(this === it) it.checked = true else it.checked = false
+                        it.checked = this === it
                     }
                 }
             }

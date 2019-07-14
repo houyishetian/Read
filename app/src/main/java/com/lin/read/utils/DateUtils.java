@@ -3,7 +3,6 @@ package com.lin.read.utils;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -14,9 +14,9 @@ class LaunchActivity : Activity(){
 
     override fun onResume() {
         super.onResume()
-        Handler().postDelayed(Runnable {
-            startActivity(Intent(this@LaunchActivity,MainActivity::class.java))
+        Handler().postDelayed({
+            startActivity(Intent(this@LaunchActivity, MainActivity::class.java))
             finish()
-        },3000)
+        }, 3000)
     }
 }

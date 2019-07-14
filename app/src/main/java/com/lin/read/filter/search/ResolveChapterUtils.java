@@ -1,8 +1,6 @@
 package com.lin.read.filter.search;
 
-import android.text.TextUtils;
 import android.util.Log;
-
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -39,7 +37,7 @@ public class ResolveChapterUtils {
             throw new IOException();
         }
         String regex = null;
-        List<Integer> allGroups = Arrays.asList(new Integer[]{1, 2});
+        List<Integer> allGroups = Arrays.asList(1);
         String uniCodeType=StringUtils.getCharSet(conn);
         switch (bookInfo.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
@@ -155,12 +153,10 @@ public class ResolveChapterUtils {
                 }
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -202,8 +198,8 @@ public class ResolveChapterUtils {
         while ((current = reader.readLine()) != null) {
             current = current.trim();
             if(Constants.RESOLVE_FROM_BIQUGE.equals(bookChapterInfo.getWebType())){
-                String biqugeRegex = "<div id=\"content\">([^\n]{1,})";;
-                List<Integer> biqugeGroups = Arrays.asList(new Integer[]{1});
+                String biqugeRegex = "<div id=\"content\">([^\n]{1,})";
+                List<Integer> biqugeGroups = Arrays.asList(1);
                 List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), biqugeRegex, biqugeGroups);
                 if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
                     resultContent=currentResult.get(0);
@@ -227,8 +223,8 @@ public class ResolveChapterUtils {
                     resultContent += current;
                 }
             }else if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookChapterInfo.getWebType())){
-                String dingdianRegex = "<dd id=\"contents\">([^\n]{1,})</dd>";;
-                List<Integer> biqugeGroups = Arrays.asList(new Integer[]{1});
+                String dingdianRegex = "<dd id=\"contents\">([^\n]{1,})</dd>";
+                List<Integer> biqugeGroups = Arrays.asList(1);
                 List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), dingdianRegex, biqugeGroups);
                 if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
                     resultContent=currentResult.get(0);
@@ -272,7 +268,7 @@ public class ResolveChapterUtils {
                 }
                 if(isStart){
                     //<a href="https://www.qingkan9.com/book/daojun_7399/34175995_1.html">1</a>
-                    String pageRegex = "<a href=\"([^\n]{1,})\">(\\d){1,}</a>";;
+                    String pageRegex = "<a href=\"([^\n]{1,})\">(\\d){1,}</a>";
                     List<Integer> pageGroups = Arrays.asList(1,2);
                     List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), pageRegex, pageGroups);
                     if (currentResult != null && currentResult.size() >0) {
@@ -284,17 +280,15 @@ public class ResolveChapterUtils {
                 break;
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         if(!StringUtils.isEmpty(nextLink)){
             bookChapterInfo.setComplete(false);
             bookChapterInfo.setNextLink(nextLink);
-            if (resultContent != null && resultContent.endsWith("<br /><br />")) {
+            if (resultContent.endsWith("<br /><br />")) {
                 resultContent = resultContent.substring(0, resultContent.length() - "<br /><br />".length());
             }
         }else{

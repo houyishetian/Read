@@ -19,7 +19,7 @@ public class ScoreInputFilter implements InputFilter {
         }
         //当前未输入，可输入 1/8/8./8.1/9/9./9.1/10/10./10.0
         if (oldInput.length() == 0) {
-            if (newInput.matches("1|[89]{1}[\\.]?|[89]{1}\\.[\\d]{1}|10[\\.]?|10\\.0")) {
+            if (newInput.matches("1|[89]{1}\\.?|[89]{1}\\.\\d{1}|10\\.?|10\\.0")) {
                 return newInput;
             }
             return "";
@@ -64,7 +64,7 @@ public class ScoreInputFilter implements InputFilter {
             }else if (dstart == 2) {
                 //已输入8.，只能输入1
                 if (oldInput.matches("[89]{1}\\.")) {
-                    if (newInput.matches("[\\d]{1}")) {
+                    if (newInput.matches("\\d{1}")) {
                         return newInput;
                     }
                     return "";
@@ -81,7 +81,7 @@ public class ScoreInputFilter implements InputFilter {
         }else if(oldInput.length()==3){
             //已输入3位，可能是8.9/10.
             //已输入8.3，不许再输入了
-            if(oldInput.matches("[89]\\.[\\d]{1}")){
+            if(oldInput.matches("[89]\\.\\d{1}")){
                 return "";
             }
             if(oldInput.matches("10\\.")){

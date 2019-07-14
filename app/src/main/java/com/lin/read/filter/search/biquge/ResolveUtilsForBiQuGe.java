@@ -29,7 +29,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
             return null;
         }
         String bookName = params[0];
-        String webName = params[2];;
+        String webName = params[2];
         if (StringUtils.isEmpty(bookName)) {
             return null;
         }
@@ -76,19 +76,18 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                 if(bookInfo==null){
                     //bookname & booklink
                     //<td class="odd"><a href="http://www.biquge5200.com/70_70322/">仙宸</a></td>
-                    List<String> resolveBookNameResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{1,2}));
+                    List<String> resolveBookNameResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(1,2));
                     if (resolveBookNameResult != null && resolveBookNameResult.size() == 2) {
                         bookInfo = new BookInfo();
                         bookInfo.setBookLink(resolveBookNameResult.get(0));
                         bookInfo.setBookName(resolveBookNameResult.get(1));
                     }else{
                         startIndex=-1;
-                        continue;
                     }
                 }else{
                     //lastChapter
                     //    <td class="even"><a href="http://www.biquge5200.com/70_70322/144888240.html" target="_blank"> 第九十九章：大结局〔完〕</a></td>
-                    List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(new Integer[]{2}));
+                    List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(2));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() == 1) {
                         bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(resolveLastChapterResult.get(0)));
                         continue;
@@ -96,7 +95,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
                     //authorname
                     //<td class="odd">仙宸</td>
-                    List<String> resolveAuthorResult= RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
+                    List<String> resolveAuthorResult= RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(1));
                     if (resolveAuthorResult != null && resolveAuthorResult.size() == 1) {
                         bookInfo.setAuthorName(resolveAuthorResult.get(0));
                         continue;
@@ -104,7 +103,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
                     //lastUpdate
                     //<td class="odd" align="center">2017-05-26</td>
-                    List<String> resolveLastUpdateResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(new Integer[]{1}));
+                    List<String> resolveLastUpdateResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(1));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() == 1) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                         bookInfo.setWebType(Constants.RESOLVE_FROM_BIQUGE);
@@ -112,17 +111,14 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                         result.add(bookInfo);
                         bookInfo=null;
                         startIndex=-1;
-                        continue;
                     }
                 }
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }

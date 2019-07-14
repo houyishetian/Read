@@ -42,9 +42,9 @@ public class SearchMusicActivity extends Activity {
     }
 
     private void initView() {
-        etMusicKey = (EditText) findViewById(R.id.et_search_music_key);
-        btnSearch = (Button) findViewById(R.id.btn_search);
-        rcvSearchResult = (RecyclerView) findViewById(R.id.rcv_search_result);
+        etMusicKey = findViewById(R.id.et_search_music_key);
+        btnSearch = findViewById(R.id.btn_search);
+        rcvSearchResult = findViewById(R.id.rcv_search_result);
         viewEmpty = findViewById(R.id.empty_view);
         allMusicData = new ArrayList<>();
         searchMusicAdapter = new SearchMusicAdapter(this, allMusicData);

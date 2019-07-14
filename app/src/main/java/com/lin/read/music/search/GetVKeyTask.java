@@ -12,8 +12,7 @@ public class GetVKeyTask extends AsyncTask<String, Void, VKeyBean> {
 
     @Override
     protected VKeyBean doInBackground(String[] objects) {
-        VKeyBean result = MusicHttpUtil.getVKey();
-        return result;
+        return MusicHttpUtil.getVKey();
     }
 
     @Override

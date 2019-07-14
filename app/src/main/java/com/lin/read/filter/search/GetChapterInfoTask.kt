@@ -5,7 +5,7 @@ import com.lin.read.filter.BookInfo
 import com.lin.read.utils.Constants
 import com.lin.read.utils.split
 
-class GetChapterInfoTask(val bookInfo: BookInfo, val onTaskListener: OnTaskListener) : AsyncTask<Unit, Unit, Unit>() {
+class GetChapterInfoTask(private val bookInfo: BookInfo, private val onTaskListener: OnTaskListener) : AsyncTask<Unit, Unit, Unit>() {
     private var eachPageSize = Constants.CHAPTER_NUM_FOR_EACH_PAGE
     init {
         if (eachPageSize <= 0) {

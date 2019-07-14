@@ -1,7 +1,6 @@
 package com.lin.read.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +91,7 @@ public class BookChapterAdapter extends BaseAdapter {
         private View chapterDivider;
 
         public ViewHolder(View itemView) {
-            chapterName = (TextView) itemView.findViewById(R.id.item_chapter_name);
+            chapterName = itemView.findViewById(R.id.item_chapter_name);
             chapterDivider = itemView.findViewById(R.id.item_chapter_divider);
         }
     }

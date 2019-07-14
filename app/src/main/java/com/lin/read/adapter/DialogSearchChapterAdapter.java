@@ -83,7 +83,7 @@ public class DialogSearchChapterAdapter extends BaseAdapter {
         private TextView name;
         private View divider;
         public ViewHolder(View itemView) {
-            name = (TextView) itemView.findViewById(R.id.dialog_chapter_name);
+            name = itemView.findViewById(R.id.dialog_chapter_name);
             divider=itemView.findViewById(R.id.dialog_chapter_divider);
         }
     }

@@ -1,8 +1,6 @@
 package com.lin.read.filter.search.aishuwang;
 
-import android.text.TextUtils;
 import android.util.Log;
-
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -72,7 +70,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
             if (bookInfo == null) {
                 //bookname & booklink & downloadLink
                 //<li class="neirong1"><a href="/xs/180297/">修真聊天群</a><a href="/xs/180297.txt" title="修真聊天群TXT下载">TXT下载</a></li>
-                List<Integer> groups = Arrays.asList(new Integer[]{1,2,3});
+                List<Integer> groups = Arrays.asList(1, 2, 3);
                 List<String> resolveBookNameResult=RegexUtils.getDataByRegex(current.trim(),
                         "<li class=\"neirong1\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a><a href=\"([^\"^\n]{1,})\" title",
                         groups);
@@ -86,7 +84,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
             }else{
                 //lastChapter
                 //<li class="neirong2"><a href="/xs/180445/42899859/">第1824章 姐，你的体质肯定有问题</a></li>
-                List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong2\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>",Arrays.asList(new Integer[]{2}));
+                List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong2\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>",Arrays.asList(2));
                 if (resolveLastChapterResult != null && resolveLastChapterResult.size() == 1) {
                     bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(resolveLastChapterResult.get(0)));
                     continue;
@@ -94,7 +92,7 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
 
                 //authorName
                 //<li class="neirong4"><a href="//www.22ff.org/author/圣骑士的传说">圣骑士的传说</a></li>
-                List<String> resolveAuthorResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong4\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>",Arrays.asList(new Integer[]{2}));
+                List<String> resolveAuthorResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong4\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>",Arrays.asList(2));
                 if (resolveAuthorResult != null && resolveAuthorResult.size() == 1) {
                     bookInfo.setAuthorName(resolveAuthorResult.get(0));
                     continue;
@@ -102,23 +100,20 @@ public class ResolveUtilsForAiShuWang extends ResolveUtilsFactory {
 
                 //lastUpdate
                 //<li class="neirong3">02-08 07:26</li>
-                List<String> resolveDownloadLinkResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong3\">([^\"^\n]{1,})</li>",Arrays.asList(new Integer[]{1}));
+                List<String> resolveDownloadLinkResult=RegexUtils.getDataByRegex(current.trim(),"<li class=\"neirong3\">([^\"^\n]{1,})</li>",Arrays.asList(1));
                 if (resolveDownloadLinkResult != null && resolveDownloadLinkResult.size() == 1) {
                     bookInfo.setLastUpdate(resolveDownloadLinkResult.get(0));
                     bookInfo.setWebType(Constants.RESOLVE_FROM_AISHU);
                     bookInfo.setWebName(webName);
                     result.add(bookInfo);
                     bookInfo=null;
-                    continue;
                 }
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }

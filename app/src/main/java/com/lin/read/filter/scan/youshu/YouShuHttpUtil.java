@@ -1,19 +1,13 @@
 package com.lin.read.filter.scan.youshu;
 
 import android.util.Log;
-import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.ScanInfo;
-import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.utils.Constants;
-import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

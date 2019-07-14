@@ -2,8 +2,7 @@ package com.lin.read.filter.scan;
 
 import android.text.format.DateFormat;
 import android.util.Log;
-
-import com.lin.read.filter.BookInfo;
+import info.monitorenter.cpdetector.io.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,19 +11,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import info.monitorenter.cpdetector.io.ASCIIDetector;
-import info.monitorenter.cpdetector.io.ByteOrderMarkDetector;
-import info.monitorenter.cpdetector.io.CodepageDetectorProxy;
-import info.monitorenter.cpdetector.io.JChardetFacade;
-import info.monitorenter.cpdetector.io.ParsingDetector;
-import info.monitorenter.cpdetector.io.UnicodeDetector;
 
 public class StringUtils {
 	public static boolean isEmpty(String data) {

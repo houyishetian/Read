@@ -83,7 +83,7 @@ public class DialogSortTypeAdapter extends BaseAdapter {
         private View divider;
 
         public ViewHolder(View itemView) {
-            name = (TextView) itemView.findViewById(R.id.dialog_sort_name);
+            name = itemView.findViewById(R.id.dialog_sort_name);
             divider = itemView.findViewById(R.id.dialog_sort_divider);
         }
     }

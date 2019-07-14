@@ -34,7 +34,7 @@ public class ScanTypeItemDecoration extends RecyclerView.ItemDecoration {
         /**
          * 跳过索引为0的item
          */
-        TextView tv= (TextView) view.findViewById(R.id.scan_type_text);
+        TextView tv= view.findViewById(R.id.scan_type_text);
         int position=parent.getChildLayoutPosition(view);
         int column=((GridLayoutManager)parent.getLayoutManager()).getSpanCount();
         if (position<column) {

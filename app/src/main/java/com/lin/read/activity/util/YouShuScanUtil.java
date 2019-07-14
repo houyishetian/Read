@@ -13,12 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lin.read.R;
-import com.lin.read.activity.LoadingDialogActivity;
-import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.fragment.ScanFragment;
-import com.lin.read.utils.Constants;
 import com.lin.read.utils.MessageUtils;
-import com.lin.read.view.ScanTypeRecyclerViewUtil;
 
 public class YouShuScanUtil {
     private TextView scanYsPrePageTv;
@@ -28,7 +24,6 @@ public class YouShuScanUtil {
     private TextView scanSkipTv;
 
     private Activity activity;
-    private ScanFragment scanFragment;
     private int totalPage;
     private int currentPage = 1;
 
@@ -37,13 +32,11 @@ public class YouShuScanUtil {
 
     public void initYouShuViews(final ScanFragment scanFragment, View view, final Handler handler) {
         activity = scanFragment.getActivity();
-        this.scanFragment = scanFragment;
-
-        scanYsPrePageTv = (TextView) view.findViewById(R.id.scan_ys_previous_page);
-        scanYsNextPageTv = (TextView) view.findViewById(R.id.scan_ys_next_page);
-        scanYsSkipPageEt = (EditText) view.findViewById(R.id.scan_ys_skip_page);
-        scanYsTotalPageTv = (TextView) view.findViewById(R.id.scan_ys_total_page);
-        scanSkipTv = (TextView) view.findViewById(R.id.scan_ys_skip);
+        scanYsPrePageTv = view.findViewById(R.id.scan_ys_previous_page);
+        scanYsNextPageTv = view.findViewById(R.id.scan_ys_next_page);
+        scanYsSkipPageEt = view.findViewById(R.id.scan_ys_skip_page);
+        scanYsTotalPageTv = view.findViewById(R.id.scan_ys_total_page);
+        scanSkipTv = view.findViewById(R.id.scan_ys_skip);
 
         initListener();
     }
@@ -55,14 +48,14 @@ public class YouShuScanUtil {
         scanYsSkipPageEt.setText("");
         scanYsSkipPageEt.setHint("" + currentPage);
         if (currentPage > 1) {
-            scanYsPrePageTv.setTextColor(activity.getResources().getColor(android.R.color.black));
+            scanYsPrePageTv.setTextColor(activity.getColor(android.R.color.black));
         } else {
-            scanYsPrePageTv.setTextColor(activity.getResources().getColor(android.R.color.darker_gray));
+            scanYsPrePageTv.setTextColor(activity.getColor(android.R.color.darker_gray));
         }
         if (currentPage < totalPage) {
-            scanYsNextPageTv.setTextColor(activity.getResources().getColor(android.R.color.black));
+            scanYsNextPageTv.setTextColor(activity.getColor(android.R.color.black));
         } else {
-            scanYsNextPageTv.setTextColor(activity.getResources().getColor(android.R.color.darker_gray));
+            scanYsNextPageTv.setTextColor(activity.getColor(android.R.color.darker_gray));
         }
     }
 

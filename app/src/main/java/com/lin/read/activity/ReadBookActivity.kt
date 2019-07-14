@@ -3,6 +3,7 @@ package com.lin.read.activity
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
@@ -174,8 +175,8 @@ class ReadBookActivity : Activity() {
 
     private fun hideSoft(){
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(page_skip_et.getWindowToken(), 0)
-        inputMethodManager.hideSoftInputFromWindow(chapter_search_et.getWindowToken(), 0)
+        inputMethodManager.hideSoftInputFromWindow(page_skip_et.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(chapter_search_et.windowToken, 0)
     }
 
     override fun onBackPressed() {
@@ -326,7 +327,9 @@ class ReadBookActivity : Activity() {
         dialog.show()
         dialog.apply dialog@{
             val view = LayoutInflater.from(this@ReadBookActivity).inflate(R.layout.dialog_search_chapter, null)
-            setContentView(view, ViewGroup.LayoutParams(windowManager.defaultDisplay.width, windowManager.defaultDisplay.height))
+            val point = Point()
+            windowManager.defaultDisplay.getSize(point)
+            setContentView(view, ViewGroup.LayoutParams(point.x, point.y))
             setCanceledOnTouchOutside(false)
             val searchChapterLv = view.findViewById(R.id.dialog_search_chapter_lv) as ListView
             val searchPrePage = view.findViewById(R.id.dialog_search_chapter_pre_page) as TextView
@@ -334,10 +337,10 @@ class ReadBookActivity : Activity() {
             searchPrePage.isEnabled = false
             searchNextPage.isEnabled = splitSearchResult.size >= 2
 
-            val KEY_TAG = R.id.dialog_search_chapter_lv
+            val keyTag = R.id.dialog_search_chapter_lv
             val displayList = mutableListOf<BookChapterInfo>().apply { addAll(splitSearchResult[0]) }
             searchChapterLv.apply listView@{
-                setTag(KEY_TAG, 0)
+                setTag(keyTag, 0)
                 adapter = DialogSearchChapterAdapter(this@ReadBookActivity, displayList).apply adapter@{
                     setOnItemChapterClickListener {
                         this@dialog.hide()
@@ -346,20 +349,20 @@ class ReadBookActivity : Activity() {
                 }
             }
             val lambdaForPage = fun(page: Int) {
-                searchChapterLv.setTag(KEY_TAG, page)
+                searchChapterLv.setTag(keyTag, page)
                 displayList.clear()
                 displayList.addAll(splitSearchResult[page])
                 (searchChapterLv.adapter as DialogSearchChapterAdapter).notifyDataSetChanged()
                 searchChapterLv.smoothScrollToPosition(0)
             }
             searchPrePage.setOnClickListener {
-                val page = (searchChapterLv.getTag(KEY_TAG) as Int) - 1
+                val page = (searchChapterLv.getTag(keyTag) as Int) - 1
                 lambdaForPage(page)
                 it.isEnabled = page != 0
                 searchNextPage.isEnabled = true
             }
             searchNextPage.setOnClickListener {
-                val page = (searchChapterLv.getTag(KEY_TAG) as Int) + 1
+                val page = (searchChapterLv.getTag(keyTag) as Int) + 1
                 lambdaForPage(page)
                 it.isEnabled = page != splitSearchResult.size - 1
                 searchPrePage.isEnabled = true

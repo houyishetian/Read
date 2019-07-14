@@ -2,7 +2,6 @@ package com.lin.read.filter.search.qingkan;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -18,11 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by lisonglin on 2018/2/24.
@@ -56,12 +51,12 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
             return null;
         }
         Log.e("Test", "search url:" + url);
-        return resolveSearchResultFromBDZhanNei(url, Constants.RESOLVE_FROM_QINGKAN, webName);
+        return resolveSearchResultFromBDZhanNei(url, webName);
     }
 
-    private List<BookInfo> resolveSearchResultFromBDZhanNei(String url, String webType, String webName)
+    private List<BookInfo> resolveSearchResultFromBDZhanNei(String url, String webName)
             throws IOException {
-
+        String webType = Constants.RESOLVE_FROM_QINGKAN;
         if (StringUtils.isEmpty(url)) {
             return null;
         }
@@ -105,12 +100,10 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
                 }
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -150,12 +143,10 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
                 break;
             }
         }
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

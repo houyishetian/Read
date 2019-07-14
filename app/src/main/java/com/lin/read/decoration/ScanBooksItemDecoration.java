@@ -1,17 +1,12 @@
 package com.lin.read.decoration;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-
 import com.lin.read.utils.UIUtils;
 
 /**
@@ -21,7 +16,7 @@ import com.lin.read.utils.UIUtils;
 public class ScanBooksItemDecoration extends RecyclerView.ItemDecoration {
 
     private Context mContext;
-    Paint paint;
+    private Paint paint;
 
     public ScanBooksItemDecoration(Context context) {
         this.mContext = context;
@@ -37,11 +32,11 @@ public class ScanBooksItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     //画横线, 这里的parent其实是显示在屏幕显示的这部分
-    public void drawHorizontalLine(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    private void drawHorizontalLine(Canvas c, RecyclerView parent, RecyclerView.State state) {
 //        int left = parent.getPaddingLeft();
 //        int right = parent.getWidth() - parent.getPaddingRight();
         int left = UIUtils.dip2px(mContext,15f);
-        int right = parent.getWidth() - UIUtils.dip2px(mContext,15f);;
+        int right = parent.getWidth() - UIUtils.dip2px(mContext,15f);
 
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {

@@ -3,7 +3,6 @@ package com.lin.read.bookmark;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-
 import com.google.gson.GsonBuilder;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
@@ -47,7 +46,7 @@ public class BookMarkSharePres {
         }
         if(!currentItems.contains(key)){
             currentItems.add(key);
-            String valueAfterAdd = new GsonBuilder().create().toJson(currentItems).toString();
+            String valueAfterAdd = new GsonBuilder().create().toJson(currentItems);
             editor.putString(BOOK_MARK_LIST, valueAfterAdd);
         }
         editor.commit();
@@ -63,8 +62,7 @@ public class BookMarkSharePres {
         String value = preferences.getString(key, null);
         try{
             Log.e("Test", "get book mark-->" + key + "=" + value);
-            BookMarkBean markBean=new GsonBuilder().create().fromJson(value,BookMarkBean.class);
-            return  markBean;
+            return new GsonBuilder().create().fromJson(value,BookMarkBean.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -79,11 +77,11 @@ public class BookMarkSharePres {
         return preferences.getString(key, null);
     }
 
-    private static ArrayList<String> getBookMarkList(Context context,SharedPreferences preferences) {
+    private static ArrayList<String> getBookMarkList(Context context, SharedPreferences preferences) {
         String value = preferences.getString(BOOK_MARK_LIST, null);
         ArrayList<String> result = new ArrayList<>();
         try {
-            result = new GsonBuilder().create().fromJson(value,ArrayList.class);
+            result = new GsonBuilder().create().fromJson(value, ArrayList.class);
             return result;
         } catch (Exception e) {
             Log.e("Test", "parse to List<String> error:" + e.getMessage());
@@ -112,7 +110,7 @@ public class BookMarkSharePres {
                 currentItems.remove(key);
             }
         }
-        String valueAfterDelete = new GsonBuilder().create().toJson(currentItems).toString();
+        String valueAfterDelete = new GsonBuilder().create().toJson(currentItems);
         editor.putString(BOOK_MARK_LIST, valueAfterDelete);
         editor.commit();
     }

@@ -1,20 +1,19 @@
 package com.lin.read.filter.search.novel80;
 
-import android.text.TextUtils;
 import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
-import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
-import com.lin.read.utils.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ResolveUtilsForNovel80 extends ResolveUtilsFactory {
 

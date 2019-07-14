@@ -110,31 +110,31 @@ public class ScanFragment extends Fragment {
         youShuScanUtil = new YouShuScanUtil();
         youShuScanUtil.initYouShuViews(this,view,handler);
 
-        scanFilterTv = (TextView) view.findViewById(R.id.scan_filter);
-        scanSortIv = (RelativeLayout) view.findViewById(R.id.scan_sort);
-        scanResultTv = (TextView) view.findViewById(R.id.scan_result_qidian);
+        scanFilterTv = view.findViewById(R.id.scan_filter);
+        scanSortIv = view.findViewById(R.id.scan_sort);
+        scanResultTv = view.findViewById(R.id.scan_result_qidian);
         scanFilterLayout = view.findViewById(R.id.layout_scan_filter);
         scanFilterBlank = view.findViewById(R.id.scan_filter_blank);
 
         scanResultYouShuLl = view.findViewById(R.id.scan_result_youshu);
 
-        scrollView = (ScrollView) view.findViewById(R.id.scroll_view);
+        scrollView = view.findViewById(R.id.scroll_view);
         tempViewForSoft = view.findViewById(R.id.tempView_for_soft);
 
-        scanOK = (Button) view.findViewById(R.id.scan_ok);
+        scanOK = view.findViewById(R.id.scan_ok);
 
-        scanWebTypeRcv = (RecyclerView) view.findViewById(R.id.rcv_scan_web);
+        scanWebTypeRcv = view.findViewById(R.id.rcv_scan_web);
 
-        allBooksRcv= (RecyclerView) view.findViewById(R.id.rcv_scan_all_books);
+        allBooksRcv= view.findViewById(R.id.rcv_scan_all_books);
 
-        emptyTv = (TextView) view.findViewById(R.id.empty_view);
+        emptyTv = view.findViewById(R.id.empty_view);
 
         setAdapter();
 
         scanFilterTv.setOnClickListener(new NoDoubleClickListener() {
             @Override
             public void onNoDoubleClick(View v) {
-                if (readScanBean == null || readScanBean.getWebs() == null || readScanBean.getWebs().size() == 0) {
+                if (readScanBean == null || readScanBean.getWebs().size() == 0) {
                     Toast.makeText(getActivity(), "没有该功能!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -240,20 +240,19 @@ public class ScanFragment extends Fragment {
                     wrongField = item.getTypeName();
                     break;
                 }
-                if(item.getInputType() != null){
-                    switch (item.getInputType()) {
-                        case Constants.INPUT_INT:
-                        case Constants.INPUT_FLOAT:
-                            if (item.getMin() != null && Float.parseFloat(item.getValue().toString()) < Float.parseFloat(item.getMin().toString())) {
-                                wrongField = item.getTypeName();
-                                break;
-                            }
-                            if (item.getMax() != null && Float.parseFloat(item.getValue().toString()) > Float.parseFloat(item.getMax().toString())) {
-                                wrongField = item.getTypeName();
-                                break;
-                            }
+                item.getInputType();
+                switch (item.getInputType()) {
+                    case Constants.INPUT_INT:
+                    case Constants.INPUT_FLOAT:
+                        if (item.getMin() != null && Float.parseFloat(item.getValue().toString()) < Float.parseFloat(item.getMin().toString())) {
+                            wrongField = item.getTypeName();
                             break;
-                    }
+                        }
+                        if (item.getMax() != null && Float.parseFloat(item.getValue().toString()) > Float.parseFloat(item.getMax().toString())) {
+                            wrongField = item.getTypeName();
+                            break;
+                        }
+                        break;
                 }
                 if(wrongField != null){
                     Toast.makeText(getActivity(), wrongField+"输入有误", Toast.LENGTH_SHORT).show();

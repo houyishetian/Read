@@ -85,7 +85,7 @@ public class RegexUtils {
     public static String replaceDataByRegex(String content, String regex) {
         List<Integer> allGroup = Arrays.asList(0);
         List<List<String>> data = getDataByRegexManyData(content, regex, allGroup);
-        if (data != null && allGroup != null && data.size() != 0) {
+        if (data != null && data.size() != 0) {
             String result = "";
             String temp = content;
             try {

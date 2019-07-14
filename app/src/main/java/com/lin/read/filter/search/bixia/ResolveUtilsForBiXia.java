@@ -58,18 +58,18 @@ public class ResolveUtilsForBiXia extends ResolveUtilsFactory {
                     continue;
                 }
                 if (bookInfo != null) {
-                    List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(new Integer[]{1, 2}));
+                    List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(1,2));
                     if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
                         bookInfo.setBookLink(resolveBookNameResult.get(0));
                         bookInfo.setBookName(resolveBookNameResult.get(1));
                     }
 
-                    List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s3\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(new Integer[]{2}));
+                    List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s3\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(2));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() != 0) {
                         bookInfo.setLastChapter(resolveLastChapterResult.get(0));
                     }
 
-                    List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s4\">([^\"^\n]{1,})</span><span class=\"s5\">([^\"^\n]{1,})</span></li>", Arrays.asList(new Integer[]{1,2}));
+                    List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s4\">([^\"^\n]{1,})</span><span class=\"s5\">([^\"^\n]{1,})</span></li>", Arrays.asList(1,2));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
                         bookInfo.setAuthorName(resolveLastUpdateResult.get(0));
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(1));

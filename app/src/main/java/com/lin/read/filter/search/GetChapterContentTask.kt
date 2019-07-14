@@ -4,7 +4,7 @@ import android.os.AsyncTask
 import android.util.Log
 import java.lang.Exception
 
-class GetChapterContentTask(val bookChapterInfo: BookChapterInfo,val onTaskListener: OnTaskListener):AsyncTask<Unit,Unit,Unit>() {
+class GetChapterContentTask(private val bookChapterInfo: BookChapterInfo,private val onTaskListener: OnTaskListener):AsyncTask<Unit,Unit,Unit>() {
     override fun doInBackground(vararg params: Unit?) {
         try {
             var content = ResolveChapterUtils.getChapterContent(bookChapterInfo)

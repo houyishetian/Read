@@ -4,23 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.lin.read.R;
-import com.lin.read.activity.ReadBookActivity;
 import com.lin.read.activity.SearchMusicActivity;
-import com.lin.read.filter.BookInfo;
 import com.lin.read.music.search.GetVKeyTask;
 import com.lin.read.music.search.MusicLinkUtil;
 import com.lin.read.music.search.bean.seachresult.MusicDataSongItemBean;
 import com.lin.read.music.search.bean.seachresult.MusicSingerBean;
 import com.lin.read.music.search.bean.vkey.VKeyBean;
-import com.lin.read.utils.Constants;
 import com.lin.read.view.DialogUtil;
 
 import java.util.ArrayList;
@@ -41,8 +35,7 @@ public class SearchMusicAdapter extends RecyclerView.Adapter<SearchMusicAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_search_music, null);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -72,8 +65,8 @@ public class SearchMusicAdapter extends RecyclerView.Adapter<SearchMusicAdapter.
 
         public ViewHolder(View itemView) {
             super(itemView);
-            musicName = (TextView) itemView.findViewById(R.id.music_name);
-            singerName = (TextView) itemView.findViewById(R.id.music_singer);
+            musicName = itemView.findViewById(R.id.music_name);
+            singerName = itemView.findViewById(R.id.music_singer);
             musicDownload = itemView.findViewById(R.id.music_download);
         }
     }

@@ -18,7 +18,7 @@ class StringKtUtil {
                 }
                 loop@ for (it in scanInfo.inputtedBeans) {
                     val thisInfo = ReflectUtil.getProperty(bookInfo, it.key, String::class.java)
-                    when (it?.inputType) {
+                    when (it.inputType) {
                         Constants.INPUT_INT, Constants.INPUT_FLOAT -> {
                             val valueStandard = it.value!!.toFloat()
                             val valuePendingCompare = thisInfo!!.toFloat()
@@ -37,9 +37,7 @@ class StringKtUtil {
         fun getBookLinkFromRankPageForQiDian(data: String): String? {
             //<h4><a href="//book.qidian.com/info/1003438608"
             return Pattern.compile("<h4><a href=\"([\\S^\"]+)\"").matcher(data).let {
-                it.takeIf { it.find() }?.let {
-                    it.group(1)
-                }
+                it.takeIf { it.find() }?.group(1)
             }
         }
 

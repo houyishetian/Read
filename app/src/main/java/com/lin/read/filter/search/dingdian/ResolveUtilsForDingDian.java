@@ -60,23 +60,23 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
                 }
                 if (bookInfo != null) {
                     current = current.replaceAll("<b style=\"color:red\">", "").replaceAll("</b>", "");
-                    List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
+                    List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>", Arrays.asList(1,2));
                     if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
                         bookInfo.setBookName(resolveBookNameResult.get(1));
                     }
 
-                    List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>", Arrays.asList(new Integer[]{1, 2}));
+                    List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>", Arrays.asList(1,2));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() != 0) {
                         bookInfo.setLastChapter(resolveLastChapterResult.get(1));
                         bookInfo.setBookLink(resolveLastChapterResult.get(0));
                     }
 
-                    List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                    List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", Arrays.asList(1));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                     }
 
-                    List<String> resolveAuthorResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\">([^\"^\n]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                    List<String> resolveAuthorResult = RegexUtils.getDataByRegexMatch(current, "<td class=\"odd\">([^\"^\n]{1,})</td>", Arrays.asList(1));
                     if (resolveAuthorResult != null && resolveAuthorResult.size() != 0) {
                         bookInfo.setAuthorName(resolveAuthorResult.get(0));
                     }
@@ -100,14 +100,14 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
             while ((current = reader.readLine()) != null) {
                 current = current.trim();
                 //<th>最后更新</th><td>&nbsp;2018-10-18</td>
-                List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "<th>最后更新</th><td>&nbsp;([^\n^<]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "<th>最后更新</th><td>&nbsp;([^\n^<]{1,})</td>", Arrays.asList(1));
                 if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
                     bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                     continue;
                 }
 
                 //最新章节：<a href="https://www.x23us.com/html/0/328/">写在新书正式上传前的回忆！</a></p>
-                List<String> resolveLastChapterResult = RegexUtils.getDataByRegex(current, "最新章节：<a href=\"([^\n^\"]{1,})\">([^\\n]{1,})</a></p>", Arrays.asList(new Integer[]{1,2}));
+                List<String> resolveLastChapterResult = RegexUtils.getDataByRegex(current, "最新章节：<a href=\"([^\n^\"]{1,})\">([^\\n]{1,})</a></p>", Arrays.asList(1,2));
                 if (resolveLastChapterResult != null && resolveLastChapterResult.size() != 0) {
                     bookInfo.setBookLink(resolveLastChapterResult.get(0));
                     bookInfo.setLastChapter(resolveLastChapterResult.get(1));
@@ -115,10 +115,9 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
                 }
 
                 //<th>文章作者</th><td>&nbsp;忘语</td><th>文章状态</th><td>&nbsp;已完成</td></tr>
-                List<String> resolveAuthorNameResult = RegexUtils.getDataByRegex(current, "<th>文章作者</th><td>&nbsp;([^\n^<]{1,})</td>", Arrays.asList(new Integer[]{1}));
+                List<String> resolveAuthorNameResult = RegexUtils.getDataByRegex(current, "<th>文章作者</th><td>&nbsp;([^\n^<]{1,})</td>", Arrays.asList(1));
                 if (resolveAuthorNameResult != null && resolveAuthorNameResult.size() != 0) {
                     bookInfo.setAuthorName(resolveAuthorNameResult.get(0));
-                    continue;
                 }
             }
             result.add(bookInfo);

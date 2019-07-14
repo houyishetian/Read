@@ -279,8 +279,7 @@ public class HttpUtils {
         if (code == 200) {
             return conn;
         } else if (code == 301 || code == 302) {
-            String location = conn.getHeaderField("Location");
-            return location;
+            return conn.getHeaderField("Location");
         }
         Log.e("Test", "code error url:" + code + ",url=" + urlLink);
         return getConn(urlLink, totalNum - 1);

@@ -17,8 +17,7 @@ public class SearchMusicTask extends AsyncTask<String, Void, MusicDataSongBean> 
             return null;
         }
         String searchKey = objects[0];
-        MusicDataSongBean result = MusicHttpUtil.searchMusic(searchKey);
-        return result;
+        return MusicHttpUtil.searchMusic(searchKey);
     }
 
     @Override

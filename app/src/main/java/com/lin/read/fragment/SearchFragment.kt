@@ -23,7 +23,6 @@ import com.lin.read.filter.search.SearchWebBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.makeMsg
 import com.lin.read.view.DialogUtil
-import kotlinx.android.synthetic.main.dialog_search_select_web.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
@@ -49,9 +48,9 @@ class SearchFragment : Fragment() {
             webBeansList[0].default = true
             webBeansList[0].webName
         }
-        select_web.setOnClickListener(View.OnClickListener {
+        select_web.setOnClickListener{
             showSelectWebDialog()
-        })
+        }
         rcv_search_result.run {
             layoutManager = LinearLayoutManager(activity)
             addItemDecoration(ScanBooksItemDecoration(activity))
@@ -64,10 +63,10 @@ class SearchFragment : Fragment() {
             }
             return@loop false
         }
-        btn_search.setOnClickListener(View.OnClickListener {
+        btn_search.setOnClickListener{
             hideSoft()
             search()
-        })
+        }
     }
 
     private fun getWebTypeBeans(): List<SearchWebBean> {
@@ -112,7 +111,7 @@ class SearchFragment : Fragment() {
             activity.makeMsg("请输入书名!")
             return
         }
-        DialogUtil.getInstance().showLoadingDialog(this.getActivity());
+        DialogUtil.getInstance().showLoadingDialog(activity)
         val currentSelectWeb = webBeansList.firstOrNull { it.checked!! } ?: let {
             webBeansList[0].checked = true
             webBeansList[0]

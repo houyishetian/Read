@@ -1,22 +1,14 @@
 package com.lin.read.filter.scan.qidian;
 
 import android.text.TextUtils;
-import android.util.Log;
-import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.ScanInfo;
-import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.RegexUtils;
-import com.lin.read.utils.Constants;
 import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -230,7 +222,7 @@ public class QiDianHttpUtils {
 			current = current.trim();
 			/*resolve book last update start*/
 			//<p class="gray ell" id="ariaMuLu" role="option">2小时前<span class="char-dot">·</span>连载至第717章 外来的尚</p>
-			List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "id=\"ariaMuLu\" role=\"option\">([^\n]{1,})<span class=\"char-dot\">·</span>连载至([^\n]{1,})</p>", Arrays.asList(new Integer[]{1, 2}));
+			List<String> resolveLastUpdateResult = RegexUtils.getDataByRegex(current, "id=\"ariaMuLu\" role=\"option\">([^\n]{1,})<span class=\"char-dot\">·</span>连载至([^\n]{1,})</p>", Arrays.asList(1,2));
 			if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
 				bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
 				bookInfo.setLastChapter(resolveLastUpdateResult.get(1));
@@ -241,7 +233,7 @@ public class QiDianHttpUtils {
 
 			/*resolve book words num start*/
 			//<p class="book-meta" role="option">182.22万字<span class="char-pipe">|</span>连载</p>
-			List<String> resolveBookWordsNumResult = RegexUtils.getDataByRegex(current, "<p class=\"book-meta\" role=\"option\">([0-9.]{1,})万字", Arrays.asList(new Integer[]{1}));
+			List<String> resolveBookWordsNumResult = RegexUtils.getDataByRegex(current, "<p class=\"book-meta\" role=\"option\">([0-9.]{1,})万字", Arrays.asList(1));
 			if (resolveBookWordsNumResult != null && resolveBookWordsNumResult.size() != 0) {
 				bookInfo.setWordsNum(resolveBookWordsNumResult.get(0));
 //				if(!StringUtils.isWordsNumFit(searchInfo,bookInfo)){
@@ -253,7 +245,7 @@ public class QiDianHttpUtils {
 
 			/*resolve book author start*/
 			//<a href="/author/4362633" role="option"><aria>作者：</aria>志鸟村<aria>级别：</aria>
-			List<String> resolveBookAuthorResult = RegexUtils.getDataByRegex(current, "role=\"option\"><aria>作者：</aria>([^\n^<]{1,})<aria>", Arrays.asList(new Integer[]{1}));
+			List<String> resolveBookAuthorResult = RegexUtils.getDataByRegex(current, "role=\"option\"><aria>作者：</aria>([^\n^<]{1,})<aria>", Arrays.asList(1));
 			if (resolveBookAuthorResult != null && resolveBookAuthorResult.size() != 0) {
 				bookInfo.setAuthorName(resolveBookAuthorResult.get(0));
 				continue;
@@ -262,7 +254,7 @@ public class QiDianHttpUtils {
 
 			/*resolve book name start*/
 			//<h2 class="book-title">大医凌然</h2>
-			List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<h2 class=\"book-title\">([^\n^<]{1,})</h2>", Arrays.asList(new Integer[]{1}));
+			List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<h2 class=\"book-title\">([^\n^<]{1,})</h2>", Arrays.asList(1));
 			if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
 				bookInfo.setBookName(resolveBookNameResult.get(0));
 				continue;
@@ -276,7 +268,7 @@ public class QiDianHttpUtils {
 			}
 			if(isResolvingScore){
 				//<span class="gray">9分/618人评过</span>
-				List<String> resolveScoreResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"gray\">([0-9.]{1,})分/([0-9]{1,})人评过</span>", Arrays.asList(new Integer[]{1, 2}));
+				List<String> resolveScoreResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"gray\">([0-9.]{1,})分/([0-9]{1,})人评过</span>", Arrays.asList(1,2));
 				if (resolveScoreResult != null && resolveScoreResult.size() != 0) {
 					bookInfo.setScore(resolveScoreResult.get(0));
 					bookInfo.setScoreNum(resolveScoreResult.get(1));
@@ -297,12 +289,10 @@ public class QiDianHttpUtils {
 			}
 			/*resolve score end*/
 		}
-		if (reader != null) {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		if(StringKtUtil.Companion.compareFilterInfo(searchInfo,bookInfo)) return bookInfo;
 		return null;

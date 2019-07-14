@@ -1,11 +1,6 @@
 package com.lin.read.retrofit
 
-import android.content.Context
-import android.util.Log
-import com.lin.read.utils.SingleInstanceHolder
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -20,9 +19,8 @@ import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.SingleInstanceHolderWith3Params
 import com.lin.read.utils.UIUtils
 import java.util.*
-import kotlin.collections.HashMap
 
-class ScanTypeRecyclerViewUtil private constructor(var context: Context, var parentLayout: LinearLayout, val readScanBean: ReadScanBean) {
+class ScanTypeRecyclerViewUtil private constructor(private var context: Context, private var parentLayout: LinearLayout, private val readScanBean: ReadScanBean) {
     private var scanTypeViews: HashMap<String, HashMap<String, ScanTypeView>>
     private var scanInputViews: HashMap<String, ScanInputView>
     private var scanViewVisis:HashMap<String,MutableList<Int>>
@@ -30,9 +28,9 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     companion object : SingleInstanceHolderWith3Params<ScanTypeRecyclerViewUtil, Context, LinearLayout, ReadScanBean>(::ScanTypeRecyclerViewUtil)
 
     init {
-        scanTypeViews = hashMapOf();
+        scanTypeViews = hashMapOf()
         scanViewVisis = hashMapOf()
-        scanInputViews = hashMapOf();
+        scanInputViews = hashMapOf()
 
         for (item in readScanBean.webs) {
             scanViewVisis.put(item.key, mutableListOf())
@@ -105,21 +103,21 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
     private fun setScanTypeClickListener(){
         readScanBean.webs.forEach { webInfo ->
             ReflectUtil.getProperty(readScanBean, webInfo.key, ReadScanDetailsInfo::class.java)?.scanTypes?.forEach{scanTypeBean ->
-                var lastHiddenItems: MutableList<String> = mutableListOf()
-                scanTypeBean.data?.forEach{scanTypeData ->
+                val lastHiddenItems: MutableList<String> = mutableListOf()
+                scanTypeBean.data.forEach{scanTypeData ->
                     if(scanTypeData.hasNoSubItems != null && scanTypeData.hasNoSubItems.isNotEmpty()){
                         if(scanTypeData.default) lastHiddenItems.addAll(scanTypeData.hasNoSubItems)
                         scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name, object : ScanTypeAdapter.OnScanItemClickListener {
                             override fun onItemClick(position: Int, clickText: String) {
-                                Log.e("Test", "${webInfo.key} -> ${clickText} / ${scanTypeData.name} -> lastHidden ${lastHiddenItems}")
+                                Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
                                 lastHiddenItems.forEach {
-                                    Log.e("Test", "show ${it}")
+                                    Log.e("Test", "show $it")
                                     scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
                                 }
                                 lastHiddenItems.clear()
                                 if (clickText == scanTypeData.name) {
                                     scanTypeData.hasNoSubItems.forEach {
-                                        Log.e("Test", "hide ${it}")
+                                        Log.e("Test", "hide $it")
                                         scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.GONE
                                         lastHiddenItems.add(it)
                                     }
@@ -130,9 +128,9 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
                     }else{
                         scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name, object : ScanTypeAdapter.OnScanItemClickListener {
                             override fun onItemClick(position: Int, clickText: String) {
-                                Log.e("Test", "${webInfo.key} -> ${clickText} / ${scanTypeData.name} -> lastHidden ${lastHiddenItems}")
+                                Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
                                 lastHiddenItems.forEach {
-                                    Log.e("Test", "show ${it}")
+                                    Log.e("Test", "show $it")
                                     scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
                                 }
                                 lastHiddenItems.clear()
@@ -223,7 +221,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
         return null
     }
 
-    class ScanTypeView(var context: Context, var readScanTypeBean: ReadScanTypeBean) {
+    class ScanTypeView(context: Context, var readScanTypeBean: ReadScanTypeBean) {
         private lateinit var promptTv: TextView
         lateinit var recyclerView: RecyclerView
         lateinit var parent: LinearLayout
@@ -244,7 +242,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             val promptParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(UIUtils.dip2px(context, 30f), LinearLayout.LayoutParams.MATCH_PARENT)
             promptParams.setMargins(0, UIUtils.dip2px(context, 5f), 0, 0)
             promptTv.layoutParams = promptParams
-            promptTv.setText(readScanTypeBean.typeName)
+            promptTv.text = readScanTypeBean.typeName
             parent.addView(promptTv)
 
             val use4Words = readScanTypeBean.use4Words
@@ -254,7 +252,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             recyclerView = RecyclerView(context)
             recyclerView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             recyclerView.layoutManager = GridLayoutManager(context, spanCount)
-            recyclerView.addItemDecoration(ScanTypeItemDecoration(context, 15));
+            recyclerView.addItemDecoration(ScanTypeItemDecoration(context, 15))
             parent.addView(recyclerView)
 
             adapter = ScanTypeAdapter(context, readScanTypeBean.data, use4Words)
@@ -329,7 +327,7 @@ class ScanTypeRecyclerViewUtil private constructor(var context: Context, var par
             parent.addView(inputParent)
 
             var subParent: LinearLayout? = null
-            for ((index, item) in readScanInputBean.data?.withIndex()) {
+            for ((index, item) in readScanInputBean.data.withIndex()) {
                 if (index % 2 == 0) {
                     subParent = LinearLayout(context)
                     val subParentParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, UIUtils.dip2px(context, 25f))

@@ -30,8 +30,7 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_scan_book, null);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -133,23 +132,23 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         private TextView commentNum;
         private TextView raiseNum;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             layouView=itemView;
-            bookName= (TextView) itemView.findViewById(R.id.book_item_bookname);
-            authorName= (TextView) itemView.findViewById(R.id.book_item_authorname);
-            webType= (TextView) itemView.findViewById(R.id.book_item_web);
-            lastUpdate= (TextView) itemView.findViewById(R.id.book_item_lastupdate);
-            wordsNum= (TextView) itemView.findViewById(R.id.book_item_wordsnum);
-            recommend= (TextView) itemView.findViewById(R.id.book_item_recommend);
-            vipClick= (TextView) itemView.findViewById(R.id.book_item_vipclick);
-            score= (TextView) itemView.findViewById(R.id.book_item_score);
-            scoreNum= (TextView) itemView.findViewById(R.id.book_item_scorenum);
+            bookName=  itemView.findViewById(R.id.book_item_bookname);
+            authorName=  itemView.findViewById(R.id.book_item_authorname);
+            webType=  itemView.findViewById(R.id.book_item_web);
+            lastUpdate=  itemView.findViewById(R.id.book_item_lastupdate);
+            wordsNum=  itemView.findViewById(R.id.book_item_wordsnum);
+            recommend=  itemView.findViewById(R.id.book_item_recommend);
+            vipClick=  itemView.findViewById(R.id.book_item_vipclick);
+            score=  itemView.findViewById(R.id.book_item_score);
+            scoreNum=  itemView.findViewById(R.id.book_item_scorenum);
             viewBookItemInfos = itemView.findViewById(R.id.book_item_infos);
             viewScoreInfos = itemView.findViewById(R.id.book_item_score_info);
             viewCommentInfos = itemView.findViewById(R.id.book_item_comment_info);
-            commentNum = (TextView) itemView.findViewById(R.id.book_item_comment);
-            raiseNum = (TextView) itemView.findViewById(R.id.book_item_raise);
+            commentNum =  itemView.findViewById(R.id.book_item_comment);
+            raiseNum =  itemView.findViewById(R.id.book_item_raise);
         }
 
         public View getLayouView(){

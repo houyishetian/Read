@@ -19,7 +19,7 @@ class ConcurrentExecutorUtil {
                         val t = item.call()
                         if (t != null) result.add(t)
                     } catch (e: Exception) {
-                        e.printStackTrace();
+                        e.printStackTrace()
                     } finally {
                         endLatch.countDown()
                     }
