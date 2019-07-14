@@ -1,5 +1,6 @@
 package com.lin.read.filter.scan;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.lin.read.filter.BookInfo;
@@ -14,6 +15,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,13 +105,11 @@ public class StringUtils {
 			return null;
 		}
 		if(srcDate.contains("今天")||srcDate.contains("今日")){
-			Date date=new Date();
-			SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-			String day=format.format(date);
-			Pattern p=Pattern.compile("[ ]?(\\d{2}:\\d{2})");
-			Matcher m=p.matcher(srcDate);
-			if(m.find()){
-				return day+" "+m.group(1)+"更新";
+			String day = DateFormat.format("yyyy-MM-dd", new Date()).toString();
+			Pattern p = Pattern.compile("[ ]?(\\d{2}:\\d{2})");
+			Matcher m = p.matcher(srcDate);
+			if (m.find()) {
+				return day + " " + m.group(1) + "更新";
 			}
 			return null;
 		}else if(srcDate.contains("昨日")||srcDate.contains("昨天")){
@@ -118,8 +118,7 @@ public class StringUtils {
 			calendar.setTime(date);
 			calendar.add(Calendar.DAY_OF_MONTH, -1);
 			date = calendar.getTime();
-			SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-			String day=format.format(date);
+			String day=DateFormat.format("yyyy-MM-dd", date).toString();
 			Pattern p=Pattern.compile("[ ]?(\\d{2}:\\d{2})");
 			Matcher m=p.matcher(srcDate);
 			if(m.find()){
@@ -176,7 +175,7 @@ public class StringUtils {
 		}
 		try {
 			int parse = Integer.parseInt(num);
-			return String.format("%.2f", parse/10000f);
+			return String.format(Locale.CHINA,"%.2f", parse/10000f);
 		}catch (Exception e){
 			e.printStackTrace();
 			return null;

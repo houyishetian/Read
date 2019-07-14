@@ -14,7 +14,10 @@ import rx.Observer
 import rx.schedulers.Schedulers
 
 class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
-    val tag = ReadGetYouShuBookInfoFactory::class.java.simpleName
+    private val tag:String
+    init {
+        tag = ReadGetYouShuBookInfoFactory::class.java.simpleName
+    }
     override fun getBookInfo(context: Context, handler: Handler, searchInfo: ScanInfo, onScanResult: OnScanResult) {
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_START)
         Log.e(tag, "scan start")

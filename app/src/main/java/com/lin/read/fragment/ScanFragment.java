@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * Created by lisonglin on 2017/10/11.
@@ -385,7 +386,7 @@ public class ScanFragment extends Fragment {
             switch (resultCode) {
                 case Constants.SCAN_RESPONSE_FAILED:
                     scanResultTv.setVisibility(View.VISIBLE);
-                    scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0));
+                    scanResultTv.setText(String.format(Locale.CHINA, Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0));
                     allBookData.clear();
                     allBookAdapter.notifyDataSetChanged();
                     emptyTv.setVisibility(View.VISIBLE);
@@ -405,7 +406,7 @@ public class ScanFragment extends Fragment {
                                 scanResultTv.setVisibility(View.VISIBLE);
                                 scanResultYouShuLl.setVisibility(View.GONE);
                                 Log.e("Test", "接收:" + allBookDataFromScan);
-                                scanResultTv.setText(String.format(Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
+                                scanResultTv.setText(String.format(Locale.CHINA,Constants.TEXT_SCAN_BOOK_INFO_RESULT, allBookDataFromScan.size()));
                                 break;
                             case Constants.WEB_YOU_SHU:
                                 scanResultYouShuLl.setVisibility(View.VISIBLE);

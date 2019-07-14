@@ -1,5 +1,6 @@
 package com.lin.read.adapter
 
+import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
@@ -18,7 +19,7 @@ class BookMarksAdapter(val fragment: Fragment, val bookMarksData: List<BookMarkB
     lateinit var onCheckBoxClickListener: OnCheckBoxClickListener
     lateinit var onItemLongClickListener: OnItemLongClickListener
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(fragment.activity).inflate(R.layout.item_book_mark, null).apply {
+        return ViewHolder(LayoutInflater.from(fragment.activity as Context).inflate(R.layout.item_book_mark, null).apply {
             setOnLongClickListener{
                 onItemLongClickListener?.onItemLongClick(this)
                 return@setOnLongClickListener true

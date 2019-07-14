@@ -15,8 +15,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="30dp"
-            android:maxLines="1"
-            android:ellipsize="middle"
+            android:singleLine="true"
             android:textColor="@android:color/black" />
 
     </LinearLayout>

@@ -124,14 +124,13 @@ class SearchFragment : Fragment() {
         GetDownloadInfoTask(activity, currentSelectWeb, object : GetDownloadInfoTask.OnTaskListener {
             override fun onSucc(allBooks: MutableList<BookInfo>?) {
                 DialogUtil.getInstance().hideLoadingView()
-                if (allBooks != null && allBooks.isNotEmpty()) {
+                allBooks?.takeIf { it.isNotEmpty() }?.apply {
                     empty_view.visibility = View.GONE
                     rcv_search_result.visibility = View.VISIBLE
                     allBookInfo.clear()
-                    allBookInfo.addAll(allBooks)
+                    allBookInfo.addAll(this)
                     rcv_search_result.adapter.notifyDataSetChanged()
-
-                } else {
+                } ?: let {
                     empty_view.visibility = View.VISIBLE
                     rcv_search_result.visibility = View.GONE
                     activity.makeMsg("未获取到数据!")

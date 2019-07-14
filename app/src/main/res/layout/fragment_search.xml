@@ -18,8 +18,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:maxLines="1"
-            android:ellipsize="middle"
+            android:singleLine="true"
             android:textSize="18sp"
             android:text="笔趣阁"/>
 

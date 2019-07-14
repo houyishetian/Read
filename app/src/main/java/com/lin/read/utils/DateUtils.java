@@ -1,6 +1,7 @@
 package com.lin.read.utils;
 
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,9 +13,8 @@ import java.util.regex.Pattern;
  */
 
 public class DateUtils {
-    public static String formatTime(long time){
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return format.format(new Date(time));
+    public static String formatTime(long time) {
+        return DateFormat.format("yyyy-MM-dd HH:mm", new Date(time)).toString();
     }
 
     public static String removeSeconds(String date) {
