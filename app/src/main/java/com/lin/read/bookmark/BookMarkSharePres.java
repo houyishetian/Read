@@ -49,7 +49,7 @@ public class BookMarkSharePres {
             String valueAfterAdd = new GsonBuilder().create().toJson(currentItems);
             editor.putString(BOOK_MARK_LIST, valueAfterAdd);
         }
-        editor.commit();
+        editor.apply();
     }
 
     public static BookMarkBean getBookMark(Context context, BookInfo bookInfo) {
@@ -112,7 +112,7 @@ public class BookMarkSharePres {
         }
         String valueAfterDelete = new GsonBuilder().create().toJson(currentItems);
         editor.putString(BOOK_MARK_LIST, valueAfterDelete);
-        editor.commit();
+        editor.apply();
     }
 
     public static List<BookMarkBean> getBookMarkBeans(Context context){

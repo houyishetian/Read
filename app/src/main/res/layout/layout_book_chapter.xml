@@ -141,11 +141,11 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/chapter_blank_view"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2.5"
-        android:alpha="0.6"
-        android:background="#DBDBDB"></View>
+            android:id="@+id/chapter_blank_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:alpha="0.6"
+            android:background="#DBDBDB"/>
 
 </LinearLayout>
