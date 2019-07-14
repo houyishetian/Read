@@ -22,18 +22,18 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
     @Override
     public List<BookInfo> getBooksByBookname(String... params) throws IOException {
         String url = "https://www.x23us.com/modules/article/search.php?searchtype=keywords&searchkey=" + URLEncoder.encode(params[0], "gbk");
-        List<BookInfo> result = new ArrayList<BookInfo>();
+        List<BookInfo> result = new ArrayList<>();
         Object responsObj = HttpUtils.getConnOrRedirectUrlWithUserAgent(url, 3);
         if (responsObj == null) {
             throw new IOException();
         }
         if(responsObj instanceof HttpURLConnection){
             HttpURLConnection conn = (HttpURLConnection) responsObj;
-            BufferedReader reader = null;
+            BufferedReader reader;
             String unicodeType = StringUtils.getCharSet(conn);
             reader = new BufferedReader(new InputStreamReader(
                     conn.getInputStream(), unicodeType));
-            String current = null;
+            String current;
             BookInfo bookInfo = null;
             while ((current = reader.readLine()) != null) {
 // <tr>
@@ -87,11 +87,11 @@ public class ResolveUtilsForDingDian extends ResolveUtilsFactory {
             if(conn==null){
                 throw new IOException();
             }
-            BufferedReader reader = null;
+            BufferedReader reader;
             String unicodeType = StringUtils.getCharSet(conn);
             reader = new BufferedReader(new InputStreamReader(
                     conn.getInputStream(), unicodeType));
-            String current = null;
+            String current;
             BookInfo bookInfo = new BookInfo();
             bookInfo.setWebType(Constants.RESOLVE_FROM_DINGDIAN);
             bookInfo.setWebName(params[2]);

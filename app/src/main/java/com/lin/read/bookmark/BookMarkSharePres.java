@@ -40,7 +40,7 @@ public class BookMarkSharePres {
         Log.e("Test", "save book mark-->" + key + "=" + value);
         editor.putString(key, value);
 
-        ArrayList<String> currentItems=getBookMarkList(context,preferences);
+        ArrayList<String> currentItems=getBookMarkList(preferences);
         if (currentItems == null) {
             currentItems = new ArrayList<>();
         }
@@ -77,7 +77,7 @@ public class BookMarkSharePres {
         return preferences.getString(key, null);
     }
 
-    private static ArrayList<String> getBookMarkList(Context context, SharedPreferences preferences) {
+    private static ArrayList<String> getBookMarkList(SharedPreferences preferences) {
         String value = preferences.getString(BOOK_MARK_LIST, null);
         ArrayList<String> result = new ArrayList<>();
         try {
@@ -95,7 +95,7 @@ public class BookMarkSharePres {
         }
         SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        ArrayList<String> currentItems = getBookMarkList(context, preferences);
+        ArrayList<String> currentItems = getBookMarkList(preferences);
 
         for(BookMarkBean deleteItem:deleteItems){
             if (deleteItem == null) {
@@ -117,7 +117,7 @@ public class BookMarkSharePres {
 
     public static List<BookMarkBean> getBookMarkBeans(Context context){
         SharedPreferences preferences = context.getSharedPreferences(BOOK_MARK_PREFS, Context.MODE_PRIVATE);
-        ArrayList<String> currentItems=getBookMarkList(context,preferences);
+        ArrayList<String> currentItems=getBookMarkList(preferences);
         List<BookMarkBean> result=new ArrayList<>();
         if (currentItems == null || currentItems.size() == 0) {
             return result;

@@ -16,7 +16,7 @@ public class ChapterHandleUtils {
         if(StringUtils.isEmpty(chapter)){
             return chapter;
         }
-        List<String> regexList = new ArrayList<String>();
+        List<String> regexList = new ArrayList<>();
         regexList.add("(\\([^\n]*\\))");
         regexList.add("(\\[[^\n]*\\])");
         regexList.add("(（[^\n]*）)");

@@ -42,7 +42,7 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
         if (StringUtils.isEmpty(bookName) || page < 0) {
             return null;
         }
-        String url = null;
+        String url;
         try {
             String searchKey = PinYinUtils.getAllPinYin(bookName).get(0);
             url = "https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input=";
@@ -64,13 +64,13 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
         if (conn == null) {
             throw new IOException();
         }
-        List<BookInfo> result = new ArrayList<BookInfo>();
-        BufferedReader reader = null;
+        List<BookInfo> result = new ArrayList<>();
+        BufferedReader reader;
         String unicodeType = StringUtils.getCharSet(conn);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
 
-        String current = null;
+        String current;
         Log.e("Test", "请看开始搜索:" + webType + "-->" + url);
         BookInfo bookInfo = null;
         while ((current = reader.readLine()) != null) {
@@ -126,12 +126,12 @@ public class ResolveUtilsForQingKan extends ResolveUtilsFactory {
         if (conn == null) {
             throw new IOException();
         }
-        BufferedReader reader = null;
+        BufferedReader reader;
         String unicodeType = StringUtils.getCharSet(conn);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
 
-        String current = null;
+        String current;
         Log.e("Test", "请看下载地址:" + url);
         while ((current = reader.readLine()) != null) {
             //<a href="https://down.qingkan9.com/144/144797.txt">道君TXT下载（右键目标另存为）</a></DIV>

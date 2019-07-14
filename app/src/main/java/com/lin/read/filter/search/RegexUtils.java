@@ -24,7 +24,7 @@ public class RegexUtils {
         Matcher matcher = pattern.matcher(content);
         try {
             if (matcher.find()) {
-                List<String> resultList = new ArrayList<String>();
+                List<String> resultList = new ArrayList<>();
                 for (Integer group : allGroup) {
                     resultList.add(matcher.group(group));
                 }
@@ -46,7 +46,7 @@ public class RegexUtils {
         Matcher matcher = pattern.matcher(content);
         try {
             if (matcher.matches()) {
-                List<String> resultList = new ArrayList<String>();
+                List<String> resultList = new ArrayList<>();
                 for (Integer group : allGroup) {
                     resultList.add(matcher.group(group));
                 }
@@ -68,7 +68,7 @@ public class RegexUtils {
         List<List<String>> resultList = new ArrayList<>();
         try {
             while (matcher.find()) {
-                List<String> currentList = new ArrayList<String>();
+                List<String> currentList = new ArrayList<>();
                 for (Integer group : allGroup) {
                     currentList.add(matcher.group(group));
                 }

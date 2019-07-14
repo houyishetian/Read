@@ -48,13 +48,13 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
         if (conn == null) {
             throw new IOException();
         }
-        List<BookInfo> result = new ArrayList<BookInfo>();
-        BufferedReader reader = null;
+        List<BookInfo> result = new ArrayList<>();
+        BufferedReader reader;
         String unicodeType=StringUtils.getCharSet(conn);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
 
-        String current = null;
+        String current;
         BookInfo bookInfo = null;
         Log.e("Test","笔趣阁开始搜索："+url);
 //  <tr>

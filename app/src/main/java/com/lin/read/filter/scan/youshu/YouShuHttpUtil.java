@@ -16,7 +16,7 @@ public class YouShuHttpUtil {
     public static ArrayList<Object> getAllBookInfo(ScanInfo searchInfo, Reader charReader) throws Exception {
         ArrayList<Object> result = new ArrayList<>();
         BufferedReader reader = new BufferedReader(charReader);
-        String current = null;
+        String current;
         while ((current = reader.readLine()) != null) {
             current = current.trim();
             //onclick="ys.common.jumpurl('page',3215)">&raquo;

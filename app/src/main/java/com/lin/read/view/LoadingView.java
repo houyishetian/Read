@@ -38,9 +38,7 @@ public class LoadingView extends ImageView {
             Animation circle_anim = AnimationUtils.loadAnimation(context, R.anim.rotate_scaning_loading);
             LinearInterpolator interpolator = new LinearInterpolator();  //设置匀速旋转，在xml文件中设置会出现卡顿
             circle_anim.setInterpolator(interpolator);
-            if (circle_anim != null) {
-                startAnimation(circle_anim);  //开始动画
-            }
+            startAnimation(circle_anim);  //开始动画
         }
     }
 }

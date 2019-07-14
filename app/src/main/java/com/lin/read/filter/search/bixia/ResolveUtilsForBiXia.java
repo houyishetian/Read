@@ -21,16 +21,16 @@ public class ResolveUtilsForBiXia extends ResolveUtilsFactory {
     @Override
     public List<BookInfo> getBooksByBookname(String... params) throws IOException {
         String url = "http://www.bxwx666.org/search.aspx?bookname=" + URLEncoder.encode(params[0], "gbk");
-        List<BookInfo> result = new ArrayList<BookInfo>();
+        List<BookInfo> result = new ArrayList<>();
         HttpURLConnection conn = HttpUtils.getConnWithUserAgent(url, 3);
         if (conn == null) {
             throw new IOException();
         }
-        BufferedReader reader = null;
+        BufferedReader reader;
         String unicodeType = StringUtils.getCharSet(conn);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
-        String current = null;
+        String current;
         BookInfo bookInfo = null;
         boolean isStartResolve = false;
         while ((current = reader.readLine()) != null) {

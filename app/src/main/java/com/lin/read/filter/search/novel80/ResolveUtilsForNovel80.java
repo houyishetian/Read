@@ -20,7 +20,7 @@ public class ResolveUtilsForNovel80 extends ResolveUtilsFactory {
     @Override
     public List<BookInfo> getBooksByBookname(String... params) throws IOException {
         String url = "http://www.txt80.com/e/search/result/?searchid=1460";
-        List<BookInfo> result = new ArrayList<BookInfo>();
+        List<BookInfo> result = new ArrayList<>();
 //        tbname=download&tempid=1&keyboard=%E5%87%A1%E4%BA%BA&show=title%2Csoftsay%2Csoftwriter&Submit22=%E6%90%9C%E7%B4%A2
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("tbname", "download");
@@ -32,11 +32,11 @@ public class ResolveUtilsForNovel80 extends ResolveUtilsFactory {
         if (conn == null) {
             throw new IOException();
         }
-        BufferedReader reader = null;
+        BufferedReader reader;
         String unicodeType = StringUtils.getCharSet(conn);
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), unicodeType));
-        String current = null;
+        String current;
         BookInfo bookInfo = null;
         int i = 1;
         while ((current = reader.readLine()) != null) {

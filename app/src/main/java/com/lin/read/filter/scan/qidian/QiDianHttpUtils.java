@@ -215,7 +215,7 @@ public class QiDianHttpUtils {
 
 	public static BookInfo getBookDetailsInfo(ScanInfo searchInfo, Reader inputReader) throws IOException {
 		BufferedReader reader= new BufferedReader(inputReader);
-		String current = null;
+		String current;
 		boolean isResolvingScore = false;
 		BookInfo bookInfo = new BookInfo();
 		while ((current = reader.readLine()) != null) {

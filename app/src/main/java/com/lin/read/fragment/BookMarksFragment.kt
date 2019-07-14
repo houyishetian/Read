@@ -45,14 +45,14 @@ class BookMarksFragment : Fragment() {
             }
             (adapter as BookMarksAdapter).onCheckBoxClickListener = object : BookMarksAdapter.OnCheckBoxClickListener {
                 override fun onCheckBoxClick() {
-                    book_marks_delete.isEnabled = (book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems().size != 0
+                    book_marks_delete.isEnabled = (book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems().isNotEmpty()
                 }
             }
         }
         book_marks_select_all.setOnClickListener {
             val adapter = book_marks_rcv.adapter as BookMarksAdapter
             adapter.handleAll(adapter.getAllSelectedItems().size != allBookmarks.size)
-            book_marks_delete.isEnabled = adapter.getAllSelectedItems().size != 0
+            book_marks_delete.isEnabled = adapter.getAllSelectedItems().isNotEmpty()
         }
         book_marks_delete.setOnClickListener{
             getData(true)

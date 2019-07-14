@@ -36,7 +36,7 @@ public class ResolveChapterUtils {
         if (conn == null) {
             throw new IOException();
         }
-        String regex = null;
+        String regex;
         List<Integer> allGroups = Arrays.asList(1);
         String uniCodeType=StringUtils.getCharSet(conn);
         switch (bookInfo.getWebType()) {
@@ -67,12 +67,12 @@ public class ResolveChapterUtils {
             default:
                 return null;
         }
-        List<BookChapterInfo> result = new ArrayList<BookChapterInfo>();
-        BufferedReader reader = null;
+        List<BookChapterInfo> result = new ArrayList<>();
+        BufferedReader reader;
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), uniCodeType));
 
-        String current = null;
+        String current;
         Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
         //for Ai Shu Wang start
         boolean isStart=false;
@@ -181,11 +181,11 @@ public class ResolveChapterUtils {
         }
 
         String uniCodeType = StringUtils.getCharSet(conn);
-        BufferedReader reader = null;
+        BufferedReader reader;
         reader = new BufferedReader(new InputStreamReader(
                 conn.getInputStream(), uniCodeType));
 
-        String current = null;
+        String current;
         Log.e("Test", "开始解析章节内容："+bookChapterInfo.getChapterLink());
 
         String resultContent="";

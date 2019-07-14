@@ -53,7 +53,7 @@ public class StringUtils {
 		String unicodeType="UTF-8";
 		BufferedReader reader=new BufferedReader(new InputStreamReader(
 				input, unicodeType));
-		String current=null;
+		String current;
 		String result="";
 		while((current=reader.readLine())!=null){
 			result=result+current;

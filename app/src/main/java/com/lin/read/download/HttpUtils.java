@@ -210,7 +210,7 @@ public class HttpUtils {
         conn.setRequestProperty("Cookie","UM_distinctid=16af4129c1d1f6-003f5ed1f7376c-3c604504-1fa400-16af4129c1e17b; CNZZDATA1263014046=219582599-1558870453-https%253A%252F%252Fwww.baidu.com%252F%7C1558870453; ovoaklastsearchtime=1558873611");
 
         if (params != null && !params.isEmpty()) {
-            StringBuffer param = new StringBuffer();
+            StringBuilder param = new StringBuilder();
             Set<String> keys = params.keySet();
             for (String item : keys) {
                 param.append(item).append("=").append(URLEncoder.encode(params.get(item), "utf-8")).append("&");

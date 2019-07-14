@@ -223,7 +223,7 @@ class ScanTypeRecyclerViewUtil private constructor(private var context: Context,
 
     class ScanTypeView(context: Context, var readScanTypeBean: ReadScanTypeBean) {
         private lateinit var promptTv: TextView
-        lateinit var recyclerView: RecyclerView
+        private lateinit var recyclerView: RecyclerView
         lateinit var parent: LinearLayout
         lateinit var adapter: ScanTypeAdapter
 
