@@ -59,5 +59,83 @@ class StringKtUtil {
                 }
             }
         }
+
+        /**
+         * remove the unuseful chars from chapter
+         */
+        fun removeUnusefulCharsFromChapter(chapterName: String): String {
+            mutableListOf<String>().apply {
+                add("(\\([^\n]*\\))")
+                add("(\\[[^\n]*\\])")
+                add("(（[^\n]*）)")
+                add("(【[^\n]*】)")
+                add("第[0-9一二三四五六七八九十零]更")
+            }.forEach {
+                Pattern.compile(it).matcher(chapterName).run {
+                    if (find()) {
+                        val findStr = group(0)
+                        Pattern.compile("[0-9一二三四五六七八九十零终末上中下]+").matcher(findStr.substring(1, findStr.length - 1)).takeIf { !it.matches() }.run {
+                            return chapterName.replace(findStr, "")
+                        }
+                    }
+                }
+            }
+            return chapterName
+        }
+
+        /**
+         * get the related data from content by regex
+         * @param content the content
+         * @param regex the regex
+         * @param groups the groups
+         * @param useMatch true-match the total contant; false-find from the total contant
+         * @return null-not find
+         */
+        @JvmOverloads
+        fun getDataFromContentByRegex(content: String, regex: String, groups: List<Int>, useMatch: Boolean = false): List<String>? {
+            Pattern.compile(regex).matcher(content).let { matcher ->
+                if (if (useMatch) matcher.matches() else matcher.find()) {
+                    return mutableListOf<String>().apply {
+                        groups.forEach {
+                            add(matcher.group(it))
+                        }
+                    }
+                }
+            }
+            return null
+        }
+
+        /**
+         * get the related data list from content by regex, such as get chapter list from content
+         * @param content the content
+         * @param regex the regex
+         * @param groups the groups
+         * @return if didn't find, will return an empty list
+         */
+        fun getDataListFromContentByRegex(content: String, regex: String, groups: List<Int>): List<List<String>> {
+            Pattern.compile(regex).matcher(content).let { matcher ->
+                return mutableListOf<List<String>>().apply {
+                    while (matcher.find()) {
+                        add(mutableListOf<String>().apply {
+                            groups.forEach {
+                                add(matcher.group(it))
+                            }
+                        })
+                    }
+                }
+            }
+        }
+
+        /**
+         * replace the regex part with new value
+         * @param content the content
+         * @param regex the regex
+         * @param newValue the new value
+         * @return the new data after replace
+         */
+        @JvmOverloads
+        fun replaceDataOfContentByRegex(content: String, regex: String, newValue: String = ""): String {
+            return content.replace(regex.toRegex(), newValue)
+        }
     }
 }

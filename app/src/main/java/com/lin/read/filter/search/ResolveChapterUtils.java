@@ -5,8 +5,8 @@ import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.filter.search.aishuwang.AiShuWangParseLinkUtils;
-import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ResolveChapterUtils {
             throw new IOException();
         }
         String regex;
-        List<Integer> allGroups = Arrays.asList(1);
+        List<Integer> allGroups = Arrays.asList(1,2);
         String uniCodeType=StringUtils.getCharSet(conn);
         switch (bookInfo.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
@@ -85,13 +85,13 @@ public class ResolveChapterUtils {
         while ((current = reader.readLine()) != null) {
             current = current.trim();
             if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
-                List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
-                if (currentResult != null && currentResult.size() > 0) {
+                List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
+                if (currentResult.size() > 0) {
                     for (List<String> item : currentResult) {
                         if (item != null && item.size() == allGroups.size()) {
                             chapterLink = bookInfo.getBookLink() + item.get(0);
                             chapterNameOri = item.get(1);
-                            chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                            chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                             BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                             result.add(bookChapterInfo);
                         }
@@ -104,13 +104,13 @@ public class ResolveChapterUtils {
                     continue;
                 }
                 if (isStart) {
-                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
-                    if (currentResult != null && currentResult.size() > 0) {
+                    List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
+                    if (currentResult.size() > 0) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
                                 chapterLink = AiShuWangParseLinkUtils.parseLink(item.get(0));
                                 chapterNameOri = item.get(1);
-                                chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                                chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                                 BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                                 result.add(bookChapterInfo);
                             }
@@ -128,13 +128,13 @@ public class ResolveChapterUtils {
                     break;
                 }
                 if (isStart) {
-                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), regex, allGroups);
-                    if (currentResult != null && currentResult.size() > 0) {
+                    List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
+                    if (currentResult.size() > 0) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
                                 chapterLink = item.get(0);
                                 chapterNameOri = item.get(1);
-                                chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                                chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                                 BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                                 result.add(bookChapterInfo);
                             }
@@ -142,12 +142,12 @@ public class ResolveChapterUtils {
                     }
                 }
             }else{
-                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), regex, allGroups);
+                List<String> currentResult = StringKtUtil.Companion.getDataFromContentByRegex(current.trim(), regex, allGroups);
                 if (currentResult != null && currentResult.size() == allGroups.size()) {
 
                     chapterLink = currentResult.get(0);
                     chapterNameOri = currentResult.get(1);
-                    chapterName = ChapterHandleUtils.handleUpdateStr(chapterNameOri);
+                    chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                     BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
                     result.add(bookChapterInfo);
                 }
@@ -200,7 +200,7 @@ public class ResolveChapterUtils {
             if(Constants.RESOLVE_FROM_BIQUGE.equals(bookChapterInfo.getWebType())){
                 String biqugeRegex = "<div id=\"content\">([^\n]{1,})";
                 List<Integer> biqugeGroups = Arrays.asList(1);
-                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), biqugeRegex, biqugeGroups);
+                List<String> currentResult = StringKtUtil.Companion.getDataFromContentByRegex(current.trim(), biqugeRegex, biqugeGroups);
                 if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
                     resultContent=currentResult.get(0);
                     break;
@@ -215,7 +215,7 @@ public class ResolveChapterUtils {
                     //<a href="/t/18882/" target="_blank">豪门盛宠：魅色首席诱情人全文阅读</a><div class="contads l"><script type="text/javascript">reads();</script></div>
                     //<strong>在线阅读天火大道Http://wWw.qiushu.cc/</strong>
                     String removeRegex = "(<strong>([^\n^\"]+)</strong>)|(<a href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"]+)</a><div class=\"contads (r|l)\"><script type=\"text/javascript\">reads\\(\\);</script></div>)";
-                    resultContent = RegexUtils.replaceDataByRegex(resultContent, removeRegex);
+                    resultContent = StringKtUtil.Companion.replaceDataOfContentByRegex(resultContent, removeRegex);
                     isStart = false;
                     break;
                 }
@@ -225,7 +225,7 @@ public class ResolveChapterUtils {
             }else if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookChapterInfo.getWebType())){
                 String dingdianRegex = "<dd id=\"contents\">([^\n]{1,})</dd>";
                 List<Integer> biqugeGroups = Arrays.asList(1);
-                List<String> currentResult = RegexUtils.getDataByRegex(current.trim(), dingdianRegex, biqugeGroups);
+                List<String> currentResult = StringKtUtil.Companion.getDataFromContentByRegex(current.trim(), dingdianRegex, biqugeGroups);
                 if (currentResult != null && currentResult.size() == biqugeGroups.size()) {
                     resultContent=currentResult.get(0);
                     break;
@@ -270,8 +270,8 @@ public class ResolveChapterUtils {
                     //<a href="https://www.qingkan9.com/book/daojun_7399/34175995_1.html">1</a>
                     String pageRegex = "<a href=\"([^\n]{1,})\">(\\d){1,}</a>";
                     List<Integer> pageGroups = Arrays.asList(1,2);
-                    List<List<String>> currentResult = RegexUtils.getDataByRegexManyData(current.trim(), pageRegex, pageGroups);
-                    if (currentResult != null && currentResult.size() >0) {
+                    List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), pageRegex, pageGroups);
+                    if (currentResult.size() >0) {
                         nextLink = currentResult.get(0).get(0);
                         break;
                     }

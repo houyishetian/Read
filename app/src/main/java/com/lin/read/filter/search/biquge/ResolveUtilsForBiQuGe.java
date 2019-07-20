@@ -4,11 +4,10 @@ import android.util.Log;
 
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.filter.scan.StringUtils;
-import com.lin.read.utils.ChapterHandleUtils;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,7 +75,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                 if(bookInfo==null){
                     //bookname & booklink
                     //<td class="odd"><a href="http://www.biquge5200.com/70_70322/">仙宸</a></td>
-                    List<String> resolveBookNameResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(1,2));
+                    List<String> resolveBookNameResult=StringKtUtil.Companion.getDataFromContentByRegex(current.trim(),"<td class=\"odd\"><a href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></td>",Arrays.asList(1,2));
                     if (resolveBookNameResult != null && resolveBookNameResult.size() == 2) {
                         bookInfo = new BookInfo();
                         bookInfo.setBookLink(resolveBookNameResult.get(0));
@@ -87,15 +86,15 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
                 }else{
                     //lastChapter
                     //    <td class="even"><a href="http://www.biquge5200.com/70_70322/144888240.html" target="_blank"> 第九十九章：大结局〔完〕</a></td>
-                    List<String> resolveLastChapterResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(2));
+                    List<String> resolveLastChapterResult=StringKtUtil.Companion.getDataFromContentByRegex(current.trim(),"<td class=\"even\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></td>",Arrays.asList(2));
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() == 1) {
-                        bookInfo.setLastChapter(ChapterHandleUtils.handleUpdateStr(resolveLastChapterResult.get(0)));
+                        bookInfo.setLastChapter(StringKtUtil.Companion.removeUnusefulCharsFromChapter(resolveLastChapterResult.get(0)));
                         continue;
                     }
 
                     //authorname
                     //<td class="odd">仙宸</td>
-                    List<String> resolveAuthorResult= RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(1));
+                    List<String> resolveAuthorResult= StringKtUtil.Companion.getDataFromContentByRegex(current.trim(),"<td class=\"odd\">([^\"^\n]{1,})</td>",Arrays.asList(1));
                     if (resolveAuthorResult != null && resolveAuthorResult.size() == 1) {
                         bookInfo.setAuthorName(resolveAuthorResult.get(0));
                         continue;
@@ -103,7 +102,7 @@ public class ResolveUtilsForBiQuGe extends ResolveUtilsFactory {
 
                     //lastUpdate
                     //<td class="odd" align="center">2017-05-26</td>
-                    List<String> resolveLastUpdateResult=RegexUtils.getDataByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(1));
+                    List<String> resolveLastUpdateResult=StringKtUtil.Companion.getDataFromContentByRegex(current.trim(),"<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>",Arrays.asList(1));
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() == 1) {
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(0));
                         bookInfo.setWebType(Constants.RESOLVE_FROM_BIQUGE);

@@ -4,9 +4,9 @@ import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
-import com.lin.read.filter.search.RegexUtils;
 import com.lin.read.filter.search.ResolveUtilsFactory;
 import com.lin.read.utils.Constants;
+import com.lin.read.utils.StringKtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,18 +58,18 @@ public class ResolveUtilsForBiXia extends ResolveUtilsFactory {
                     continue;
                 }
                 if (bookInfo != null) {
-                    List<String> resolveBookNameResult = RegexUtils.getDataByRegexMatch(current, "<a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(1,2));
+                    List<String> resolveBookNameResult = StringKtUtil.Companion.getDataFromContentByRegex(current, "<a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(1,2),true);
                     if (resolveBookNameResult != null && resolveBookNameResult.size() != 0) {
                         bookInfo.setBookLink(resolveBookNameResult.get(0));
                         bookInfo.setBookName(resolveBookNameResult.get(1));
                     }
 
-                    List<String> resolveLastChapterResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s3\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(2));
+                    List<String> resolveLastChapterResult = StringKtUtil.Companion.getDataFromContentByRegex(current, "<span class=\"s3\"><a href=\"([^\"^\n]{1,})\" target=\"_blank\">([^\"^\n]{1,})</a></span>", Arrays.asList(2),true);
                     if (resolveLastChapterResult != null && resolveLastChapterResult.size() != 0) {
                         bookInfo.setLastChapter(resolveLastChapterResult.get(0));
                     }
 
-                    List<String> resolveLastUpdateResult = RegexUtils.getDataByRegexMatch(current, "<span class=\"s4\">([^\"^\n]{1,})</span><span class=\"s5\">([^\"^\n]{1,})</span></li>", Arrays.asList(1,2));
+                    List<String> resolveLastUpdateResult = StringKtUtil.Companion.getDataFromContentByRegex(current, "<span class=\"s4\">([^\"^\n]{1,})</span><span class=\"s5\">([^\"^\n]{1,})</span></li>", Arrays.asList(1,2),true);
                     if (resolveLastUpdateResult != null && resolveLastUpdateResult.size() != 0) {
                         bookInfo.setAuthorName(resolveLastUpdateResult.get(0));
                         bookInfo.setLastUpdate(resolveLastUpdateResult.get(1));
