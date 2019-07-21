@@ -36,51 +36,27 @@ class StringKtUtil {
 
         fun getBookLinkFromRankPageForQiDian(data: String): String? {
             //<h4><a href="//book.qidian.com/info/1003438608"
-            return Pattern.compile("<h4><a href=\"([\\S^\"]+)\"").matcher(data).let {
-                it.takeIf { it.find() }?.group(1)
-            }
+            return getDataFromContentByRegex(data, "<h4><a href=\"([\\S^\"]+)\"", listOf(1))?.get(0)
         }
 
+        /**
+         * get current page num and max page num for qidian
+         * @param data page data
+         * @return position 0 -> current page; position 1 -> max page num. null-> not found
+         */
         fun getCurrentAndMaxPageForQiDian(data: String): List<String>? {
             //		data-page="2" data-pageMax="5"></div>
             //       id="page-container" data-pageMax="5" data-page="1"
-            val result = mutableListOf<String>()
-            return Pattern.compile("data-page=\"(\\d+)\" data-pageMax=\"(\\d+)\"").matcher(data).let {
-                it.takeIf { it.find() }?.run {
-                    result.add(group(1))
-                    result.add(group(2))
-                    result
-                }
-            } ?: Pattern.compile("data-pageMax=\"(\\d+)\" data-page=\"(\\d+)\"").matcher(data).let {
-                it.takeIf { it.find() }?.run {
-                    result.add(group(2))
-                    result.add(group(1))
-                    result
-                }
-            }
+            return getDataFromContentByRegex(data, "data-page=\"(\\d+)\" data-pageMax=\"(\\d+)\"", listOf(1, 2))
+                    ?: getDataFromContentByRegex(data, "data-pageMax=\"(\\d+)\" data-page=\"(\\d+)\"", listOf(2, 1))
         }
 
         /**
          * remove the unuseful chars from chapter
          */
         fun removeUnusefulCharsFromChapter(chapterName: String): String {
-            mutableListOf<String>().apply {
-                add("(\\([^\n]*\\))")
-                add("(\\[[^\n]*\\])")
-                add("(（[^\n]*）)")
-                add("(【[^\n]*】)")
-                add("第[0-9一二三四五六七八九十零]更")
-            }.forEach {
-                Pattern.compile(it).matcher(chapterName).run {
-                    if (find()) {
-                        val findStr = group(0)
-                        Pattern.compile("[0-9一二三四五六七八九十零终末上中下]+").matcher(findStr.substring(1, findStr.length - 1)).takeIf { !it.matches() }.run {
-                            return chapterName.replace(findStr, "")
-                        }
-                    }
-                }
-            }
-            return chapterName
+            //remove the unuseful infos from chapter:1212 测试章节(第五更) -> 1212 测试章节
+            return replaceDataOfContentByRegex(chapterName, "[\\(\\[（【第]+[0-9一二三四五六七八九十零终末上中下]+[\\)\\]）】更]+")
         }
 
         /**
