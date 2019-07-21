@@ -46,6 +46,7 @@ class TestKt {
     @Test
     fun testGetDataListFromContentByRegex() {
         println(StringKtUtil.getDataListFromContentByRegex("wo ce shi %非常 好ffff测试《》,.<aaa>", "([a-z]+) ([a-z]{1})", listOf(0,1,2)))
+        println(StringKtUtil.getDataListFromContentByRegex("wo ce shi %非常 好ffff测试《》,.<aaa>", "acd", listOf(0,1,2)))
     }
 
     @Test

@@ -86,19 +86,20 @@ class StringKtUtil {
          * @param content the content
          * @param regex the regex
          * @param groups the groups
-         * @return if didn't find, will return an empty list
+         * @return if didn't find, will return null
          */
-        fun getDataListFromContentByRegex(content: String, regex: String, groups: List<Int>): List<List<String>> {
+        fun getDataListFromContentByRegex(content: String, regex: String, groups: List<Int>): List<List<String>>? {
             Pattern.compile(regex).matcher(content).let { matcher ->
-                return mutableListOf<List<String>>().apply {
-                    while (matcher.find()) {
-                        add(mutableListOf<String>().apply {
-                            groups.forEach {
-                                add(matcher.group(it))
-                            }
-                        })
-                    }
+                var result: MutableList<List<String>>? = null
+                while (matcher.find()) {
+                    if (result == null) result = mutableListOf()
+                    result.add(mutableListOf<String>().apply {
+                        groups.forEach {
+                            add(matcher.group(it))
+                        }
+                    })
                 }
+                return result
             }
         }
 

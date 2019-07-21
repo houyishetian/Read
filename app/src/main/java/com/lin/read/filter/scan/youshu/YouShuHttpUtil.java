@@ -33,7 +33,7 @@ public class YouShuHttpUtil {
             String regex = "<div class=\"title\"><a href=\"[^\n^\"]+\" target=\"_blank\">([^\n^\"]+)</a></div><div class=\"rating\"><span class=\"allstar00\"></span><span class=\"rating_nums\"></span><span>\\((\\d+)人评价\\)</span></div><div class=\"abstract\">作者: ([^\\n^<]+)<br>字数: ([\\d.]+)万<br>最后更新: ([^\\n^<]+)<br>综合评分: <span class=\"num2star\\\">([\\d.]+)</span>";
             List<Integer> allGroups = Arrays.asList(1,2,3,4,5,6);
             List<List<String>> bookinfos = StringKtUtil.Companion.getDataListFromContentByRegex(current, regex, allGroups);
-            if (bookinfos.size() > 0) {
+            if (bookinfos != null) {
                 Log.e("Test，共：", "" + bookinfos.size());
                 for (int i = 0; i < bookinfos.size(); i++) {
                     List<String> item = bookinfos.get(i);

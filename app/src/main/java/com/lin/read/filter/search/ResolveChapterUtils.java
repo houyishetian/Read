@@ -86,7 +86,7 @@ public class ResolveChapterUtils {
             current = current.trim();
             if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
                 List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
-                if (currentResult.size() > 0) {
+                if (currentResult != null) {
                     for (List<String> item : currentResult) {
                         if (item != null && item.size() == allGroups.size()) {
                             chapterLink = bookInfo.getBookLink() + item.get(0);
@@ -105,7 +105,7 @@ public class ResolveChapterUtils {
                 }
                 if (isStart) {
                     List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
-                    if (currentResult.size() > 0) {
+                    if (currentResult != null) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
                                 chapterLink = AiShuWangParseLinkUtils.parseLink(item.get(0));
@@ -129,7 +129,7 @@ public class ResolveChapterUtils {
                 }
                 if (isStart) {
                     List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
-                    if (currentResult.size() > 0) {
+                    if (currentResult != null) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
                                 chapterLink = item.get(0);
@@ -271,7 +271,7 @@ public class ResolveChapterUtils {
                     String pageRegex = "<a href=\"([^\n]{1,})\">(\\d){1,}</a>";
                     List<Integer> pageGroups = Arrays.asList(1,2);
                     List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), pageRegex, pageGroups);
-                    if (currentResult.size() >0) {
+                    if (currentResult != null) {
                         nextLink = currentResult.get(0).get(0);
                         break;
                     }
