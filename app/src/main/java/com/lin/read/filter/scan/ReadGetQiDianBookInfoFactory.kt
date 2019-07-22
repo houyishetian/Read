@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Handler
 import android.util.Log
 import com.lin.read.filter.BookInfo
-import com.lin.read.filter.scan.qidian.QiDianHttpUtils
 import com.lin.read.filter.scan.qidian.QiDianResolveUtil
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
@@ -107,7 +106,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 .subscribe(object:Observer<ResponseBody>{
                     override fun onNext(t: ResponseBody?) {
                         t?.run {
-                            val bookInfo = QiDianHttpUtils.getBookDetailsInfo(searchInfo,charStream())
+                            val bookInfo = QiDianResolveUtil.getBookDetailsInfo(searchInfo, charStream())
                             MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE)
                             if(bookInfo != null){
                                 result.add(bookInfo)

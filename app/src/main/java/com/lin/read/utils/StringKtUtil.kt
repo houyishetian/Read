@@ -12,26 +12,20 @@ class StringKtUtil {
          * @return true-the book is ok, false-the book is not ok
          */
         fun compareFilterInfo(scanInfo: ScanInfo, bookInfo: BookInfo): Boolean {
-            try {
-                if(scanInfo.inputtedBeans == null || scanInfo.inputtedBeans.isEmpty()){
-                    return true
-                }
-                loop@ for (it in scanInfo.inputtedBeans) {
-                    val thisInfo = ReflectUtil.getProperty(bookInfo, it.key, String::class.java)
-                    when (it.inputType) {
+            return scanInfo.inputtedBeans?.takeIf { it.isNotEmpty() }?.let {
+                loop@ for (item in it) {
+                    val thisInfo = ReflectUtil.getProperty(bookInfo, item.key, String::class.java)
+                    when (item.inputType) {
                         Constants.INPUT_INT, Constants.INPUT_FLOAT -> {
-                            val valueStandard = it.value!!.toFloat()
-                            val valuePendingCompare = thisInfo!!.toFloat()
-                            if (valueStandard > valuePendingCompare) return false
+                            val valueStandard = item.value?.toFloat() ?: -1f
+                            val valuePendingCompare = thisInfo?.toFloat() ?: -1f
+                            if (valueStandard < 0 || valuePendingCompare < 0 || valueStandard > valuePendingCompare) return false
                         }
                         else -> continue@loop
                     }
                 }
                 return true
-            }catch (e:Exception){
-                e.printStackTrace()
-            }
-            return false
+            } ?: true
         }
 
         fun getBookLinkFromRankPageForQiDian(data: String): String? {
