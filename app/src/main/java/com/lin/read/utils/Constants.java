@@ -29,6 +29,12 @@ public class Constants {
     public static final String RESOLVE_FROM_AISHU = "AISHUWANG";
     public static final String RESOLVE_FROM_QINGKAN = "QINGKAN";
 
+    public static final String WEB_NAME_BIQUGE = "笔趣阁";
+    public static final String WEB_NAME_DINGDIAN = "顶点";
+    public static final String WEB_NAME_BIXIA = "笔下";
+    public static final String WEB_NAME_AISHU = "爱书网";
+    public static final String WEB_NAME_QINGKAN = "请看";
+
     public static final String WEB_QIDIAN="起点";
     public static final String WEB_QIDIAN_FINISH="完本";
     public static final String WEB_ZONGHENG="纵横";

@@ -5,8 +5,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.util.Log
 import android.widget.Toast
 import com.lin.read.filter.search.BookChapterInfo
+import okhttp3.ResponseBody
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.nio.charset.Charset
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit){
     val fragmentTransaction = this.beginTransaction()
@@ -58,4 +63,20 @@ fun List<BookChapterInfo>.split(eachPageLen: Int, resetPageAndIndex: Boolean = f
         }
     }
     return splitResult
+}
+
+fun ResponseBody.readLinesOfHtml(): List<String> {
+    val byteOutPutStream = ByteArrayOutputStream()
+    byteStream().copyTo(byteOutPutStream)
+    val inputStream0 = ByteArrayInputStream(byteOutPutStream.toByteArray())
+    val inputStream1 = ByteArrayInputStream(byteOutPutStream.toByteArray())
+    val charset = inputStream0.bufferedReader().readLines().firstOrNull { it.toLowerCase().contains("charset=\"?[^\"^\n^;]+\"?".toRegex()) }?.let {
+        StringKtUtil.getDataFromContentByRegex(it.toLowerCase(), "charset=\"?([^\"^\n^;]+)\"?", listOf(1))?.get(0)
+    } ?: throw Exception("no charset found!")
+    Log.d("charset", charset)
+    return inputStream1.bufferedReader(Charset.forName(charset)).readLines().apply {
+        inputStream0.close()
+        inputStream1.close()
+        byteOutPutStream.close()
+    }
 }

@@ -48,7 +48,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 .observeOn(Schedulers.io())
                 .flatMap { t ->
                     return@flatMap t?.run {
-                        val maxPageWithBookInfo = QiDianResolveUtil.getMaxPageAndBookInfoFromRandPage(charStream(), true)
+                        val maxPageWithBookInfo = QiDianResolveUtil.getMaxPageAndBookInfoFromRandPage(this, true)
                         val maxPage = maxPageWithBookInfo[0] as Int
                         maxPageWithBookInfo.removeAt(0)
                         maxPageWithBookInfo.forEach { result.add(it as BookLinkInfo) }
@@ -69,7 +69,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 .subscribe(object : Observer<ResponseBody> {
                     override fun onNext(t: ResponseBody?) {
                         t?.run {
-                            val bookLinkInfos = QiDianResolveUtil.getMaxPageAndBookInfoFromRandPage(charStream())
+                            val bookLinkInfos = QiDianResolveUtil.getMaxPageAndBookInfoFromRandPage(this)
                             bookLinkInfos.forEach { result.add(it as BookLinkInfo) }
                             Log.e(tag, "${(bookLinkInfos[0] as BookLinkInfo).page} page complete, book count::${bookLinkInfos.size}")
                             MessageUtils.sendMessageOfInteger(handler, MessageUtils.SCAN_BOOK_INFO_END, result.size)
@@ -106,7 +106,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 .subscribe(object:Observer<ResponseBody>{
                     override fun onNext(t: ResponseBody?) {
                         t?.run {
-                            val bookInfo = QiDianResolveUtil.getBookDetailsInfo(searchInfo, charStream())
+                            val bookInfo = QiDianResolveUtil.getBookDetailsInfo(searchInfo,this)
                             MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_FINISH_ONE)
                             if(bookInfo != null){
                                 result.add(bookInfo)

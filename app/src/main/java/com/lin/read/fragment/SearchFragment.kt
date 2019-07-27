@@ -18,7 +18,7 @@ import com.lin.read.adapter.DialogWebTypeAdapter
 import com.lin.read.adapter.SearchBookItemAdapter
 import com.lin.read.decoration.ScanBooksItemDecoration
 import com.lin.read.filter.BookInfo
-import com.lin.read.filter.search.GetDownloadInfoTask
+import com.lin.read.filter.search.SearchBookTask
 import com.lin.read.filter.search.SearchWebBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.makeMsg
@@ -71,11 +71,11 @@ class SearchFragment : Fragment() {
 
     private fun getWebTypeBeans(): List<SearchWebBean> {
         return mutableListOf<SearchWebBean>().apply {
-            add(SearchWebBean("笔趣阁", Constants.RESOLVE_FROM_BIQUGE))
-            add(SearchWebBean("顶点", Constants.RESOLVE_FROM_DINGDIAN))
-            add(SearchWebBean("笔下", Constants.RESOLVE_FROM_BIXIA, default = true))
-            add(SearchWebBean("爱书网", Constants.RESOLVE_FROM_AISHU))
-            add(SearchWebBean("请看", Constants.RESOLVE_FROM_QINGKAN))
+            add(SearchWebBean(Constants.WEB_NAME_BIQUGE, Constants.RESOLVE_FROM_BIQUGE))
+            add(SearchWebBean(Constants.WEB_NAME_DINGDIAN, Constants.RESOLVE_FROM_DINGDIAN))
+            add(SearchWebBean(Constants.WEB_NAME_BIXIA, Constants.RESOLVE_FROM_BIXIA, default = true))
+            add(SearchWebBean(Constants.WEB_NAME_AISHU, Constants.RESOLVE_FROM_AISHU))
+            add(SearchWebBean(Constants.WEB_NAME_QINGKAN, Constants.RESOLVE_FROM_QINGKAN))
         }
     }
 
@@ -116,8 +116,8 @@ class SearchFragment : Fragment() {
             webBeansList[0].checked = true
             webBeansList[0]
         }
-        GetDownloadInfoTask(activity, currentSelectWeb, object : GetDownloadInfoTask.OnTaskListener {
-            override fun onSucc(allBooks: MutableList<BookInfo>?) {
+        SearchBookTask(currentSelectWeb, et_search_bookname.text.toString(), object : SearchBookTask.OnSearchResult {
+            override fun onSucceed(allBooks: List<BookInfo>?) {
                 DialogUtil.getInstance().hideLoadingView()
                 allBooks?.takeIf { it.isNotEmpty() }?.apply {
                     empty_view.visibility = View.GONE
@@ -132,13 +132,13 @@ class SearchFragment : Fragment() {
                 }
             }
 
-            override fun onFailed() {
+            override fun onFailed(e: Throwable?) {
                 DialogUtil.getInstance().hideLoadingView()
                 empty_view.visibility = View.VISIBLE
                 rcv_search_result.visibility = View.GONE
                 activity.makeMsg("网络请求失败!")
             }
-        }).execute(et_search_bookname.text.toString(), "0", currentSelectWeb.webName)
+        }).searchBook()
     }
 
     fun setSearchType(bookInfo: BookInfo) {
