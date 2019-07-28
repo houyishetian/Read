@@ -220,7 +220,7 @@ class SearchBookResolveUtil {
                             it.webType = Constants.RESOLVE_FROM_QINGKAN
                             it.bookLink = this[0].replace("info.html", "txt.html")
                             it.bookName = this[1]
-                            it.authorName = this[2].replace(" |/".toRegex(), "")
+                            it.authorName = this[2].replace("[ /]".toRegex(), "")
                         }
                     }
                 }?:let {
@@ -228,7 +228,7 @@ class SearchBookResolveUtil {
                     StringKtUtil.getDataFromContentByRegex(current, "<a class=\"sp_chaptername\" href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"]+)</a>([^\n^\"]+)</h4>", listOf(2,3))?.run {
                         bookInfo?.let {
                             it.lastChapter = this[0]
-                            it.lastUpdate = DateUtils.removeSeconds(this[1].replace("（|）".toRegex(), ""))
+                            it.lastUpdate = DateUtils.removeSeconds(this[1].replace("[（）]".toRegex(), ""))
                             result.add(it)
                             bookInfo = null
                         }

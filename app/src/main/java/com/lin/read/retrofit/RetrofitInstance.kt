@@ -26,12 +26,12 @@ class RetrofitInstance (baseUrl: String) {
                         var response = chain.proceed(request)
                         Log.e("Test","${request.url} --> ${response.code}")
                         if ( response.code == 301 || response.code == 302) {
-                            val location = response.headers.get("Location");
-                            Log.e("redirect url：", "location = " + location);
+                            val location = response.headers["Location"]
+                            Log.e("redirect url：", "location =$location")
                             val newRequest = request.newBuilder().url(location!!).build()
-                            response = chain.proceed(newRequest);
+                            response = chain.proceed(newRequest)
                         }
-                        return response;
+                        return response
                     }
                 })
                 .build()
