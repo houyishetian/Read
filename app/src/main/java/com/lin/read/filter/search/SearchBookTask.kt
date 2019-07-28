@@ -38,15 +38,8 @@ class SearchBookTask(val searchWebBean: SearchWebBean, val bookName: String,val 
 
     private fun getObservable(): Observable<ResponseBody> {
         Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
-            val bookNameEncoded = Constants.SEARCH_WEB_BOOK_NAME_MAP(searchWebBean.tag, bookName)
-            return when (searchWebBean.tag) {
-                Constants.RESOLVE_FROM_BIQUGE -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromBIQUGE(bookNameEncoded)
-                Constants.RESOLVE_FROM_DINGDIAN -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromDINGDIAN(bookNameEncoded)
-                Constants.RESOLVE_FROM_BIXIA -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromBIXIA(bookNameEncoded)
-                Constants.RESOLVE_FROM_AISHU -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromAISHUWANG(bookNameEncoded)
-                Constants.RESOLVE_FROM_QINGKAN -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromQINGKAN(bookNameEncoded)
-                else -> throw Exception("cannot get observable! Pls check tag!")
-            }
+            val param = Constants.SEARCH_WEB_RETRO_PARAMS_MAP(searchWebBean.tag, bookName)
+            return ReflectUtil.invokeMethod(RetrofitInstance(it).create(ReadRetrofitService::class.java), "searchFrom${searchWebBean.tag}", Observable::class.java, param) as Observable<ResponseBody>
         } ?: throw Exception("cannot get observable by  ${searchWebBean.tag}! Pls check tag!")
     }
 

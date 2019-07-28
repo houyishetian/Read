@@ -33,7 +33,7 @@ interface ReadRetrofitService {
     @GET("/modules/article/search.php")
     @Headers("User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
     //"https://www.x23us.com/modules/article/search.php?searchtype=keywords&searchkey=" + URLEncoder.encode(params[0], "gbk");
-    fun searchFromDINGDIAN(@Query("searchkey", encoded = true) bookNameEncoded: String, @Query("searchtype") searchtype: String = "keywords"): Observable<ResponseBody>
+    fun searchFromDINGDIAN(@QueryMap(encoded = true) params:HashMap<String,String>): Observable<ResponseBody>
 
     @GET("/search.aspx")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
@@ -48,6 +48,5 @@ interface ReadRetrofitService {
     @GET("/novel.php")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
     //"https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input="
-    fun searchFromQINGKAN(@Query("searchkey", encoded = true) bookName: String, @Query("action") action: String = "search",
-                          @Query("searchtype") searchtype: String = "novelname", @Query("input") input: String = ""): Observable<ResponseBody>
+    fun searchFromQINGKAN(@QueryMap(encoded = true) params:HashMap<String,String>): Observable<ResponseBody>
 }

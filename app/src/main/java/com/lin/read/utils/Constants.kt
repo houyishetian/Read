@@ -37,11 +37,32 @@ class Constants {
             put(RESOLVE_FROM_QINGKAN, "https://www.qk6.org/")
         }
 
-        val SEARCH_WEB_BOOK_NAME_MAP = fun(tag: String, bookName: String): String {
-            return when (tag) {
+        val SEARCH_WEB_RETRO_PARAMS_MAP = fun(tag: String, bookName: String): Any {
+            val searchKey = when (tag) {
                 RESOLVE_FROM_BIQUGE, RESOLVE_FROM_AISHU -> bookName
                 RESOLVE_FROM_DINGDIAN, RESOLVE_FROM_BIXIA, RESOLVE_FROM_QINGKAN -> URLEncoder.encode(bookName, "gbk")
                 else -> throw Exception("cannot resolve current type:$tag")
+            }
+            return when (tag) {
+                //"http://www.biquge5200.com/modules/article/search.php?searchkey="+bookName;
+                RESOLVE_FROM_BIQUGE -> searchKey
+                RESOLVE_FROM_DINGDIAN -> hashMapOf<String, String>().apply {
+                    //"https://www.x23us.com/modules/article/search.php?searchtype=keywords&searchkey=" + URLEncoder.encode(params[0], "gbk");
+                    put("searchtype", "keywords")
+                    put("searchkey", searchKey)
+                }
+                // "http://www.bxwx666.org/search.aspx?bookname=" + URLEncoder.encode(params[0], "gbk")
+                RESOLVE_FROM_BIXIA -> searchKey
+                //"http://www.22ff.org/s_"+bookName;
+                RESOLVE_FROM_AISHU -> searchKey
+                //"https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input="
+                RESOLVE_FROM_QINGKAN -> hashMapOf<String, String>().apply {
+                    put("action", "search")
+                    put("searchtype", "novelname")
+                    put("input", "")
+                    put("searchkey", searchKey)
+                }
+                else -> throw Exception("cannot resolve current params:$tag")
             }
         }
 
