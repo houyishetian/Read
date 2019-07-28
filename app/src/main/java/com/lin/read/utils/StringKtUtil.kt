@@ -108,5 +108,15 @@ class StringKtUtil {
         fun replaceDataOfContentByRegex(content: String, regex: String, newValue: String = ""): String {
             return content.replace(regex.toRegex(), newValue)
         }
+
+        fun parseLinkForAiShuWang(url: String): String {
+            return Constants.SEARCH_WEB_BASEURL_MAP[Constants.RESOLVE_FROM_AISHU]?.let{
+                if (url.startsWith("//"))
+                    return "http:$url"
+                if (url.startsWith("/"))
+                    return it + url.substring(1)
+                return url
+            }?:url
+        }
     }
 }

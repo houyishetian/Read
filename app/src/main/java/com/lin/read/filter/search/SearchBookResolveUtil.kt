@@ -1,19 +1,17 @@
 package com.lin.read.filter.search
 
 import com.lin.read.filter.BookInfo
-import com.lin.read.filter.search.aishuwang.AiShuWangParseLinkUtils
 import com.lin.read.utils.Constants
 import com.lin.read.utils.DateUtils
 import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.readLinesOfHtml
-import okhttp3.ResponseBody
 
 class SearchBookResolveUtil {
     companion object {
-        fun resolveFromBIQUGE(responseBody: ResponseBody): List<BookInfo>? {
+        fun resolveFromBIQUGE(searchResolveBean: SearchResolveBean): List<BookInfo>? {
             val result = mutableListOf<BookInfo>()
             var bookInfo: BookInfo? = null
-            responseBody.readLinesOfHtml().forEach {
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
                 val current = it.trim()
                 if (current == "<tr>") {
                     bookInfo = BookInfo()
@@ -52,10 +50,10 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
-        fun resolveFromDINGDIAN(responseBody: ResponseBody, bookName: String): List<BookInfo>? {
+        fun resolveFromDINGDIAN(searchResolveBean: SearchResolveBean): List<BookInfo>? {
             var bookInfo: BookInfo? = null
             val result = mutableListOf<BookInfo>()
-            val content = responseBody.readLinesOfHtml()
+            val content = searchResolveBean.responseBody.readLinesOfHtml()
             content.forEach {
                 var current = it.trim()
                 if (current == "<tr>") {
@@ -98,7 +96,7 @@ class SearchBookResolveUtil {
                 bookInfo?.run {
                     webType = Constants.RESOLVE_FROM_DINGDIAN
                     webName = Constants.WEB_NAME_DINGDIAN
-                    this.bookName = bookName
+                    bookName = searchResolveBean.bookName
                 }
                 content.forEach {
                     val current = it.trim()
@@ -127,10 +125,10 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
-        fun resolveFromBIXIA(responseBody: ResponseBody): List<BookInfo>? {
+        fun resolveFromBIXIA(searchResolveBean: SearchResolveBean): List<BookInfo>? {
             val result = mutableListOf<BookInfo>()
             var bookInfo: BookInfo? = null
-            responseBody.readLinesOfHtml().forEach {
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
                 val current = it.trim()
                 if (current == "<span class=\"s2\">") {
                     bookInfo = BookInfo()
@@ -164,10 +162,10 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
-        fun resolveFromAISHUWANG(responseBody: ResponseBody): List<BookInfo>? {
+        fun resolveFromAISHUWANG(searchResolveBean: SearchResolveBean): List<BookInfo>? {
             var bookInfo: BookInfo? = null
             val result = mutableListOf<BookInfo>()
-            responseBody.readLinesOfHtml().forEach {
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
                 var current = it.trim()
                 if (current == "<ul>") {
                     bookInfo = BookInfo()
@@ -178,9 +176,8 @@ class SearchBookResolveUtil {
                     it.takeIf { it.bookName == null }?.let {
                         //<li class="neirong1"><a href="/xs/125988/">仙逆</a><a href="/xs/125988.txt" title="仙逆TXT下载">TXT下载</a></li>
                         StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong1\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a><a href=\"([^\"^\n]+)\" title", listOf(1, 2, 3))?.run {
-                            it.bookLink = AiShuWangParseLinkUtils.parseLink(this[0])
+                            it.bookLink = StringKtUtil.parseLinkForAiShuWang(this[0])
                             it.bookName = this[1]
-                            it.downloadLink = AiShuWangParseLinkUtils.parseDownloadLink(this[2])
                         }
                     } ?: it.takeIf { it.lastChapter == null }?.let {
                         //<li class="neirong2"><a href="/xs/125988/6114823/">第一卷 平庸少年 第二十一章 夺灵</a></li>
@@ -208,10 +205,10 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
-        fun resolveFromQINGKAN(responseBody: ResponseBody): List<BookInfo>? {
+        fun resolveFromQINGKAN(searchResolveBean: SearchResolveBean): List<BookInfo>? {
             var bookInfo: BookInfo? = null
             val result = mutableListOf<BookInfo>()
-            responseBody.readLinesOfHtml().forEach{
+            searchResolveBean.responseBody.readLinesOfHtml().forEach{
                 val current = it.trim()
                 takeIf { bookInfo == null }?.let {
                     //<span class="sp_name"><a class="sp_bookname" href="https://www.qk6.org/book/xiannichangsheng/info.html" target="_blank">仙逆长生</a> / 莺歌</span>

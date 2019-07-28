@@ -1,0 +1,67 @@
+package com.lin.read.utils
+
+import java.lang.Exception
+import java.net.URLEncoder
+
+class Constants {
+    companion object {
+        const val KEY_SEARCH_INFO = "KEY_SEARCH_INFO"
+        const val TEXT_SCAN_START = "正在检索书籍..."
+        const val TEXT_SCAN_BOOK_INFO_END = "检索书籍结束，共%d本书！"
+        const val TEXT_SCAN_BOOK_INFO_BY_CONDITION_START = "正在扫描书籍..."
+        const val TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE = "扫描书籍，扫描到%d本..."
+        const val TEXT_SCAN_BOOK_INFO_RESULT = "共找到%d本"
+        const val SCAN_REQUEST_CODE = 12
+        const val READ_REQUEST_CODE = 15
+
+        const val KEY_BUNDLE_FOR_BOOK_DATA = "KEY_BUNDLE_FOR_BOOK_DATA"
+        const val KEY_INTENT_FOR_BOOK_DATA = "KEY_INTENT_FOR_BOOK_DATA"
+
+        const val SCAN_RESPONSE_SUCC = 13
+        const val SCAN_RESPONSE_FAILED = 14
+
+        const val KEY_SKIP_TO_READ = "KEY_SKIP_TO_READ"
+
+        const val RESOLVE_FROM_NOVEL80 = "NOVEL80"
+        const val RESOLVE_FROM_BIQUGE = "BIQUGE"
+        const val RESOLVE_FROM_DINGDIAN = "DINGDIAN"
+        const val RESOLVE_FROM_BIXIA = "BIXIA"
+        const val RESOLVE_FROM_AISHU = "AISHUWANG"
+        const val RESOLVE_FROM_QINGKAN = "QINGKAN"
+
+        val SEARCH_WEB_BASEURL_MAP:HashMap<String,String> = hashMapOf<String, String>().apply {
+            put(RESOLVE_FROM_BIQUGE, "http://www.biquge5200.com/")
+            put(RESOLVE_FROM_DINGDIAN, "https://www.x23us.com/")
+            put(RESOLVE_FROM_BIXIA, "http://www.bxwx666.org/")
+            put(RESOLVE_FROM_AISHU, "http://www.22ff.org/")
+            put(RESOLVE_FROM_QINGKAN, "https://www.qk6.org/")
+        }
+
+        val SEARCH_WEB_BOOK_NAME_MAP = fun(tag: String, bookName: String): String {
+            return when (tag) {
+                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_AISHU -> bookName
+                RESOLVE_FROM_DINGDIAN, RESOLVE_FROM_BIXIA, RESOLVE_FROM_QINGKAN -> URLEncoder.encode(bookName, "gbk")
+                else -> throw Exception("cannot resolve current type:$tag")
+            }
+        }
+
+        const val WEB_NAME_BIQUGE = "笔趣阁"
+        const val WEB_NAME_DINGDIAN = "顶点"
+        const val WEB_NAME_BIXIA = "笔下"
+        const val WEB_NAME_AISHU = "爱书网"
+        const val WEB_NAME_QINGKAN = "请看"
+
+        const val WEB_QIDIAN = "起点"
+        const val WEB_QIDIAN_FINISH = "完本"
+        const val WEB_ZONGHENG = "纵横"
+        const val WEB_YOU_SHU = "优书"
+
+        const val INPUT_INT = "int"
+        const val INPUT_FLOAT = "float"
+
+        const val ROLE_PATH = "path"
+        const val ROLE_PARAM = "param"
+
+        const val CHAPTER_NUM_FOR_EACH_PAGE = 30
+    }
+}

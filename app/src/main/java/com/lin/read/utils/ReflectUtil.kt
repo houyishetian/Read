@@ -14,7 +14,23 @@ class ReflectUtil {
         }
 
         fun <T> invokeMethod(obj: Any, methodName: String, returnClz: Class<T>, vararg params: Any): T? {
-            return obj.javaClass.methods.firstOrNull { it.name == methodName }?.let { if (params.isNotEmpty()) returnClz.cast(it.invoke(obj, params)) else returnClz.cast(it.invoke(obj)) }
+            fun parseClass(ori: Class<*>): Class<*> {
+                return when (ori) {
+                    java.lang.Integer::class.java -> Int::class.java
+                    java.lang.Byte::class.java -> Byte::class.java
+                    java.lang.Short::class.java -> Short::class.java
+                    java.lang.Long::class.java -> Long::class.java
+                    java.lang.Double::class.java -> Double::class.java
+                    java.lang.Float::class.java -> Float::class.java
+                    java.lang.Character::class.java -> Char::class.java
+                    java.lang.Boolean::class.java -> Boolean::class.java
+                    else -> ori
+                }
+            }
+
+            return obj.javaClass.getMethod(methodName, *params.map { parseClass(it.javaClass) }.toTypedArray()).invoke(obj, *params).let {
+                (it as? T) ?: returnClz.cast(it)
+            }
         }
 
         fun <T> deepCopy(src: T): T {

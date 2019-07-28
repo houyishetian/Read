@@ -4,7 +4,6 @@ import android.util.Log;
 import com.lin.read.download.HttpUtils;
 import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.StringUtils;
-import com.lin.read.filter.search.aishuwang.AiShuWangParseLinkUtils;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.StringKtUtil;
 
@@ -108,7 +107,7 @@ public class ResolveChapterUtils {
                     if (currentResult != null) {
                         for (List<String> item : currentResult) {
                             if (item != null && item.size() == allGroups.size()) {
-                                chapterLink = AiShuWangParseLinkUtils.parseLink(item.get(0));
+                                chapterLink = StringKtUtil.Companion.parseLinkForAiShuWang(item.get(0));
                                 chapterNameOri = item.get(1);
                                 chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                                 BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);

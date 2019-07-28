@@ -4,12 +4,12 @@ import com.lin.read.filter.BookInfo
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
 import com.lin.read.utils.Constants
+import com.lin.read.utils.ReflectUtil
 import okhttp3.ResponseBody
 import rx.Observable
 import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.net.URLEncoder
 
 class SearchBookTask(val searchWebBean: SearchWebBean, val bookName: String,val onSearchResult: OnSearchResult) {
     @SuppressWarnings("unchecked")
@@ -37,25 +37,24 @@ class SearchBookTask(val searchWebBean: SearchWebBean, val bookName: String,val 
     }
 
     private fun getObservable(): Observable<ResponseBody> {
-        return when (searchWebBean.tag) {
-            Constants.RESOLVE_FROM_BIQUGE -> RetrofitInstance("http://www.biquge5200.com/").create(ReadRetrofitService::class.java).searchFromBIQUGE(bookName)
-            Constants.RESOLVE_FROM_DINGDIAN -> RetrofitInstance("https://www.x23us.com/").create(ReadRetrofitService::class.java).searchFromDINGDIAN(URLEncoder.encode(bookName, "gbk"))
-            Constants.RESOLVE_FROM_BIXIA -> RetrofitInstance("http://www.bxwx666.org/").create(ReadRetrofitService::class.java).searchFromBIXIA(URLEncoder.encode(bookName, "gbk"))
-            Constants.RESOLVE_FROM_AISHU -> RetrofitInstance("http://www.22ff.org/").create(ReadRetrofitService::class.java).searchFromAISHUWANG(bookName)
-            Constants.RESOLVE_FROM_QINGKAN -> RetrofitInstance("https://www.qk6.org/").create(ReadRetrofitService::class.java).searchFromQINGKAN(URLEncoder.encode(bookName, "gbk"))
-            else -> throw Exception("cannot get observable! Pls check tag!")
-        }
+        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
+            val bookNameEncoded = Constants.SEARCH_WEB_BOOK_NAME_MAP(searchWebBean.tag, bookName)
+            return when (searchWebBean.tag) {
+                Constants.RESOLVE_FROM_BIQUGE -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromBIQUGE(bookNameEncoded)
+                Constants.RESOLVE_FROM_DINGDIAN -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromDINGDIAN(bookNameEncoded)
+                Constants.RESOLVE_FROM_BIXIA -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromBIXIA(bookNameEncoded)
+                Constants.RESOLVE_FROM_AISHU -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromAISHUWANG(bookNameEncoded)
+                Constants.RESOLVE_FROM_QINGKAN -> RetrofitInstance(it).create(ReadRetrofitService::class.java).searchFromQINGKAN(bookNameEncoded)
+                else -> throw Exception("cannot get observable! Pls check tag!")
+            }
+        } ?: throw Exception("cannot get observable by  ${searchWebBean.tag}! Pls check tag!")
     }
 
+    @SuppressWarnings("unchecked")
     private fun getBookList(responseBody: ResponseBody): List<BookInfo>? {
-        return when (searchWebBean.tag) {
-            Constants.RESOLVE_FROM_BIQUGE -> SearchBookResolveUtil.resolveFromBIQUGE(responseBody)
-            Constants.RESOLVE_FROM_DINGDIAN -> SearchBookResolveUtil.resolveFromDINGDIAN(responseBody,bookName)
-            Constants.RESOLVE_FROM_BIXIA -> SearchBookResolveUtil.resolveFromBIXIA(responseBody)
-            Constants.RESOLVE_FROM_AISHU -> SearchBookResolveUtil.resolveFromAISHUWANG(responseBody)
-            Constants.RESOLVE_FROM_QINGKAN -> SearchBookResolveUtil.resolveFromQINGKAN(responseBody)
-            else -> throw Exception("cannot get observable! Pls check tag!")
-        }
+        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
+            return ReflectUtil.invokeMethod(SearchBookResolveUtil.Companion, "resolveFrom${searchWebBean.tag}", List::class.java, SearchResolveBean(it, bookName, responseBody)) as? List<BookInfo>
+        } ?: throw java.lang.Exception("cannot get ${searchWebBean.tag}'s booklist!")
     }
 
     interface OnSearchResult{
