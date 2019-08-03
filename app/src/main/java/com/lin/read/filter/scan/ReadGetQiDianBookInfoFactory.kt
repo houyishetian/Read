@@ -11,6 +11,7 @@ import com.lin.read.retrofit.RetrofitInstance
 import com.lin.read.utils.Constants
 import com.lin.read.utils.MessageUtils
 import okhttp3.ResponseBody
+import retrofit2.HttpException
 import rx.Observable
 import rx.Observer
 import rx.schedulers.Schedulers
@@ -91,6 +92,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 })
     }
 
+    @Suppress("UNREACHABLE_CODE")
     private fun getBookDetailsInfoAndFilter(searchInfo: ScanInfo,bookInfoList:List<BookLinkInfo>){
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
         val service = RetrofitInstance(searchInfo.mainUrl!![1]).create(ReadRetrofitService::class.java)
@@ -98,7 +100,18 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         val observableArray = arrayListOf<Observable<ResponseBody>>()
         bookInfoList.forEach{
             val bookId = StringUtils.getBookId(it.bookLink)
-            observableArray.add(service.getQiDianBookDetails(bookId).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()))
+            observableArray.add(service.getQiDianBookDetails(bookId).subscribeOn(Schedulers.io()).onErrorReturn {
+                Log.e("exception error", "${it.javaClass.name}")
+                when (it) {
+                    is HttpException -> {
+                        it.response()?.takeIf { it.code() >= 400 }?.errorBody().let {
+                            Log.e("error for current item", "${it?.string()}")
+                            return@onErrorReturn null
+                        } ?: throw  it
+                    }
+                    else -> throw  it
+                }
+            }.observeOn(Schedulers.io()))
         }
         Observable.merge(observableArray,20)
                 .subscribeOn(Schedulers.io())
@@ -113,7 +126,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                                 MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_GET_ONE)
                                 Log.e(tag,"find one：$bookInfo")
                             }
-                        }
+                        } ?: Log.e("meet error", "null response, skip error!")
                     }
 
                     override fun onError(e: Throwable?) {
@@ -125,7 +138,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                     }
 
                     override fun onCompleted() {
-                        Log.e(tag, "all completed, totally:${result.size}")
+                        Log.d(tag, "all completed, totally:${result.size}")
                         result.forEach {
                             it.webName = searchInfo.webName
                         }

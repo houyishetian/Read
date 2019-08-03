@@ -7,6 +7,8 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 class RetrofitInstance (baseUrl: String) {
@@ -24,7 +26,7 @@ class RetrofitInstance (baseUrl: String) {
                     override fun intercept(chain: Interceptor.Chain): Response {
                         val request = chain.request()
                         var response = chain.proceed(request)
-                        Log.e("Test","${request.url} --> ${response.code}")
+                        Log.e("intercept","${request.url} --> ${response.code}")
                         if ( response.code == 301 || response.code == 302) {
                             val location = response.headers["Location"]
                             Log.e("redirect url：", "location =$location")
@@ -34,6 +36,7 @@ class RetrofitInstance (baseUrl: String) {
                         return response
                     }
                 })
+//                .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("112.87.71.196", 9999)))
                 .build()
         retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
