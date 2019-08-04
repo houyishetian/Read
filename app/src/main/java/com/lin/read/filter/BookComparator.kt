@@ -44,11 +44,11 @@ class BookComparator(private val sortType: SortType, private val bookType: BookT
         return try {
             when (bookType) {
                 BookType.POSTION -> book0.position.let { book0.position - book1.position }
-                BookType.SCORE -> book0.score?.let { (book0.score.toFloat() - book1.score.toFloat()).toInt() } ?: 0
-                BookType.SCORE_NUM -> book0.scoreNum?.let { (book0.scoreNum.toFloat() - book1.scoreNum.toFloat()).toInt() } ?: 0
-                BookType.WORDS_NUM -> book0.wordsNum?.let { (book0.wordsNum.toFloat() - book1.wordsNum.toFloat()).toInt() } ?: 0
-                BookType.RECOMMEND -> book0.recommend?.let { (book0.recommend.toFloat() - book1.recommend.toFloat()).toInt() } ?: 0
-                BookType.VIP_CLICK -> book0.click?.let { (book0.click.toFloat() - book1.click.toFloat()).toInt() } ?: 0
+                BookType.SCORE -> book0.score?.let { (book0.score.toFloat() - book1.score.toFloat()).times(100).toInt() } ?: 0
+                BookType.SCORE_NUM -> book0.scoreNum?.let { (book0.scoreNum.toFloat() - book1.scoreNum.toFloat()).times(100).toInt() } ?: 0
+                BookType.WORDS_NUM -> book0.wordsNum?.let { (book0.wordsNum.toFloat() - book1.wordsNum.toFloat()).times(100).toInt() } ?: 0
+                BookType.RECOMMEND -> book0.recommend?.let { (book0.recommend.toFloat() - book1.recommend.toFloat()).times(100).toInt() } ?: 0
+                BookType.VIP_CLICK -> book0.click?.let { (book0.click.toFloat() - book1.click.toFloat()).times(100).toInt() } ?: 0
                 BookType.RAISE -> book0.raiseNum?.let { book0.raiseNum.toInt() - book1.raiseNum.toInt() } ?: 0
                 BookType.COMMENT -> book0.commentNum?.let { book0.commentNum.toInt() - book1.commentNum.toInt() } ?: 0
             }
