@@ -92,7 +92,6 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                 })
     }
 
-    @Suppress("UNREACHABLE_CODE")
     private fun getBookDetailsInfoAndFilter(searchInfo: ScanInfo,bookInfoList:List<BookLinkInfo>){
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
         val service = RetrofitInstance(searchInfo.mainUrl!![1]).create(ReadRetrofitService::class.java)
@@ -101,16 +100,10 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         bookInfoList.forEach{
             val bookId = StringUtils.getBookId(it.bookLink)
             observableArray.add(service.getQiDianBookDetails(bookId).subscribeOn(Schedulers.io()).onErrorReturn {
-                Log.e("exception error", "${it.javaClass.name}")
-                when (it) {
-                    is HttpException -> {
-                        it.response()?.takeIf { it.code() >= 400 }?.errorBody().let {
-                            Log.e("error for current item", "${it?.string()}")
-                            return@onErrorReturn null
-                        } ?: throw  it
-                    }
-                    else -> throw  it
-                }
+                (it as? HttpException)?.response()?.takeIf { it.code() >= 400 }?.errorBody()?.let {
+                    Log.e("error for current item", "${it.string()}")
+                    return@onErrorReturn null
+                } ?: throw  it
             }.observeOn(Schedulers.io()))
         }
         Observable.merge(observableArray,20)
