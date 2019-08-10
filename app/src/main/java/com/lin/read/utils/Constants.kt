@@ -84,5 +84,8 @@ class Constants {
         const val ROLE_PARAM = "param"
 
         const val CHAPTER_NUM_FOR_EACH_PAGE = 30
+
+        const val DEFAULT_SHARED_NAME = "BOOK_MARK_PREFS"
+        const val BOOK_MARK_LIST = "BOOK_MARK_LIST"
     }
 }

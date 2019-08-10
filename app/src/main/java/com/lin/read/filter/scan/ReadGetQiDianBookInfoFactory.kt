@@ -101,7 +101,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
             val bookId = StringUtils.getBookId(it.bookLink)
             observableArray.add(service.getQiDianBookDetails(bookId).subscribeOn(Schedulers.io()).onErrorReturn {
                 (it as? HttpException)?.response()?.takeIf { it.code() >= 400 }?.errorBody()?.let {
-                    Log.e("error for current item", "${it.string()}")
+                    Log.e("error for current item", it.string())
                     return@onErrorReturn null
                 } ?: throw  it
             }.observeOn(Schedulers.io()))

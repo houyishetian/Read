@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.adapter.BookMarksAdapter
 import com.lin.read.bookmark.BookMarkBean
-import com.lin.read.bookmark.BookMarkSharePres
+import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.decoration.ScanBooksItemDecoration
 import com.lin.read.utils.Constants
 import com.lin.read.view.DialogUtil
@@ -72,8 +72,8 @@ class BookMarksFragment : Fragment() {
     private fun getData(afterDelete:Boolean = false){
         DialogUtil.getInstance().showLoadingDialog(activity)
         Handler().post{
-            if(afterDelete) BookMarkSharePres.deleteBookMarks(activity,(book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems())
-            val bookMarksList = BookMarkSharePres.getBookMarkBeans(activity)
+            if (afterDelete) BookMarkUtil.getInstance(activity).deleteBookMarks((book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems())
+            val bookMarksList = BookMarkUtil.getInstance(activity).getAllBookMarks()
             activity.runOnUiThread{
                 DialogUtil.getInstance().hideLoadingView()
                 if(!bookMarksList.isNullOrEmpty()){

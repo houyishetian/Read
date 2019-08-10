@@ -20,7 +20,7 @@ import com.lin.read.R
 import com.lin.read.adapter.BookChapterAdapter
 import com.lin.read.adapter.DialogSearchChapterAdapter
 import com.lin.read.bookmark.BookMarkBean
-import com.lin.read.bookmark.BookMarkSharePres
+import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.filter.BookInfo
 import com.lin.read.filter.search.BookChapterInfo
 import com.lin.read.filter.search.CurrentReadInfo
@@ -119,7 +119,7 @@ class ReadBookActivity : Activity() {
         chapter_search_iv.setOnClickListener {
             showSearchChapterLayout()
         }
-        chapter_search_et.setOnEditorActionListener { v, actionId, event ->
+        chapter_search_et.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 chapter_search_btn.performClick()
             }
@@ -128,17 +128,17 @@ class ReadBookActivity : Activity() {
         chapter_search_btn.setOnClickListener {
             searchByChapterName()
         }
-        chapter_content.setOnTouchListener { v, event ->
+        chapter_content.setOnTouchListener { _, _ ->
             hideSearchChapterLayout()
             hideSoft()
             return@setOnTouchListener false
         }
-        read_scroll.setOnTouchListener { v, event ->
+        read_scroll.setOnTouchListener { _, _ ->
             hideSearchChapterLayout()
             hideSoft()
             return@setOnTouchListener false
         }
-        page_skip_et.setOnEditorActionListener { v, actionId, event ->
+        page_skip_et.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 page_skip.performClick()
             }
@@ -225,7 +225,7 @@ class ReadBookActivity : Activity() {
                 runOnUiThread {
                     DialogUtil.getInstance().hideLoadingView()
                     takeIf { allInfo.isNotEmpty() && splitInfos.isNotEmpty() }?.run {
-                        val bookMarkBean = BookMarkSharePres.getBookMark(this@ReadBookActivity, bookInfo)?.apply {
+                        val bookMarkBean = BookMarkUtil.getInstance(this@ReadBookActivity).getBookMark(bookInfo)?.apply {
                             page = splitInfos.takeIf { page >= it.size }?.size?.minus(1) ?: page
                             index = allInfo.takeIf { index >= it.size }?.size?.minus(1) ?: index
                         } ?: BookMarkBean()
@@ -283,7 +283,7 @@ class ReadBookActivity : Activity() {
                         page = currentReadInfo.bookChapterInfo.page
                         index = currentReadInfo.bookChapterInfo.index
                         lastReadChapter = currentReadInfo.bookChapterInfo.chapterName
-                        BookMarkSharePres.saveBookMark(this@ReadBookActivity, this)
+                        BookMarkUtil.getInstance(this@ReadBookActivity).saveBookMark(this)
                     }
                     Handler().post {
                         read_scroll.scrollTo(0, 0)

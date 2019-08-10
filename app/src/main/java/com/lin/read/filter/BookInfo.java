@@ -2,6 +2,7 @@ package com.lin.read.filter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.lin.read.filter.scan.StringUtils;
 
 /**
  * Created by lisonglin on 2017/10/15.
@@ -242,4 +243,11 @@ public class BookInfo implements Parcelable{
         }
     };
 
+    public String getKey() {
+        if (StringUtils.isEmpty(getBookLink()) || StringUtils.isEmpty(getWebType())
+                || StringUtils.isEmpty(getBookName()) || StringUtils.isEmpty(getAuthorName())) {
+            return null;
+        }
+        return getWebType() + "_" + getBookName() + "_" + getAuthorName() + "_" + getBookLink();
+    }
 }
