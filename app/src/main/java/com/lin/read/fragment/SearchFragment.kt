@@ -56,7 +56,7 @@ class SearchFragment : Fragment() {
             addItemDecoration(ScanBooksItemDecoration(activity))
             adapter = SearchBookItemAdapter(activity, allBookInfo)
         }
-        et_search_bookname.setOnEditorActionListener loop@{ v, actionId, event ->
+        et_search_bookname.setOnEditorActionListener loop@{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 hideSoft()
                 search()
@@ -71,11 +71,9 @@ class SearchFragment : Fragment() {
 
     private fun getWebTypeBeans(): List<SearchWebBean> {
         return mutableListOf<SearchWebBean>().apply {
-            add(SearchWebBean(Constants.WEB_NAME_BIQUGE, Constants.RESOLVE_FROM_BIQUGE))
-            add(SearchWebBean(Constants.WEB_NAME_DINGDIAN, Constants.RESOLVE_FROM_DINGDIAN))
-            add(SearchWebBean(Constants.WEB_NAME_BIXIA, Constants.RESOLVE_FROM_BIXIA, default = true))
-            add(SearchWebBean(Constants.WEB_NAME_AISHU, Constants.RESOLVE_FROM_AISHU))
-            add(SearchWebBean(Constants.WEB_NAME_QINGKAN, Constants.RESOLVE_FROM_QINGKAN))
+            Constants.SEARCH_WEB_NAME_MAP.forEach { tag, webName ->
+                add(SearchWebBean(webName, tag))
+            }
         }
     }
 

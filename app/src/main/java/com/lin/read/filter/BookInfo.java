@@ -244,12 +244,4 @@ public class BookInfo implements Parcelable, Serializable {
             return new BookInfo[size];
         }
     };
-
-    public String getKey() {
-        if (StringUtils.isEmpty(getBookLink()) || StringUtils.isEmpty(getWebType())
-                || StringUtils.isEmpty(getBookName()) || StringUtils.isEmpty(getAuthorName())) {
-            return null;
-        }
-        return getWebType() + "_" + getBookName() + "_" + getAuthorName() + "_" + getBookLink();
-    }
 }

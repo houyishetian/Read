@@ -19,9 +19,9 @@ import android.widget.TextView
 import com.lin.read.R
 import com.lin.read.adapter.BookChapterAdapter
 import com.lin.read.adapter.DialogSearchChapterAdapter
-import com.lin.read.bookmark.BookMarkBean
 import com.lin.read.bookmark.BookMarkUtil
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.BookMark
+import com.lin.read.filter.ReadBookBean
 import com.lin.read.filter.search.BookChapterInfo
 import com.lin.read.filter.search.CurrentReadInfo
 import com.lin.read.filter.search.GetChapterContentTask
@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.layout_book_chapter.*
 import java.text.NumberFormat
 
 class ReadBookActivity : Activity() {
-    private lateinit var bookInfo: BookInfo
+    private lateinit var readBookBean:ReadBookBean
     private lateinit var currentReadInfo: CurrentReadInfo
     private var currentShownPage:Int = 0
     private lateinit var currentDisplayChapterList:MutableList<BookChapterInfo>
@@ -47,13 +47,13 @@ class ReadBookActivity : Activity() {
     }
 
     private fun init() {
-        bookInfo = intent.getParcelableExtra(Constants.KEY_SKIP_TO_READ)
+        readBookBean = intent.getParcelableExtra(Constants.KEY_SKIP_TO_READ)
         chaptersList = mutableListOf()
-        val bookChapterInfo = BookChapterInfo(bookInfo.webType, bookInfo.webName, "", "", "")
+        val bookChapterInfo = BookChapterInfo(readBookBean.webType, Constants.SEARCH_WEB_NAME_MAP[readBookBean.webType]!!, "", "", "")
         currentReadInfo = CurrentReadInfo(false, false, false, false, bookChapterInfo)
         splitChaptersList = mutableListOf()
         currentDisplayChapterList = mutableListOf()
-        chapter_bookName.text = bookInfo.bookName
+        chapter_bookName.text = readBookBean.bookName
 
         lv_chapters.adapter = BookChapterAdapter(this, currentDisplayChapterList, currentReadInfo.bookChapterInfo).apply {
             setOnChapterClickListener {
@@ -220,16 +220,16 @@ class ReadBookActivity : Activity() {
 
     private fun getChapterInfo() {
         DialogUtil.getInstance().showLoadingDialog(this)
-        GetChapterInfoTask(bookInfo, object : GetChapterInfoTask.OnTaskListener {
+        GetChapterInfoTask(readBookBean, object : GetChapterInfoTask.OnTaskListener {
             override fun onSucc(allInfo: List<BookChapterInfo>, splitInfos: List<List<BookChapterInfo>>) {
                 runOnUiThread {
                     DialogUtil.getInstance().hideLoadingView()
                     takeIf { allInfo.isNotEmpty() && splitInfos.isNotEmpty() }?.run {
-                        val bookMarkBean = BookMarkUtil.getInstance(this@ReadBookActivity).getAllBookMarks().firstOrNull { it.bookInfo.key == bookInfo.key }
+                        val bookMarkBean = BookMarkUtil.getInstance(this@ReadBookActivity).getAllBookMarks().firstOrNull { it.markKey == readBookBean.markKey }
                                 ?.apply {
                                     page = splitInfos.takeIf { page >= it.size }?.size?.minus(1) ?: page
                                     index = allInfo.takeIf { index >= it.size }?.size?.minus(1) ?: index
-                                } ?: BookMarkBean()
+                                } ?: BookMark(readBookBean.webType, readBookBean.bookName, readBookBean.authorName, readBookBean.chapterLink)
                         chapter_total_page.text = "${splitInfos.size}"
                         chaptersList.clear()
                         chaptersList.addAll(allInfo)
@@ -278,11 +278,10 @@ class ReadBookActivity : Activity() {
                                 minimumFractionDigits = 2
                             }.format((currentReadInfo.bookChapterInfo.index + 1).toFloat() / chaptersList.size)
                     //save bookmark
-                    BookMarkBean().run {
-                        bookInfo = this@ReadBookActivity.bookInfo
-                        lastReadTime = System.currentTimeMillis()
+                    BookMark(readBookBean.webType, readBookBean.bookName, readBookBean.authorName, readBookBean.chapterLink).run {
                         page = currentReadInfo.bookChapterInfo.page
                         index = currentReadInfo.bookChapterInfo.index
+                        lastReadTime = System.currentTimeMillis()
                         lastReadChapter = currentReadInfo.bookChapterInfo.chapterName
                         BookMarkUtil.getInstance(this@ReadBookActivity).saveBookMark(this)
                     }

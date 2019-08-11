@@ -39,7 +39,7 @@ class SearchBookResolveUtil {
                         StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             it.webType = Constants.RESOLVE_FROM_BIQUGE
-                            it.webName = Constants.WEB_NAME_BIQUGE
+                            it.webName = Constants.SEARCH_WEB_NAME_MAP[it.webType]
                             result.add(it)
                         }
                     } ?: takeIf { current == "</tr>" }?.run {
@@ -83,7 +83,7 @@ class SearchBookResolveUtil {
                         StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([^\"^\n]+)</td>", listOf(1), true)?.run {
                             it.lastUpdate = this[0]
                             it.webType = Constants.RESOLVE_FROM_DINGDIAN
-                            it.webName = Constants.WEB_NAME_DINGDIAN
+                            it.webName = Constants.SEARCH_WEB_NAME_MAP[it.webType]
                             result.add(it)
                         }
                     } ?: takeIf { current == "</tr>" }?.apply {
@@ -95,7 +95,7 @@ class SearchBookResolveUtil {
                 bookInfo = BookInfo()
                 bookInfo?.run {
                     webType = Constants.RESOLVE_FROM_DINGDIAN
-                    webName = Constants.WEB_NAME_DINGDIAN
+                    webName = Constants.SEARCH_WEB_NAME_MAP[webType]
                     bookName = searchResolveBean.bookName
                 }
                 content.forEach {
@@ -152,7 +152,7 @@ class SearchBookResolveUtil {
                             it.authorName = this[0]
                             it.lastUpdate = this[1]
                             it.webType = Constants.RESOLVE_FROM_BIXIA
-                            it.webName = Constants.WEB_NAME_BIXIA
+                            it.webName = Constants.SEARCH_WEB_NAME_MAP[it.webType]
                             result.add(it)
                             bookInfo = null
                         }
@@ -194,7 +194,7 @@ class SearchBookResolveUtil {
                         StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong3\">([^\"^\n]+)</li>", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             it.webType = Constants.RESOLVE_FROM_AISHU
-                            it.webName = Constants.WEB_NAME_AISHU
+                            it.webName = Constants.SEARCH_WEB_NAME_MAP[it.webType]
                             result.add(it)
                         }
                     } ?: takeIf { current == "</ul>" }?.apply {
@@ -216,8 +216,8 @@ class SearchBookResolveUtil {
                             listOf(1,2,3))?.run {
                         bookInfo = BookInfo()
                         bookInfo?.let {
-                            it.webName = Constants.WEB_NAME_QINGKAN
                             it.webType = Constants.RESOLVE_FROM_QINGKAN
+                            it.webName = Constants.SEARCH_WEB_NAME_MAP[it.webType]
                             it.bookLink = this[0].replace("info.html", "txt.html")
                             it.bookName = this[1]
                             it.authorName = this[2].replace("[ /]".toRegex(), "")

@@ -29,6 +29,14 @@ class Constants {
         const val RESOLVE_FROM_AISHU = "AISHUWANG"
         const val RESOLVE_FROM_QINGKAN = "QINGKAN"
 
+        val SEARCH_WEB_NAME_MAP: LinkedHashMap<String, String> = linkedMapOf<String, String>().apply {
+            put(RESOLVE_FROM_BIQUGE, "笔趣阁")
+            put(RESOLVE_FROM_DINGDIAN, "顶点")
+            put(RESOLVE_FROM_BIXIA, "笔下")
+            put(RESOLVE_FROM_AISHU, "爱书网")
+            put(RESOLVE_FROM_QINGKAN, "请看")
+        }
+
         val SEARCH_WEB_BASEURL_MAP:HashMap<String,String> = hashMapOf<String, String>().apply {
             put(RESOLVE_FROM_BIQUGE, "http://www.biquge5200.com/")
             put(RESOLVE_FROM_DINGDIAN, "https://www.x23us.com/")
@@ -66,12 +74,6 @@ class Constants {
             }
         }
 
-        const val WEB_NAME_BIQUGE = "笔趣阁"
-        const val WEB_NAME_DINGDIAN = "顶点"
-        const val WEB_NAME_BIXIA = "笔下"
-        const val WEB_NAME_AISHU = "爱书网"
-        const val WEB_NAME_QINGKAN = "请看"
-
         const val WEB_QIDIAN = "起点"
         const val WEB_QIDIAN_FINISH = "完本"
         const val WEB_ZONGHENG = "纵横"
@@ -88,5 +90,6 @@ class Constants {
         const val DEFAULT_SHARED_NAME = "BOOK_MARK_PREFS"
         const val BOOK_MARK_LIST = "BOOK_MARK_LIST"
         const val BOOK_MARK_NEW_LIST = "NEW_BOOK_MARK_LIST"
+        const val BOOK_MARK_NEW_LIST2 = "NEW_BOOK_MARK_LIST2"
     }
 }

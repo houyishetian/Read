@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.activity.ReadBookActivity
 import com.lin.read.filter.BookInfo
+import com.lin.read.filter.ReadBookBean
 import com.lin.read.utils.Constants
 import kotlinx.android.synthetic.main.item_search_book.view.*
 
@@ -41,7 +42,7 @@ class SearchBookItemAdapter(private val context: Context, private val allBookDat
             }
             holder?.itemView?.book_item_read?.setOnClickListener {
                 val intent = Intent(context, ReadBookActivity::class.java)
-                intent.putExtra(Constants.KEY_SKIP_TO_READ, this as Parcelable)
+                intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, bookLink) as Parcelable)
                 context.startActivity(intent)
             }
         }

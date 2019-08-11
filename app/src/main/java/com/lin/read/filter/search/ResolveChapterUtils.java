@@ -2,7 +2,7 @@ package com.lin.read.filter.search;
 
 import android.util.Log;
 import com.lin.read.download.HttpUtils;
-import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.ReadBookBean;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.StringKtUtil;
@@ -22,12 +22,12 @@ import java.util.List;
  */
 
 public class ResolveChapterUtils {
-    public static List<BookChapterInfo> getChapterInfo(BookInfo bookInfo)
+    public static List<BookChapterInfo> getChapterInfo(ReadBookBean readBookBean)
             throws IOException {
-        if (bookInfo == null) {
+        if (readBookBean == null) {
             return null;
         }
-        String url = bookInfo.getBookLink();
+        String url = readBookBean.getChapterLink();
         if (StringUtils.isEmpty(url)) {
             return null;
         }
@@ -38,7 +38,7 @@ public class ResolveChapterUtils {
         String regex;
         List<Integer> allGroups = Arrays.asList(1,2);
         String uniCodeType=StringUtils.getCharSet(conn);
-        switch (bookInfo.getWebType()) {
+        switch (readBookBean.getWebType()) {
             case Constants.RESOLVE_FROM_NOVEL80:
                 //<li><a rel="nofollow" href="http://www.qiushu.cc/t/67053/17977700.html">第1章 脱去球衣，换上西服</a></li>
                 regex = "<li><a rel=\"nofollow\" href=\"([^\"^\n]{1,})\">([^\"^\n]{1,})</a></li>";
@@ -72,23 +72,23 @@ public class ResolveChapterUtils {
                 conn.getInputStream(), uniCodeType));
 
         String current;
-        Log.e("Test", "开始解析目录:"+bookInfo.getWebType()+"-->"+bookInfo.getBookLink());
+        Log.e("Test", "开始解析目录:"+readBookBean.getWebType()+"-->"+readBookBean.getChapterLink());
         //for Ai Shu Wang start
         boolean isStart=false;
-        String webType = bookInfo.getWebType();
-        String webName = bookInfo.getWebName();
+        String webType = readBookBean.getWebType();
+        String webName =Constants.Companion.getSEARCH_WEB_NAME_MAP().get(readBookBean.getWebType());
         String chapterLink;
         String chapterName;
         String chapterNameOri;
         //for Ai Shu Wang end
         while ((current = reader.readLine()) != null) {
             current = current.trim();
-            if(Constants.RESOLVE_FROM_DINGDIAN.equals(bookInfo.getWebType())){
+            if(Constants.RESOLVE_FROM_DINGDIAN.equals(readBookBean.getWebType())){
                 List<List<String>> currentResult = StringKtUtil.Companion.getDataListFromContentByRegex(current.trim(), regex, allGroups);
                 if (currentResult != null) {
                     for (List<String> item : currentResult) {
                         if (item != null && item.size() == allGroups.size()) {
-                            chapterLink = bookInfo.getBookLink() + item.get(0);
+                            chapterLink = readBookBean.getChapterLink() + item.get(0);
                             chapterNameOri = item.get(1);
                             chapterName = StringKtUtil.Companion.removeUnusefulCharsFromChapter(chapterNameOri);
                             BookChapterInfo bookChapterInfo = new BookChapterInfo(webType, webName, chapterLink, chapterName, chapterNameOri);
@@ -97,7 +97,7 @@ public class ResolveChapterUtils {
                     }
                     break;
                 }
-            } else if (Constants.RESOLVE_FROM_AISHU.equals(bookInfo.getWebType())) {
+            } else if (Constants.RESOLVE_FROM_AISHU.equals(readBookBean.getWebType())) {
                 if (!isStart && current.trim().equals("<div class=\"neirong\">")) {
                     isStart = true;
                     continue;
@@ -117,7 +117,7 @@ public class ResolveChapterUtils {
                         break;
                     }
                 }
-            }else if(Constants.RESOLVE_FROM_BIXIA.equals(bookInfo.getWebType())){
+            }else if(Constants.RESOLVE_FROM_BIXIA.equals(readBookBean.getWebType())){
                 if (!isStart && current.equals("<dl>")) {
                     isStart = true;
                     continue;

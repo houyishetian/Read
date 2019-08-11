@@ -10,12 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.activity.ReadBookActivity
-import com.lin.read.bookmark.BookMarkBean
+import com.lin.read.filter.BookMark
+import com.lin.read.filter.ReadBookBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.DateUtils
 import kotlinx.android.synthetic.main.item_book_mark.view.*
 
-class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData: List<BookMarkBean>) : RecyclerView.Adapter<BookMarksAdapter.ViewHolder>() {
+class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData: List<BookMark>) : RecyclerView.Adapter<BookMarksAdapter.ViewHolder>() {
     private var isBinding = false
     lateinit var onCheckBoxClickListener: OnCheckBoxClickListener
     lateinit var onItemLongClickListener: OnItemLongClickListener
@@ -35,10 +36,10 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         isBinding = true
         bookMarksData[position].run {
-            holder?.itemView?.mark_item_bookname?.text = bookInfo.bookName
-            holder?.itemView?.mark_item_authorname?.text = bookInfo.authorName
-            holder?.itemView?.mark_item_booktype?.text = bookInfo.bookType
-            holder?.itemView?.mark_item_web_name?.text = bookInfo.webName
+            holder?.itemView?.mark_item_bookname?.text = bookName
+            holder?.itemView?.mark_item_authorname?.text = authorName
+            holder?.itemView?.mark_item_booktype?.visibility = View.GONE
+            holder?.itemView?.mark_item_web_name?.text = Constants.SEARCH_WEB_NAME_MAP[webType]
             holder?.itemView?.mark_item_lastchapter?.text = lastReadChapter
             holder?.itemView?.mark_item_lastread?.text = DateUtils.formatTime(lastReadTime)
             if(isShowCheckBox){
@@ -51,7 +52,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
             }
             holder?.itemView?.mark_item_continue_read?.setOnClickListener {
                 val intent = Intent(fragment.activity, ReadBookActivity::class.java)
-                intent.putExtra(Constants.KEY_SKIP_TO_READ, bookInfo as Parcelable)
+                intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, chapterLink) as Parcelable)
                 fragment.startActivityForResult(intent, Constants.READ_REQUEST_CODE)
             }
             holder?.itemView?.mark_select_cb?.setOnCheckedChangeListener { _, isChecked ->
@@ -69,7 +70,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
         fun onCheckBoxClick()
     }
 
-    fun getAllSelectedItems(): List<BookMarkBean> {
+    fun getAllSelectedItems(): List<BookMark> {
         return bookMarksData.filter { it.isChecked }
     }
 

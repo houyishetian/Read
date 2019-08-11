@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.adapter.BookMarksAdapter
-import com.lin.read.bookmark.BookMarkBean
 import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.decoration.ScanBooksItemDecoration
+import com.lin.read.filter.BookMark
 import com.lin.read.utils.Constants
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_book_marks.*
 
 class BookMarksFragment : Fragment() {
-    private lateinit var allBookmarks: MutableList<BookMarkBean>
+    private lateinit var allBookmarks: MutableList<BookMark>
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(activity).inflate(R.layout.fragment_book_marks,null)
     }

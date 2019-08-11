@@ -2,6 +2,7 @@ package com.lin.read.bookmark
 
 import android.content.Context
 import com.google.gson.GsonBuilder
+import com.lin.read.filter.BookMark
 import com.lin.read.utils.Constants
 import com.lin.read.utils.SharedUtil
 import com.lin.read.utils.SingleInstanceHolder
@@ -12,6 +13,8 @@ class BookMarkUtil private constructor(private val ctx: Context) {
     private var markKeysList: String by SharedUtil(ctx, Constants.BOOK_MARK_LIST, "")
 
     private var newMarksList: MutableList<BookMarkBean> by SharedUtil(ctx, Constants.BOOK_MARK_NEW_LIST, mutableListOf())
+
+    private var newMarksList2: MutableList<BookMark> by SharedUtil(ctx, Constants.BOOK_MARK_NEW_LIST2, mutableListOf())
 
     fun syncOldData() {
         markKeysList.takeIf { it != "" }?.let { keyListStr ->
@@ -37,43 +40,54 @@ class BookMarkUtil private constructor(private val ctx: Context) {
                 }
             }
         }
+        syncOldData2()
     }
 
-    fun saveBookMark(bookMarkBean: BookMarkBean) {
-        bookMarkBean.bookInfo.key?.let { markKey ->
-            newMarksList.firstOrNull { it.bookInfo.key == markKey }?.let {
-                // this is an existing bookmark, update it
-                it.takeIf { it.page != bookMarkBean.page || it.index != bookMarkBean.index }?.let {
-                    newMarksList = mutableListOf<BookMarkBean>().apply {
-                        newMarksList.forEach {
-                            if (it.bookInfo.key != markKey) {
-                                add(it)
-                            }
-                        }
-                        add(bookMarkBean)
-                    }
-                }
-                return
-            } ?: let {
-                // this is a new bookmark, save it
-                newMarksList = mutableListOf<BookMarkBean>().apply {
-                    addAll(newMarksList)
-                    add(bookMarkBean)
+    private fun syncOldData2() {
+        newMarksList.takeIf { it.isNotEmpty() && newMarksList2.isEmpty() }?.let {
+            newMarksList2 = mutableListOf<BookMark>().apply {
+                it.forEach {
+                    add(BookMark(it.bookInfo.webType, it.bookInfo.bookName, it.bookInfo.authorName, it.bookInfo.bookLink, it.page, it.index, it.lastReadTime, it.lastReadChapter))
                 }
             }
         }
     }
 
-    fun getAllBookMarks(): List<BookMarkBean> {
-        return newMarksList.apply {
+    fun saveBookMark(bookMark: BookMark) {
+        bookMark.markKey.let { markKey ->
+            newMarksList2.firstOrNull { it.markKey == markKey }?.let {
+                // this is an existing bookmark, update it
+                it.takeIf { it.page != bookMark.page || it.index != bookMark.index }?.let {
+                    newMarksList2 = mutableListOf<BookMark>().apply {
+                        newMarksList2.forEach {
+                            if (it.markKey != markKey) {
+                                add(it)
+                            }
+                        }
+                        add(bookMark)
+                    }
+                }
+                return
+            } ?: let {
+                // this is a new bookmark, save it
+                newMarksList2 = mutableListOf<BookMark>().apply {
+                    addAll(newMarksList2)
+                    add(bookMark)
+                }
+            }
+        }
+    }
+
+    fun getAllBookMarks(): List<BookMark> {
+        return newMarksList2.apply {
             sortByDescending { it.lastReadTime }
         }
     }
 
-    fun deleteBookMarks(deletedItems: List<BookMarkBean>) {
-        newMarksList = mutableListOf<BookMarkBean>().apply {
-            addAll(newMarksList.filter { pendingAddedItem ->
-                deletedItems.firstOrNull { it.bookInfo.key == pendingAddedItem.bookInfo.key } == null
+    fun deleteBookMarks(deletedItems: List<BookMark>) {
+        newMarksList2 = mutableListOf<BookMark>().apply {
+            addAll(newMarksList2.filter { pendingAddedItem ->
+                deletedItems.firstOrNull { it.markKey == pendingAddedItem.markKey } == null
             })
         }
     }
