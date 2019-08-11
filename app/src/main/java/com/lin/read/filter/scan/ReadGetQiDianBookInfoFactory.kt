@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.util.Log
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.qidian.QiDianResolveUtil
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
@@ -95,7 +95,7 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
     private fun getBookDetailsInfoAndFilter(searchInfo: ScanInfo,bookInfoList:List<BookLinkInfo>){
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_BOOK_INFO_BY_CONDITION_START)
         val service = RetrofitInstance(searchInfo.mainUrl!![1]).create(ReadRetrofitService::class.java)
-        val result = mutableListOf<BookInfo>()
+        val result = mutableListOf<ScanBookBean>()
         val observableArray = arrayListOf<Observable<ResponseBody>>()
         bookInfoList.forEach{
             val bookId = StringUtils.getBookId(it.bookLink)
@@ -132,9 +132,6 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
 
                     override fun onCompleted() {
                         Log.d(tag, "all completed, totally:${result.size}")
-                        result.forEach {
-                            it.webName = searchInfo.webName
-                        }
                         (context as Activity).runOnUiThread{
                             onScanResult.onSucceed(result.size, result)
                         }

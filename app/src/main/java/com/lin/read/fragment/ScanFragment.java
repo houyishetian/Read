@@ -30,7 +30,7 @@ import com.lin.read.decoration.ScanBooksItemDecoration;
 import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.filter.BookComparator;
 import com.lin.read.filter.BookComparatorUtil;
-import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.*;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
@@ -61,7 +61,7 @@ public class ScanFragment extends Fragment {
 
     private RecyclerView allBooksRcv;
     private ScanBookItemAdapter allBookAdapter;
-    private ArrayList<BookInfo> allBookData;
+    private ArrayList<ScanBookBean> allBookData;
     private TextView emptyTv;
 
     private Button scanOK;
@@ -321,8 +321,8 @@ public class ScanFragment extends Fragment {
 
         allBookAdapter.setOnBookItemClickListener(new ScanBookItemAdapter.OnBookItemClickListener() {
             @Override
-            public void onBookItemClick(BookInfo bookInfo) {
-                ((MainActivity)getActivity()).clickScanBookItem(bookInfo.getBookName());
+            public void onBookItemClick(ScanBookBean scanBookBean) {
+                ((MainActivity)getActivity()).clickScanBookItem(scanBookBean.getBookName());
             }
         });
     }
@@ -398,7 +398,7 @@ public class ScanFragment extends Fragment {
                     if (data != null) {
                         emptyTv.setVisibility(View.GONE);
                         allBooksRcv.setVisibility(View.VISIBLE);
-                        ArrayList<BookInfo> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
+                        ArrayList<ScanBookBean> allBookDataFromScan = data.getBundleExtra(Constants.KEY_INTENT_FOR_BOOK_DATA).getParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA);
                         switch (scanWebTypeAdapter.getCheckedText()){
                             case Constants.WEB_QIDIAN:
                             case Constants.WEB_QIDIAN_FINISH:

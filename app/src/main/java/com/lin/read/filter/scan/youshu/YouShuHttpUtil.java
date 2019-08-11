@@ -1,8 +1,7 @@
 package com.lin.read.filter.scan.youshu;
 
 import android.util.Log;
-import com.lin.read.filter.BookInfo;
-import com.lin.read.filter.scan.ScanInfo;
+import com.lin.read.filter.ScanBookBean;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.StringKtUtil;
 
@@ -13,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class YouShuHttpUtil {
-    public static ArrayList<Object> getAllBookInfo(ScanInfo searchInfo, Reader charReader) throws Exception {
+    public static ArrayList<Object> getAllBookInfo(Reader charReader) throws Exception {
         ArrayList<Object> result = new ArrayList<>();
         BufferedReader reader = new BufferedReader(charReader);
         String current;
@@ -37,16 +36,7 @@ public class YouShuHttpUtil {
                 Log.e("Test，共：", "" + bookinfos.size());
                 for (int i = 0; i < bookinfos.size(); i++) {
                     List<String> item = bookinfos.get(i);
-                    BookInfo bookInfo = new BookInfo();
-                    bookInfo.setBookName(item.get(0));
-                    bookInfo.setWebName(Constants.WEB_YOU_SHU);
-                    bookInfo.setWebType(searchInfo.getWebName());
-                    bookInfo.setScoreNum(item.get(1));
-                    bookInfo.setAuthorName(item.get(2));
-                    bookInfo.setWordsNum(item.get(3));
-                    bookInfo.setLastUpdate(item.get(4));
-                    bookInfo.setScore(item.get(5));
-                    bookInfo.setPosition(i);
+                    ScanBookBean bookInfo = new ScanBookBean(Constants.WEB_YOU_SHU,item.get(0),item.get(2),item.get(3),item.get(5),item.get(1),item.get(4),"",i);
                     result.add(bookInfo);
                 }
             }

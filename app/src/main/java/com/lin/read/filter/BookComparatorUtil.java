@@ -69,23 +69,8 @@ public class BookComparatorUtil {
             case SortInfo.QD_ID_SORT_BY_SCORE_NUM:
                 bookType = BookComparator.BookType.SCORE_NUM;
                 break;
-            case SortInfo.ZH_ID_SORT_BY_RAISE:
-                bookType = BookComparator.BookType.RAISE;
-                break;
-            case SortInfo.ZH_ID_SORT_BY_COMMENT:
-                bookType = BookComparator.BookType.COMMENT;
-                break;
             case SortInfo.QD_ID_SORT_BY_WORDS:
-            case SortInfo.ZH_ID_SORT_BY_WORDS:
                 bookType = BookComparator.BookType.WORDS_NUM;
-                break;
-            case SortInfo.QD_ID_SORT_BY_RECOMMEND:
-            case SortInfo.ZH_ID_SORT_BY_RECOMMEND:
-                bookType = BookComparator.BookType.RECOMMEND;
-                break;
-            case SortInfo.QD_ID_SORT_BY_VIP_CLICK:
-            case SortInfo.ZH_ID_SORT_BY_CLICK:
-                bookType = BookComparator.BookType.VIP_CLICK;
                 break;
         }
         return bookType;
@@ -97,7 +82,7 @@ public class BookComparatorUtil {
 
     private Dialog sortDialog;
 
-    public void showSortDialog(Activity activity, final ArrayList<BookInfo> allBookData, final OnSortCompletedListener onSortCompletedListener) {
+    public void showSortDialog(Activity activity, final ArrayList<ScanBookBean> allBookData, final OnSortCompletedListener onSortCompletedListener) {
         if (allBookData == null || allBookData.size() == 0) {
             return;
         }
@@ -146,11 +131,11 @@ public class BookComparatorUtil {
         void onSortCompleted();
     }
 
-    private List<SortInfo> getSortInfoData(BookInfo oneItem) {
-        if (oneItem == null || StringUtils.isEmpty(oneItem.getWebName())) {
+    private List<SortInfo> getSortInfoData(ScanBookBean oneItem) {
+        if (oneItem == null || StringUtils.isEmpty(oneItem.getScanWebName())) {
             return null;
         }
-        if(Constants.WEB_QIDIAN.equals(oneItem.getWebName()) || Constants.WEB_YOU_SHU.equals(oneItem.getWebName()) || Constants.WEB_QIDIAN_FINISH.equals(oneItem.getWebName())){
+        if(Constants.WEB_QIDIAN.equals(oneItem.getScanWebName()) || Constants.WEB_YOU_SHU.equals(oneItem.getScanWebName()) || Constants.WEB_QIDIAN_FINISH.equals(oneItem.getScanWebName())){
             List<SortInfo> allSortInfo = new ArrayList<>();
             allSortInfo.add(new SortInfo(SortInfo.SORT_BY_DEFAULT,SortInfo.ID_SORT_BY_DEFAULT));
             if(!TextUtils.isEmpty(oneItem.getScore())){
@@ -161,31 +146,6 @@ public class BookComparatorUtil {
             }
             if(!TextUtils.isEmpty(oneItem.getWordsNum())){
                 allSortInfo.add(new SortInfo(SortInfo.QD_SORT_BY_WORDS_NUM,SortInfo.QD_ID_SORT_BY_WORDS));
-            }
-            if(!TextUtils.isEmpty(oneItem.getRecommend())){
-                allSortInfo.add(new SortInfo(SortInfo.QD_SORT_BY_RECOMMEND,SortInfo.QD_ID_SORT_BY_RECOMMEND));
-            }
-            if(!TextUtils.isEmpty(oneItem.getClick())){
-                allSortInfo.add(new SortInfo(SortInfo.QD_SORT_BY_VIP_CLICK,SortInfo.QD_ID_SORT_BY_VIP_CLICK));
-            }
-            return allSortInfo;
-        }else if(Constants.WEB_ZONGHENG.equals(oneItem.getWebName())){
-            List<SortInfo> allSortInfo = new ArrayList<>();
-            allSortInfo.add(new SortInfo(SortInfo.SORT_BY_DEFAULT,SortInfo.ID_SORT_BY_DEFAULT));
-            if(!TextUtils.isEmpty(oneItem.getRaiseNum())){
-                allSortInfo.add(new SortInfo(SortInfo.ZH_SORT_BY_RAISE,SortInfo.ZH_ID_SORT_BY_RAISE));
-            }
-            if(!TextUtils.isEmpty(oneItem.getCommentNum())){
-                allSortInfo.add(new SortInfo(SortInfo.ZH_SORT_BY_COMMENT,SortInfo.ZH_ID_SORT_BY_COMMENT));
-            }
-            if(!TextUtils.isEmpty(oneItem.getWordsNum())){
-                allSortInfo.add(new SortInfo(SortInfo.ZH_SORT_BY_WORDS_NUM,SortInfo.ZH_ID_SORT_BY_WORDS));
-            }
-            if(!TextUtils.isEmpty(oneItem.getRecommend())){
-                allSortInfo.add(new SortInfo(SortInfo.ZH_SORT_BY_RECOMMEND,SortInfo.ZH_ID_SORT_BY_RECOMMEND));
-            }
-            if(!TextUtils.isEmpty(oneItem.getClick())){
-                allSortInfo.add(new SortInfo(SortInfo.ZH_SORT_BY_CLICK,SortInfo.ZH_ID_SORT_BY_CLICK));
             }
             return allSortInfo;
         }else {

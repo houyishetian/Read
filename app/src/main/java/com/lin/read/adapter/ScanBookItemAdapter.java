@@ -6,9 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.lin.read.R;
-import com.lin.read.filter.BookInfo;
+import com.lin.read.filter.ScanBookBean;
 import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
 
@@ -19,10 +18,10 @@ import java.util.ArrayList;
  */
 
 public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapter.ViewHolder> {
-    private ArrayList<BookInfo> allBookData;
+    private ArrayList<ScanBookBean> allBookData;
     private Context context;
 
-    public ScanBookItemAdapter(Context context,ArrayList<BookInfo> allBookData) {
+    public ScanBookItemAdapter(Context context,ArrayList<ScanBookBean> allBookData) {
         this.allBookData = allBookData;
         this.context = context;
     }
@@ -35,10 +34,10 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final BookInfo bookInfo =allBookData.get(position);
+        final ScanBookBean bookInfo =allBookData.get(position);
         holder.bookName.setText(bookInfo.getBookName());
         holder.authorName.setText(bookInfo.getAuthorName());
-        holder.webType.setText(bookInfo.getWebName());
+        holder.webType.setText(bookInfo.getScanWebName());
         holder.lastUpdate.setText(StringUtils.formatLastUpdate(bookInfo.getLastUpdate()));
         if(StringUtils.isEmpty(bookInfo.getWordsNum())){
             holder.wordsNum.setVisibility(View.INVISIBLE);
@@ -46,28 +45,18 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
             holder.wordsNum.setVisibility(View.VISIBLE);
             holder.wordsNum.setText(bookInfo.getWordsNum()+"万字");
         }
-        if(StringUtils.isEmpty(bookInfo.getRecommend())){
-            holder.recommend.setVisibility(View.INVISIBLE);
-        }else{
-            holder.recommend.setVisibility(View.VISIBLE);
-            holder.recommend.setText(bookInfo.getRecommend()+"万推荐");
-        }
-        if(StringUtils.isEmpty(bookInfo.getClick())){
-            holder.vipClick.setVisibility(View.INVISIBLE);
-        }else{
-            holder.vipClick.setVisibility(View.VISIBLE);
-            holder.vipClick.setText(bookInfo.getClick()+"万点击");
-        }
+        holder.recommend.setVisibility(View.INVISIBLE);
+        holder.vipClick.setVisibility(View.INVISIBLE);
         if (View.VISIBLE != holder.wordsNum.getVisibility() && View.VISIBLE != holder.recommend.getVisibility() && View.VISIBLE != holder.vipClick.getVisibility()) {
             holder.viewBookItemInfos.setVisibility(View.GONE);
         } else {
             holder.viewBookItemInfos.setVisibility(View.VISIBLE);
         }
-        if(StringUtils.isEmpty(bookInfo.getWebName())){
+        if(StringUtils.isEmpty(bookInfo.getScanWebName())){
             holder.viewScoreInfos.setVisibility(View.INVISIBLE);
             holder.viewCommentInfos.setVisibility(View.INVISIBLE);
         }else{
-            switch (bookInfo.getWebName()) {
+            switch (bookInfo.getScanWebName()) {
                 case Constants.WEB_QIDIAN:
                 case Constants.WEB_QIDIAN_FINISH:
                 case Constants.WEB_YOU_SHU:
@@ -75,12 +64,6 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
                     holder.viewCommentInfos.setVisibility(View.INVISIBLE);
                     holder.score.setText(bookInfo.getScore());
                     holder.scoreNum.setText(bookInfo.getScoreNum()+"人");
-                    break;
-                case Constants.WEB_ZONGHENG:
-                    holder.viewScoreInfos.setVisibility(View.INVISIBLE);
-                    holder.viewCommentInfos.setVisibility(View.VISIBLE);
-                    holder.raiseNum.setText(bookInfo.getRaiseNum());
-                    holder.commentNum.setText(bookInfo.getCommentNum());
                     break;
                 default:
                     holder.viewScoreInfos.setVisibility(View.INVISIBLE);
@@ -100,7 +83,7 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
     }
 
     public interface OnBookItemClickListener{
-        void onBookItemClick(BookInfo bookInfo);
+        void onBookItemClick(ScanBookBean scanBookBean);
     }
 
     private OnBookItemClickListener onBookItemClickListener;

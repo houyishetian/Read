@@ -76,7 +76,6 @@ class Constants {
 
         const val WEB_QIDIAN = "起点"
         const val WEB_QIDIAN_FINISH = "完本"
-        const val WEB_ZONGHENG = "纵横"
         const val WEB_YOU_SHU = "优书"
 
         const val INPUT_INT = "int"

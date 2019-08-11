@@ -2,7 +2,7 @@ package com.lin.read.filter.scan
 
 import android.content.Context
 import android.os.Handler
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.ScanBookBean
 import com.lin.read.utils.Constants
 
 abstract class ReadGetBookInfoFactory {
@@ -18,7 +18,7 @@ abstract class ReadGetBookInfoFactory {
     }
 
     interface OnScanResult{
-        fun onSucceed(totalNum:Int,bookInfoList:List<BookInfo>)
+        fun onSucceed(totalNum:Int,bookInfoList:List<ScanBookBean>)
         fun onFailed(e:Throwable?)
     }
 }

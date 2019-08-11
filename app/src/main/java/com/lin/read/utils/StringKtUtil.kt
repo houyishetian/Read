@@ -1,6 +1,6 @@
 package com.lin.read.utils
 
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.ScanInfo
 import java.util.regex.Pattern
 
@@ -11,14 +11,14 @@ class StringKtUtil {
          * @param bookInfo pending for compare
          * @return true-the book is ok, false-the book is not ok
          */
-        fun compareFilterInfo(scanInfo: ScanInfo, bookInfo: BookInfo): Boolean {
+        fun compareFilterInfo(scanInfo: ScanInfo, scanBookBean: ScanBookBean): Boolean {
             return scanInfo.inputtedBeans?.takeIf { it.isNotEmpty() }?.let {
                 loop@ for (item in it) {
-                    val thisInfo = ReflectUtil.getProperty(bookInfo, item.key, String::class.java)
+                    val thisInfo = ReflectUtil.getProperty(scanBookBean, item.key, String::class.java)
                     when (item.inputType) {
                         Constants.INPUT_INT, Constants.INPUT_FLOAT -> {
-                            val valueStandard = item.value?.toFloat() ?: -1f
-                            val valuePendingCompare = thisInfo?.toFloat() ?: -1f
+                            val valueStandard = item.value?.takeIf { it.toString().isNotEmpty() }?.toFloat() ?: -1f
+                            val valuePendingCompare = thisInfo?.takeIf { it.isNotEmpty() }?.toFloat() ?: -1f
                             if (valueStandard < 0 || valuePendingCompare < 0 || valueStandard > valuePendingCompare) return false
                         }
                         else -> continue@loop

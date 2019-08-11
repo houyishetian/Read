@@ -1,7 +1,6 @@
 package com.lin.read.filter.scan.qidian;
 
 import android.text.TextUtils;
-import com.lin.read.filter.BookInfo;
 import com.lin.read.filter.scan.ScanInfo;
 import com.lin.read.utils.StringKtUtil;
 
