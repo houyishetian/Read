@@ -21,3 +21,17 @@ data class ReadBookBean(val webType: String, val bookName: String, val authorNam
     val markKey: String
         get() = arrayOf(webType, bookName, authorName, chapterLink).joinToString("_")
 }
+
+/**
+//zongheng
+private String raiseNum;
+private String commentNum;
+
+ */
+//@Parcelize
+//data class BookInfof(val webType: String,val bookName: String,val authorName: String,val wordsNum:String,val score:String,val scoreNum:String,
+//                    val lastUpdate:String,val lastChapter:String,val position:Int):Serializable,Parcelable
+
+@Parcelize
+data class SearchBookBean(val webType: String, var bookName: String = "", var authorName: String = "",
+                          var lastUpdate: String = "", var lastChapter: String = "", var chapterLink: String = "") : Serializable, Parcelable

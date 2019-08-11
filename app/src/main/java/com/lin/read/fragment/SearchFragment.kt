@@ -17,7 +17,7 @@ import com.lin.read.R
 import com.lin.read.adapter.DialogWebTypeAdapter
 import com.lin.read.adapter.SearchBookItemAdapter
 import com.lin.read.decoration.ScanBooksItemDecoration
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.SearchBookBean
 import com.lin.read.filter.search.SearchBookTask
 import com.lin.read.filter.search.SearchWebBean
 import com.lin.read.utils.Constants
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
     private lateinit var webBeansList: List<SearchWebBean>
-    private lateinit var allBookInfo: MutableList<BookInfo>
+    private lateinit var allBookInfo: MutableList<SearchBookBean>
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_search, null)?.apply {
@@ -115,7 +115,7 @@ class SearchFragment : Fragment() {
             webBeansList[0]
         }
         SearchBookTask(currentSelectWeb, et_search_bookname.text.toString(), object : SearchBookTask.OnSearchResult {
-            override fun onSucceed(allBooks: List<BookInfo>?) {
+            override fun onSucceed(allBooks: List<SearchBookBean>?) {
                 DialogUtil.getInstance().hideLoadingView()
                 allBooks?.takeIf { it.isNotEmpty() }?.apply {
                     empty_view.visibility = View.GONE
@@ -139,8 +139,8 @@ class SearchFragment : Fragment() {
         }).searchBook()
     }
 
-    fun setSearchType(bookInfo: BookInfo) {
-        et_search_bookname.setText(bookInfo.bookName)
+    fun setSearchType(bookName: String) {
+        et_search_bookname.setText(bookName)
         btn_search.performClick()
     }
 }

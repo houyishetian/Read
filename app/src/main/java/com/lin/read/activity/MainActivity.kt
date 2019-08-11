@@ -75,8 +75,8 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
         ll_main_functions.visibility = visibility
     }
 
-    fun clickScanBookItem(bookInfo:BookInfo){
-        searchFragment.setSearchType(bookInfo)
+    fun clickScanBookItem(bookName:String){
+        searchFragment.setSearchType(bookName)
         rl_search.performClick()
     }
 

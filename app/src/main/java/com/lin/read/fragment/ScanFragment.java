@@ -322,7 +322,7 @@ public class ScanFragment extends Fragment {
         allBookAdapter.setOnBookItemClickListener(new ScanBookItemAdapter.OnBookItemClickListener() {
             @Override
             public void onBookItemClick(BookInfo bookInfo) {
-                ((MainActivity)getActivity()).clickScanBookItem(bookInfo);
+                ((MainActivity)getActivity()).clickScanBookItem(bookInfo.getBookName());
             }
         });
     }

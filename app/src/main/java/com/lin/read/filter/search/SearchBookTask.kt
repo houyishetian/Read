@@ -1,6 +1,6 @@
 package com.lin.read.filter.search
 
-import com.lin.read.filter.BookInfo
+import com.lin.read.filter.SearchBookBean
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
 import com.lin.read.utils.Constants
@@ -44,14 +44,14 @@ class SearchBookTask(val searchWebBean: SearchWebBean, val bookName: String,val 
     }
 
     @SuppressWarnings("unchecked")
-    private fun getBookList(responseBody: ResponseBody): List<BookInfo>? {
+    private fun getBookList(responseBody: ResponseBody): List<SearchBookBean>? {
         Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
-            return ReflectUtil.invokeMethod(SearchBookResolveUtil.Companion, "resolveFrom${searchWebBean.tag}", List::class.java, SearchResolveBean(it, bookName, responseBody)) as? List<BookInfo>
+            return ReflectUtil.invokeMethod(SearchBookResolveUtil.Companion, "resolveFrom${searchWebBean.tag}", List::class.java, SearchResolveBean(it, bookName, responseBody)) as? List<SearchBookBean>
         } ?: throw java.lang.Exception("cannot get ${searchWebBean.tag}'s booklist!")
     }
 
     interface OnSearchResult{
-        fun onSucceed(bookInfoList:List<BookInfo>?)
+        fun onSucceed(bookInfoList:List<SearchBookBean>?)
         fun onFailed(e:Throwable?)
     }
 }
