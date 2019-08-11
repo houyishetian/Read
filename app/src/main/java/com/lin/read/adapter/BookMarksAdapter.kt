@@ -13,7 +13,7 @@ import com.lin.read.activity.ReadBookActivity
 import com.lin.read.filter.BookMark
 import com.lin.read.filter.ReadBookBean
 import com.lin.read.utils.Constants
-import com.lin.read.utils.DateUtils
+import com.lin.read.utils.StringKtUtil
 import kotlinx.android.synthetic.main.item_book_mark.view.*
 
 class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData: List<BookMark>) : RecyclerView.Adapter<BookMarksAdapter.ViewHolder>() {
@@ -41,7 +41,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
             holder?.itemView?.mark_item_booktype?.visibility = View.GONE
             holder?.itemView?.mark_item_web_name?.text = Constants.SEARCH_WEB_NAME_MAP[webType]
             holder?.itemView?.mark_item_lastchapter?.text = lastReadChapter
-            holder?.itemView?.mark_item_lastread?.text = DateUtils.formatTime(lastReadTime)
+            holder?.itemView?.mark_item_lastread?.text = StringKtUtil.formatTime(lastReadTime)
             if(isShowCheckBox){
                 holder?.itemView?.mark_reading_layout?.visibility = View.GONE
                 holder?.itemView?.mark_select_cb?.visibility = View.VISIBLE

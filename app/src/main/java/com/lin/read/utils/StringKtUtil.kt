@@ -1,14 +1,16 @@
 package com.lin.read.utils
 
+import android.text.format.DateFormat
 import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.ScanInfo
+import java.util.*
 import java.util.regex.Pattern
 
 class StringKtUtil {
     companion object {
         /**
          * @param scanInfo standard value
-         * @param bookInfo pending for compare
+         * @param scanBookBean pending for compare
          * @return true-the book is ok, false-the book is not ok
          */
         fun compareFilterInfo(scanInfo: ScanInfo, scanBookBean: ScanBookBean): Boolean {
@@ -118,5 +120,10 @@ class StringKtUtil {
                 return url
             }?:url
         }
+
+        fun formatTime(time: Long): String = DateFormat.format("yyyy-MM-dd HH:mm", Date(time)).toString()
+
+        fun removeSeconds(data: String): String = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}):\\d{2}").matcher(data).takeIf { it.matches() }?.group(1)
+                ?: data
     }
 }

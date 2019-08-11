@@ -40,9 +40,9 @@ class BookComparator(private val sortType: SortType, private val bookType: BookT
         return try {
             when (bookType) {
                 BookType.POSTION -> book0.position.let { book0.position - book1.position }
-                BookType.SCORE -> book0.score.let { (book0.score.toFloat() - book1.score.toFloat()).times(100).toInt() } ?: 0
-                BookType.SCORE_NUM -> book0.scoreNum.let { (book0.scoreNum.toFloat() - book1.scoreNum.toFloat()).times(100).toInt() } ?: 0
-                BookType.WORDS_NUM -> book0.wordsNum.let { (book0.wordsNum.toFloat() - book1.wordsNum.toFloat()).times(100).toInt() } ?: 0
+                BookType.SCORE -> book0.score.let { (book0.score.toFloat() - book1.score.toFloat()).times(100).toInt() }
+                BookType.SCORE_NUM -> book0.scoreNum.let { (book0.scoreNum.toFloat() - book1.scoreNum.toFloat()).times(100).toInt() }
+                BookType.WORDS_NUM -> book0.wordsNum.let { (book0.wordsNum.toFloat() - book1.wordsNum.toFloat()).times(100).toInt() }
             }
         } catch (e: Exception) {
             e.printStackTrace()

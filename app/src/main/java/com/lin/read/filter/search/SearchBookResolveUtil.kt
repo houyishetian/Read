@@ -2,7 +2,6 @@ package com.lin.read.filter.search
 
 import com.lin.read.filter.SearchBookBean
 import com.lin.read.utils.Constants
-import com.lin.read.utils.DateUtils
 import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.readLinesOfHtml
 
@@ -217,7 +216,7 @@ class SearchBookResolveUtil {
                     StringKtUtil.getDataFromContentByRegex(current, "<a class=\"sp_chaptername\" href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"]+)</a>([^\n^\"]+)</h4>", listOf(2, 3))?.run {
                         bookInfo?.let {
                             it.lastChapter = this[0]
-                            it.lastUpdate = DateUtils.removeSeconds(this[1].replace("[（）]".toRegex(), ""))
+                            it.lastUpdate = StringKtUtil.removeSeconds(this[1].replace("[（）]".toRegex(), ""))
                             result.add(it)
                             bookInfo = null
                         }
