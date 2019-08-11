@@ -3,6 +3,7 @@ package com.lin.read.adapter
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Parcelable
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -40,7 +41,7 @@ class SearchBookItemAdapter(private val context: Context, private val allBookDat
             }
             holder?.itemView?.book_item_read?.setOnClickListener {
                 val intent = Intent(context, ReadBookActivity::class.java)
-                intent.putExtra(Constants.KEY_SKIP_TO_READ, this)
+                intent.putExtra(Constants.KEY_SKIP_TO_READ, this as Parcelable)
                 context.startActivity(intent)
             }
         }

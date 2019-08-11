@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import com.lin.read.R
+import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.filter.BookInfo
 import com.lin.read.fragment.BookMarksFragment
 import com.lin.read.fragment.ScanFragment
@@ -24,6 +25,7 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        BookMarkUtil.getInstance(this).syncOldData()
         initData()
     }
 

@@ -225,10 +225,11 @@ class ReadBookActivity : Activity() {
                 runOnUiThread {
                     DialogUtil.getInstance().hideLoadingView()
                     takeIf { allInfo.isNotEmpty() && splitInfos.isNotEmpty() }?.run {
-                        val bookMarkBean = BookMarkUtil.getInstance(this@ReadBookActivity).getBookMark(bookInfo)?.apply {
-                            page = splitInfos.takeIf { page >= it.size }?.size?.minus(1) ?: page
-                            index = allInfo.takeIf { index >= it.size }?.size?.minus(1) ?: index
-                        } ?: BookMarkBean()
+                        val bookMarkBean = BookMarkUtil.getInstance(this@ReadBookActivity).getAllBookMarks().firstOrNull { it.bookInfo.key == bookInfo.key }
+                                ?.apply {
+                                    page = splitInfos.takeIf { page >= it.size }?.size?.minus(1) ?: page
+                                    index = allInfo.takeIf { index >= it.size }?.size?.minus(1) ?: index
+                                } ?: BookMarkBean()
                         chapter_total_page.text = "${splitInfos.size}"
                         chaptersList.clear()
                         chaptersList.addAll(allInfo)

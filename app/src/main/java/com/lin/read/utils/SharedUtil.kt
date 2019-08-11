@@ -2,7 +2,10 @@ package com.lin.read.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.lang.Exception
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -15,7 +18,7 @@ class SharedUtil<T>(private val ctx: Context, private val key: String, private v
             is Float -> getFloat(key, default)
             is Int -> getInt(key, default)
             is Boolean -> getBoolean(key, default)
-            else -> throw Exception("the default format is wrong")
+            else -> parseStr2Obj(getString(key, parseObj2Str(default)))
         }
         result as T
     }
@@ -28,10 +31,31 @@ class SharedUtil<T>(private val ctx: Context, private val key: String, private v
                 is Float -> putFloat(key, value)
                 is Int -> putInt(key, value)
                 is Boolean -> putBoolean(key, value)
-                else -> throw Exception("the default format is wrong")
+                else -> putString(key, parseObj2Str(value))
             }
         }.apply()
     }
 
     fun removeKey() = shared.edit().remove(key).apply()
+
+    fun clear() = shared.edit().clear().apply()
+
+    private fun parseObj2Str(value: T): String {
+        val byteOutputStream = ByteArrayOutputStream()
+        val objOutputStream = ObjectOutputStream(byteOutputStream)
+        objOutputStream.writeObject(value)
+        return byteOutputStream.toString("ISO-8859-1").apply {
+            objOutputStream.close()
+            byteOutputStream.close()
+        }
+    }
+
+    private fun parseStr2Obj(value: String): T {
+        val byteInputStream = ByteArrayInputStream(value.toByteArray(charset("ISO-8859-1")))
+        val objInputStream = ObjectInputStream(byteInputStream)
+        return (objInputStream.readObject() as T).apply {
+            byteInputStream.close()
+            objInputStream.close()
+        }
+    }
 }

@@ -87,5 +87,6 @@ class Constants {
 
         const val DEFAULT_SHARED_NAME = "BOOK_MARK_PREFS"
         const val BOOK_MARK_LIST = "BOOK_MARK_LIST"
+        const val BOOK_MARK_NEW_LIST = "NEW_BOOK_MARK_LIST"
     }
 }

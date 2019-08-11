@@ -18,7 +18,7 @@ android {
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.lin.read"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 2
         versionName "2.0"

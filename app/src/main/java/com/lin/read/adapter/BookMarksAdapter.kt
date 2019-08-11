@@ -2,6 +2,7 @@ package com.lin.read.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -50,7 +51,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
             }
             holder?.itemView?.mark_item_continue_read?.setOnClickListener {
                 val intent = Intent(fragment.activity, ReadBookActivity::class.java)
-                intent.putExtra(Constants.KEY_SKIP_TO_READ, bookInfo)
+                intent.putExtra(Constants.KEY_SKIP_TO_READ, bookInfo as Parcelable)
                 fragment.startActivityForResult(intent, Constants.READ_REQUEST_CODE)
             }
             holder?.itemView?.mark_select_cb?.setOnCheckedChangeListener { _, isChecked ->

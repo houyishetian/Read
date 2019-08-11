@@ -2,7 +2,6 @@ package com.lin.read.bookmark
 
 import android.content.Context
 import com.google.gson.GsonBuilder
-import com.lin.read.filter.BookInfo
 import com.lin.read.utils.Constants
 import com.lin.read.utils.SharedUtil
 import com.lin.read.utils.SingleInstanceHolder
@@ -12,61 +11,70 @@ class BookMarkUtil private constructor(private val ctx: Context) {
 
     private var markKeysList: String by SharedUtil(ctx, Constants.BOOK_MARK_LIST, "")
 
+    private var newMarksList: MutableList<BookMarkBean> by SharedUtil(ctx, Constants.BOOK_MARK_NEW_LIST, mutableListOf())
+
+    fun syncOldData() {
+        markKeysList.takeIf { it != "" }?.let { keyListStr ->
+            // get all old keys
+            val keyList = GsonBuilder().create().fromJson(keyListStr, MutableList::class.java) as MutableList<String>
+            // get all old bookmarks
+            mutableListOf<BookMarkBean>().apply {
+                keyList.forEach { markKey ->
+                    val existBookMark: String by SharedUtil(ctx, markKey, "")
+                    existBookMark.takeIf { it != "" }?.let {
+                        add(GsonBuilder().create().fromJson(it, BookMarkBean::class.java))
+                    }
+                }
+            }.takeIf { newMarksList.isEmpty() && it.isNotEmpty() }?.let {
+                // sync to new field if needed
+                newMarksList = mutableListOf<BookMarkBean>().apply {
+                    addAll(it)
+                }
+                // remove the old fields
+                SharedUtil(ctx, Constants.BOOK_MARK_LIST, "").removeKey()
+                keyList.forEach {
+                    SharedUtil(ctx, it, "").removeKey()
+                }
+            }
+        }
+    }
+
     fun saveBookMark(bookMarkBean: BookMarkBean) {
         bookMarkBean.bookInfo.key?.let { markKey ->
-            getBookMark(bookMarkBean.bookInfo).takeIf { it == null || it.page != bookMarkBean.page || it.index != bookMarkBean.index }?.run {
-                var existBookMark: String by SharedUtil(ctx, markKey, "")
-                existBookMark = GsonBuilder().create().toJson(bookMarkBean)
+            newMarksList.firstOrNull { it.bookInfo.key == markKey }?.let {
+                // this is an existing bookmark, update it
+                it.takeIf { it.page != bookMarkBean.page || it.index != bookMarkBean.index }?.let {
+                    newMarksList = mutableListOf<BookMarkBean>().apply {
+                        newMarksList.forEach {
+                            if (it.bookInfo.key != markKey) {
+                                add(it)
+                            }
+                        }
+                        add(bookMarkBean)
+                    }
+                }
+                return
+            } ?: let {
+                // this is a new bookmark, save it
+                newMarksList = mutableListOf<BookMarkBean>().apply {
+                    addAll(newMarksList)
+                    add(bookMarkBean)
+                }
             }
-            addBookMarkKeyToList(markKey)
         }
     }
 
     fun getAllBookMarks(): List<BookMarkBean> {
-        return mutableListOf<BookMarkBean>().apply {
-            getBookMarkKeysList().forEach {
-                val existBookMark: String by SharedUtil(ctx, it, "")
-                existBookMark.takeIf { it != "" }?.let {
-                    add(GsonBuilder().create().fromJson(it, BookMarkBean::class.java))
-                }
-            }
+        return newMarksList.apply {
             sortByDescending { it.lastReadTime }
         }
     }
 
-    fun getBookMark(bookInfo: BookInfo): BookMarkBean? {
-        return bookInfo.key.let {
-            val existBookMark: String by SharedUtil(ctx, it, "")
-            existBookMark.takeIf { it != "" }?.run {
-                GsonBuilder().create().fromJson(this, BookMarkBean::class.java)
-            }
-        }
-    }
-
-    fun deleteBookMarks(bookMarks: List<BookMarkBean>) {
-        bookMarks.map { it.bookInfo.key }.forEach {
-            SharedUtil(ctx, it, "").removeKey()
-            removeBookMarkKeyFromList(it)
-        }
-    }
-
-    private fun addBookMarkKeyToList(key: String) {
-        getBookMarkKeysList().takeIf { !it.contains(key) }?.let {
-            it.add(key)
-            markKeysList = GsonBuilder().create().toJson(it)
-        }
-    }
-
-    private fun getBookMarkKeysList(): MutableList<String> {
-        return markKeysList.takeIf { it != "" }?.let {
-            GsonBuilder().create().fromJson(it, MutableList::class.java) as MutableList<String>
-        } ?: mutableListOf()
-    }
-
-    private fun removeBookMarkKeyFromList(key: String) {
-        getBookMarkKeysList().takeIf { it.contains(key) }?.let {
-            it.remove(key)
-            markKeysList = GsonBuilder().create().toJson(it)
+    fun deleteBookMarks(deletedItems: List<BookMarkBean>) {
+        newMarksList = mutableListOf<BookMarkBean>().apply {
+            addAll(newMarksList.filter { pendingAddedItem ->
+                deletedItems.firstOrNull { it.bookInfo.key == pendingAddedItem.bookInfo.key } == null
+            })
         }
     }
 }

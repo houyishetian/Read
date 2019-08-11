@@ -4,11 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.lin.read.filter.scan.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * Created by lisonglin on 2017/10/15.
  */
 
-public class BookInfo implements Parcelable{
+public class BookInfo implements Parcelable, Serializable {
     private String bookName;
     private String authorName;
     private String webType;

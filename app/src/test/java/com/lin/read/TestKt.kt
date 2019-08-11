@@ -3,6 +3,7 @@ package com.lin.read
 import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.StringKtUtil
 import org.junit.Test
+import java.io.*
 
 class TestKt {
     @Test
@@ -96,5 +97,25 @@ class TestKt {
         println("test float -> " + ReflectUtil.invokeMethod(testObj, "test", Float::class.java, 0.0.toFloat(), 3.toFloat()))
         println("test char -> " + ReflectUtil.invokeMethod(testObj, "test", Char::class.java, 'a'))
         println("test boolean -> " + ReflectUtil.invokeMethod(testObj, "test", Boolean::class.java, false, false))
+    }
+
+    @Test
+    fun testSerializable(){
+        data class Person(val name:String,val age:Int):Serializable
+        val p = Person("zhangSan",21)
+        val byteOutputStream = ByteArrayOutputStream()
+        val objOutputStream = ObjectOutputStream(byteOutputStream)
+        objOutputStream.writeObject(p)
+        val afterParse = byteOutputStream.toString("ISO-8859-1")
+        objOutputStream.close()
+        byteOutputStream.close()
+        println("afterParse:$afterParse")
+
+        val byteInputStream = ByteArrayInputStream(afterParse.toByteArray(charset("ISO-8859-1")))
+        val objInputStream = ObjectInputStream(byteInputStream)
+        val afterBack = objInputStream.readObject() as Person
+        byteInputStream.close()
+        objInputStream.close()
+        println("afterBack:$afterBack")
     }
 }
