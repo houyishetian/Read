@@ -2,6 +2,7 @@ package com.lin.read.filter.search
 
 import android.os.AsyncTask
 import android.util.Log
+import com.lin.read.utils.StringKtUtil
 import java.lang.Exception
 
 class GetChapterContentTask(private val bookChapterInfo: BookChapterInfo,private val onTaskListener: OnTaskListener):AsyncTask<Unit,Unit,Unit>() {
@@ -12,7 +13,7 @@ class GetChapterContentTask(private val bookChapterInfo: BookChapterInfo,private
                 Log.d("Test", "continue search ..")
                 content += ResolveChapterUtils.getChapterContent(bookChapterInfo) ?: ""
             }
-            onTaskListener.onSucc(content)
+            onTaskListener.onSucc(StringKtUtil.removeAdsFromContent(content))
         } catch (e: Exception) {
             e.printStackTrace()
             onTaskListener.onFailed()
