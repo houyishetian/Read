@@ -3,6 +3,7 @@ package com.lin.read.filter.search
 import com.lin.read.retrofit.ReadRetrofitService
 import com.lin.read.retrofit.RetrofitInstance
 import com.lin.read.utils.Constants
+import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.baseUrl
 import okhttp3.ResponseBody
 import rx.Observer
@@ -32,7 +33,7 @@ class GetChapterContentTask(private val bookChapterInfo: BookChapterInfo, privat
                                 }
                             }
                             bookChapterContent.takeIf { it.isComplete }?.content?.let {
-                                onTaskListener.onSucc(previousChapter + it)
+                                onTaskListener.onSucc(StringKtUtil.removeAdsFromContent(previousChapter + it))
                             }?: getChapterContent(bookChapterContent.nextLink, previousChapter + bookChapterContent.content)
                         }
                     }
