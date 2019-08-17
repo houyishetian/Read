@@ -1,5 +1,6 @@
 package com.lin.read.utils
 
+import android.util.Log
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
@@ -27,7 +28,9 @@ class ReflectUtil {
                     else -> ori
                 }
             }
-
+            obj.javaClass.methods.forEach {
+                Log.d("available item", "${it.name},params type:${it.parameterTypes.map { it.name }.joinToString("/")}")
+            }
             return obj.javaClass.getMethod(methodName, *params.map { parseClass(it.javaClass) }.toTypedArray()).invoke(obj, *params).let {
                 (it as? T) ?: returnClz.cast(it)
             }

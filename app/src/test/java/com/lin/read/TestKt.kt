@@ -2,6 +2,7 @@ package com.lin.read
 
 import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.StringKtUtil
+import com.lin.read.utils.baseUrl
 import org.junit.Test
 import java.io.*
 
@@ -117,5 +118,19 @@ class TestKt {
         byteInputStream.close()
         objInputStream.close()
         println("afterBack:$afterBack")
+    }
+
+    @Test
+    fun testGetBaseUrl(){
+        println("https://www.baidu.com".baseUrl())
+        println("http://www.baidu.com".baseUrl())
+        println("http://www.baidu.com/".baseUrl())
+        println("http://www.baidu.com/path?".baseUrl())
+        println("http://www.baidu.com/path#".baseUrl())
+    }
+
+    @Test
+    fun testRemoveAds(){
+        println(StringKtUtil.removeAdsFromContent("三年后。顶点小说 Ｘ２３ＵＳ．ＣＯＭ更新最快\n\n赤霞峰领地内的一处山"))
     }
 }

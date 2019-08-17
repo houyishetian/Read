@@ -49,4 +49,8 @@ interface ReadRetrofitService {
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
     //"https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input="
     fun searchFromQINGKAN(@QueryMap(encoded = true) params:HashMap<String,String>): Observable<ResponseBody>
+
+    @GET
+    @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
+    fun getResponse(@Url url: String): Observable<ResponseBody>
 }

@@ -11,6 +11,7 @@ import com.lin.read.filter.search.BookChapterInfo
 import okhttp3.ResponseBody
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URL
 import java.nio.charset.Charset
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Unit){
@@ -78,5 +79,11 @@ fun ResponseBody.readLinesOfHtml(): List<String> {
         inputStream0.close()
         inputStream1.close()
         byteOutPutStream.close()
+    }
+}
+
+fun String.baseUrl(): String {
+    URL(this).apply {
+        return "$protocol://$host/"
     }
 }

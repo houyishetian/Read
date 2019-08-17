@@ -253,7 +253,7 @@ class ReadBookActivity : Activity() {
                     finish()
                 }
             }
-        }).execute()
+        }).getChapters()
     }
 
     private fun getContentInfo(loadChapter: LoadChapter,toBookChapter: BookChapterInfo? = null){
@@ -298,7 +298,7 @@ class ReadBookActivity : Activity() {
                     if (loadChapter == LoadChapter.CURRENT) finish()
                 }
             }
-        }).execute()
+        }).getChapterContent()
     }
 
     private fun searchByChapterName() {
