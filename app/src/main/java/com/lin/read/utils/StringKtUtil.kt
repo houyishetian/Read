@@ -114,12 +114,12 @@ class StringKtUtil {
         fun removeSeconds(data: String): String = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}):\\d{2}").matcher(data).takeIf { it.matches() }?.group(1)
                 ?: data
 
-        fun removeAdsFromContent(content: String): String = content.let {
-            var result = it
+        fun removeAdsFromContent(content: String): String = let {
+            var result = content
             listOf(
-                    "顶点小说 Ｘ２３ＵＳ．ＣＯＭ更新最快"
+                    "[顶点小说Ｘ２３ＵＳ．ＣＯＭ ]+?(更新最快)?"
             ).forEach {
-                result = result.replace(it, "")
+                result = replaceDataOfContentByRegex(result, it)
             }
             result
         }
