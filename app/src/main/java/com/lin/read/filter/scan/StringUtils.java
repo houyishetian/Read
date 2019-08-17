@@ -1,16 +1,12 @@
 package com.lin.read.filter.scan;
 
 import android.text.format.DateFormat;
-import android.util.Log;
-import info.monitorenter.cpdetector.io.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -124,40 +120,6 @@ public class StringUtils {
 			}
 		}
 		return srcDate;
-	}
-
-	public static String getCharSet(HttpURLConnection conn){
-		if(conn==null){
-			Log.e("Test","conn is null,cannot get charset");
-			return null;
-		}
-		String contentType = conn.getContentType();
-		//contentType:text/html; charset=gbk
-		if(!isEmpty(contentType)){
-			Pattern pattern=Pattern.compile("charset=([\\S]+)");
-			Matcher matcher=pattern.matcher(contentType);
-			if(matcher.find()){
-				return matcher.group(1).toUpperCase();
-			}
-		}
-		String url = conn.getURL().toString();
-		//如果相应头里面没有编码格式,用下面这种
-		CodepageDetectorProxy codepageDetectorProxy = CodepageDetectorProxy.getInstance();
-		codepageDetectorProxy.add(JChardetFacade.getInstance());
-		codepageDetectorProxy.add(ASCIIDetector.getInstance());
-		codepageDetectorProxy.add(UnicodeDetector.getInstance());
-		codepageDetectorProxy.add(new ParsingDetector(false));
-		codepageDetectorProxy.add(new ByteOrderMarkDetector());
-		try {
-			Charset charset = codepageDetectorProxy.detectCodepage(new URL(url));
-			String charsetName=charset.name();
-			Log.e("Test","get charset with  CodepageDetectorProxy:"+charsetName);
-			return charsetName;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Log.e("Test","cannot get charset , use UTF-8");
-		return "UTF-8";
 	}
 
 	public static String parseDataByTenThousand(String num){

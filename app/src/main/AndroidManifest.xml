@@ -29,9 +29,6 @@
                 android:name=".activity.ReadBookActivity"
                 android:theme="@android:style/Theme.Light.NoTitleBar"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <activity android:name=".activity.SearchMusicActivity"
-                  android:theme="@android:style/Theme.Light.NoTitleBar"
-                  android:windowSoftInputMode="adjustResize|stateHidden"/>
     </application>
 
 </manifest>
