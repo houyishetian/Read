@@ -5,6 +5,7 @@ import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.baseUrl
 import org.junit.Test
 import java.io.*
+import java.net.URLEncoder
 
 class TestKt {
     @Test
@@ -132,5 +133,12 @@ class TestKt {
     @Test
     fun testRemoveAds(){
         println(StringKtUtil.removeAdsFromContent("三年后。顶点小说 Ｘ２３ＵＳ．ＣＯＭ更新最快\n\n赤霞峰领地内的一处山"))
+    }
+
+    @Test
+    fun testEncode(){
+        val data = "%B7%B2%C8%CB%D0%DE%CF%C9"
+        println(URLEncoder.encode("凡人修仙","gbk") == data)
+        println(URLEncoder.encode("仙逆","gbk"))
     }
 }

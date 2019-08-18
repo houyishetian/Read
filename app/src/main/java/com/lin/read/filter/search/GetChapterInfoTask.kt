@@ -37,6 +37,7 @@ class GetChapterInfoTask(private val readBookBean: ReadBookBean, private val onT
                                     Constants.RESOLVE_FROM_BIXIA -> getChapterListFromBIXIA(readBookBean, it)
                                     Constants.RESOLVE_FROM_AISHU -> getChapterListFromAISHUWANG(readBookBean, it)
                                     Constants.RESOLVE_FROM_QINGKAN -> getChapterListFromQINGKAN(readBookBean, it)
+                                    Constants.RESOLVE_FROM_SANQI -> getChapterListFromSANQI(readBookBean,it)
                                     else -> throw Exception("the webType is not found:${readBookBean.webType}")
                                 }
                             }.let {

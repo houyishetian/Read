@@ -50,6 +50,11 @@ interface ReadRetrofitService {
     //"https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input="
     fun searchFromQINGKAN(@QueryMap(encoded = true) params:HashMap<String,String>): Observable<ResponseBody>
 
+    @GET("/modules/article/ss.php")
+    @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
+    //http://www.37shuwu.com/modules/article/ss.php?searchkey=%CF%C9%C4%E6
+    fun searchFromSANQI(@Query("searchkey", encoded = true) bookNameEncoded: String): Observable<ResponseBody>
+
     @GET
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
     fun getResponse(@Url url: String): Observable<ResponseBody>

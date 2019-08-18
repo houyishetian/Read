@@ -87,6 +87,29 @@ class ReadBookResolveUtil {
             }
         }
 
+        fun getChapterContentFromSANQI(bookChapterInfo: BookChapterInfo, responseBody: ResponseBody): BookChapterContent {
+            var start = false
+            var resultContent: String? = null
+            responseBody.readLinesOfHtml().forEach {
+                val current = it.trim()
+                //<div id="neirong">
+                if (!start && current.startsWith("<div id=\"neirong\">")) {
+                    start = true
+                    resultContent = current.replace("<div id=\"neirong\">", "")
+                    return@forEach
+                }
+                if (start) {
+                    if (!current.endsWith("</div>")) {
+                        resultContent += current
+                    } else {
+                        resultContent += current.replace("</div>", "")
+                        return BookChapterContent(resultContent ?: "")
+                    }
+                }
+            }
+            return BookChapterContent("")
+        }
+
         fun getChapterListFromBIQUGE(readBookBean: ReadBookBean, responseBody: ResponseBody): List<BookChapterInfo> {
             var lastNonEmptyLine = ""
             var startResolving = false
@@ -157,7 +180,8 @@ class ReadBookResolveUtil {
                     StringKtUtil.getDataListFromContentByRegex(it, "<div class=\"clc\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></div>", listOf(1, 2))?.let {
                         return mutableListOf<BookChapterInfo>().apply {
                             it.forEach {
-                                add(BookChapterInfo(readBookBean.webType, Constants.SEARCH_WEB_NAME_MAP[readBookBean.webType]!!, StringKtUtil.parseLinkForAiShuWang(it[0]),
+                                add(BookChapterInfo(readBookBean.webType, Constants.SEARCH_WEB_NAME_MAP[readBookBean.webType]!!,
+                                        StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[readBookBean.webType]!!, it[0]),
                                         StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                             }
                         }
@@ -190,6 +214,26 @@ class ReadBookResolveUtil {
                 lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
             }
             return result
+        }
+
+        fun getChapterListFromSANQI(readBookBean: ReadBookBean, responseBody: ResponseBody): List<BookChapterInfo> {
+            var lastNonEmptyLine = ""
+            responseBody.readLinesOfHtml().forEach {
+                if(lastNonEmptyLine == "<div class=\"liebiao_bottom\">"){
+                    //<dd><a href="/html/65/65143/17223065.html">仙界篇外传一</a></dd>
+                    StringKtUtil.getDataListFromContentByRegex(it, "<dd><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></dd>", listOf(1, 2))?.let {
+                        return mutableListOf<BookChapterInfo>().apply {
+                            it.forEach {
+                                add(BookChapterInfo(readBookBean.webType, Constants.SEARCH_WEB_NAME_MAP[readBookBean.webType]!!,
+                                        StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[readBookBean.webType]!!, it[0]),
+                                        StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
+                            }
+                        }
+                    }
+                }
+                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
+            }
+            return listOf()
         }
     }
 }

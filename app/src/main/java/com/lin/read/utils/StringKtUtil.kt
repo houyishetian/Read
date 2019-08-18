@@ -101,13 +101,13 @@ class StringKtUtil {
         @JvmOverloads
         fun replaceDataOfContentByRegex(content: String, regex: String, newValue: String = ""): String = content.replace(regex.toRegex(), newValue)
 
-        fun parseLinkForAiShuWang(url: String): String = Constants.SEARCH_WEB_BASEURL_MAP[Constants.RESOLVE_FROM_AISHU]?.let {
+        fun parseLineForIncompletedLinks(startLink: String, url: String): String = startLink.let {
             if (url.startsWith("//"))
                 return "http:$url"
             if (url.startsWith("/"))
-                return it + url.substring(1)
+                return startLink + url.substring(1)
             return url
-        } ?: url
+        }
 
         fun formatTime(time: Long): String = DateFormat.format("yyyy-MM-dd HH:mm", Date(time)).toString()
 

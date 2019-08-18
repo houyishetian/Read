@@ -7,7 +7,10 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.*
 
 class RetrofitInstance (baseUrl: String) {
 //    companion object : SingleInstanceHolder<RetrofitInstance, String>(::RetrofitInstance)
@@ -35,6 +38,19 @@ class RetrofitInstance (baseUrl: String) {
                     }
                 })
 //                .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("112.87.71.196", 9999)))
+                .sslSocketFactory(createOkHttpSocketFactory(), object : X509TrustManager {
+                    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+                    }
+
+                    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+                    }
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate>? = arrayOf()
+
+                })
+                .hostnameVerifier(createOkHttpHostnameVerifier())
                 .build()
         retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -46,5 +62,24 @@ class RetrofitInstance (baseUrl: String) {
 
     fun <T> create(clz: Class<T>): T {
         return retrofit.create(clz)
+    }
+
+    private fun createOkHttpSocketFactory(): SSLSocketFactory = SSLContext.getInstance("TLS").apply {
+        init(null, arrayOf(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+            }
+
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+
+            }
+
+            override fun getAcceptedIssuers(): Array<X509Certificate>? = arrayOf()
+
+        }), SecureRandom())
+    }.socketFactory
+
+    private fun createOkHttpHostnameVerifier(): HostnameVerifier = object : HostnameVerifier {
+        override fun verify(hostname: String?, session: SSLSession?): Boolean = true
     }
 }

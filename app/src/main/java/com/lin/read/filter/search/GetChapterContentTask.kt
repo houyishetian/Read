@@ -29,6 +29,7 @@ class GetChapterContentTask(private val bookChapterInfo: BookChapterInfo, privat
                                     Constants.RESOLVE_FROM_BIXIA -> getChapterContentFromBIXIA(bookChapterInfo, it)
                                     Constants.RESOLVE_FROM_AISHU -> getChapterContentFromAISHUWANG(bookChapterInfo, it)
                                     Constants.RESOLVE_FROM_QINGKAN -> getChapterContentFromQINGKAN(bookChapterInfo, it)
+                                    Constants.RESOLVE_FROM_SANQI -> getChapterContentFromSANQI(bookChapterInfo, it)
                                     else -> throw Exception("the webType is not found:${bookChapterInfo.webType}")
                                 }
                             }

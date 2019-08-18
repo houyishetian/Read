@@ -168,7 +168,7 @@ class SearchBookResolveUtil {
                     it.takeIf { it.bookName.isEmpty() }?.let {
                         //<li class="neirong1"><a href="/xs/125988/">仙逆</a><a href="/xs/125988.txt" title="仙逆TXT下载">TXT下载</a></li>
                         StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong1\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a><a href=\"([^\"^\n]+)\" title", listOf(1, 2, 3))?.run {
-                            it.chapterLink = StringKtUtil.parseLinkForAiShuWang(this[0])
+                            it.chapterLink = StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[Constants.RESOLVE_FROM_AISHU]!!,this[0])
                             it.bookName = this[1]
                         }
                     } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
@@ -222,6 +222,49 @@ class SearchBookResolveUtil {
                         }
                     }
                 }
+            }
+            return if (result.isEmpty()) null else result
+        }
+
+        fun resolveFromSANQI(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
+            var lastNonEmptyLine = ""
+            val result = mutableListOf<SearchBookBean>()
+            var searchBookBean:SearchBookBean? = null
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
+                val current = it.trim()
+                if(lastNonEmptyLine == "<tr>"){
+                    searchBookBean = SearchBookBean(Constants.RESOLVE_FROM_SANQI)
+                }
+                if(current == "</tr>"){
+                    searchBookBean = null
+                    return@forEach
+                }
+                searchBookBean?.let {
+                    it.takeIf { it.bookName.isEmpty() }?.let {
+                        //<td class="odd"><a href="https://www.37shuwu.com/html/65/65143/index.html">凡人修仙之仙界篇</a></td>
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></td>", listOf(1, 2))?.run {
+                            it.chapterLink = this[0]
+                            it.bookName = this[1]
+                        }
+                    } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
+                        //<td class="even"><a href="/html/65/65143/20979788.html" target="_blank"> 第一千零六十八章 出手</a></td>
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"^\n]+)\" target=\"_blank\">([^\"^\n]+)</a></td>", listOf(2))?.run {
+                            it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
+                        }
+                    } ?: it.takeIf { it.authorName.isEmpty() }?.let {
+                        //<td class="odd">忘语</td>
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([^\"^\n]+)</td>", listOf(1))?.run {
+                            it.authorName = this[0]
+                        }
+                    } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
+                        //<td class="odd" align="">19-08-17</td>
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"\">([^\"^\n]{1,})</td>", listOf(1))?.run {
+                            it.lastUpdate = this[0]
+                            result.add(it)
+                        }
+                    }
+                }
+                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
             }
             return if (result.isEmpty()) null else result
         }
