@@ -1,5 +1,6 @@
 package com.lin.read.filter.search
 
+import com.lin.read.filter.ReadBookBean
 import okhttp3.ResponseBody
 import java.io.Serializable
 
@@ -16,5 +17,7 @@ data class BookChapterContent(var content: String) : Serializable {
     var isComplete: Boolean = true
     var nextLink: String = ""
 }
+
+data class ReadResolveBean(val bookChapterInfo: BookChapterInfo?, val readBookBean: ReadBookBean?, val responseBody: ResponseBody) : Serializable
 
 data class CurrentReadInfo(var hasPreviousPage: Boolean, var hasNextPage: Boolean, var hasPreviousChapter: Boolean, var hasNextChapter: Boolean, var bookChapterInfo: BookChapterInfo) : Serializable
