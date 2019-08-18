@@ -26,6 +26,11 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
                 onItemLongClickListener.onItemLongClick(this)
                 return@setOnLongClickListener true
             }
+            setOnClickListener {
+                if ((it.getTag(R.integer.read_book_cb_view_id) as View).visibility != View.VISIBLE) {
+                    readBook(bookMarksData[it.tag as Int])
+                }
+            }
         })
     }
 
@@ -35,6 +40,8 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         isBinding = true
+        holder?.view?.tag = position
+        holder?.view?.setTag(R.integer.read_book_cb_view_id, holder.itemView?.mark_select_cb)
         bookMarksData[position].run {
             holder?.itemView?.mark_item_bookname?.text = bookName
             holder?.itemView?.mark_item_authorname?.text = authorName
@@ -50,9 +57,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
                 holder?.itemView?.mark_select_cb?.visibility = View.GONE
             }
             holder?.itemView?.mark_item_continue_read?.setOnClickListener {
-                val intent = Intent(fragment.activity, ReadBookActivity::class.java)
-                intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, chapterLink) as Parcelable)
-                fragment.startActivityForResult(intent, Constants.READ_REQUEST_CODE)
+                readBook(this)
             }
             holder?.itemView?.mark_select_cb?.setOnCheckedChangeListener { _, isChecked ->
                 if(!isBinding){
@@ -63,6 +68,14 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
             }
         }
         isBinding = false
+    }
+
+    private fun readBook(bookMark: BookMark) {
+        bookMark.run {
+            val intent = Intent(fragment.activity, ReadBookActivity::class.java)
+            intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, chapterLink) as Parcelable)
+            fragment.startActivityForResult(intent, Constants.READ_REQUEST_CODE)
+        }
     }
 
     interface OnCheckBoxClickListener {
@@ -93,5 +106,5 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
         notifyDataSetChanged()
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 }
