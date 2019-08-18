@@ -1,11 +1,9 @@
 package com.lin.read.filter.search
 
-import com.lin.read.filter.ReadBookBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.baseUrl
 import com.lin.read.utils.readLinesOfHtml
-import okhttp3.ResponseBody
 
 class ReadBookResolveUtil {
     companion object {
@@ -124,7 +122,7 @@ class ReadBookResolveUtil {
                 if (startResolving) {
                     //<dd><a href="http://www.biquge5200.com/51_51647/19645389.html">第一章 十六年</a></dd>
                     readResolveBean.readBookBean?.run {
-                        StringKtUtil.getDataFromContentByRegex(it, "<dd><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></dd>", listOf(1, 2))?.let {
+                        StringKtUtil.getDataFromContentByRegex(it, "<dd><a href=\"([^\"]+)\">([\\s\\S]+?)</a></dd>", listOf(1, 2))?.let {
                             result.add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
                                     it[0], StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                         }
@@ -143,7 +141,7 @@ class ReadBookResolveUtil {
                     if (lastNonEmptyLine == "<div class=\"adlist\"><script>show_list();</script></div>") {
                         readResolveBean.readBookBean?.run {
                             //<td class="L"><a href=
-                            StringKtUtil.getDataListFromContentByRegex(it, "<td class=\"L\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></td>", listOf(1, 2))?.let {
+                            StringKtUtil.getDataListFromContentByRegex(it, "<td class=\"L\"><a href=\"([^\"]+)\">([\\s\\S]+?)</a></td>", listOf(1, 2))?.let {
                                 return mutableListOf<BookChapterInfo>().apply {
                                     it.forEach {
                                         add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
@@ -165,7 +163,7 @@ class ReadBookResolveUtil {
                 it.trim().takeIf { it.startsWith("<dd><h3>") }?.let {
                     readResolveBean.readBookBean?.run {
                         ////<dd><a href="http://www.bxwx666.org/txt/267294/1215770.htm">第五章 观思神</a></dd>
-                        StringKtUtil.getDataListFromContentByRegex(it, "<td class=\"L\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></td>", listOf(1, 2))?.let {
+                        StringKtUtil.getDataListFromContentByRegex(it, "<td class=\"L\"><a href=\"([^\"]+)\">([\\s\\S]+?)</a></td>", listOf(1, 2))?.let {
                             return mutableListOf<BookChapterInfo>().apply {
                                 it.forEach {
                                     add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
@@ -186,7 +184,7 @@ class ReadBookResolveUtil {
                 if (lastNonEmptyLine == "<div class=\"neirong\">") {
                     readResolveBean.readBookBean?.run {
                         //<div class="clc"><a href="/xs/180445/20519569/">第一章 黄山真君和九洲一号群</a></div>
-                        StringKtUtil.getDataListFromContentByRegex(it, "<div class=\"clc\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></div>", listOf(1, 2))?.let {
+                        StringKtUtil.getDataListFromContentByRegex(it, "<div class=\"clc\"><a href=\"([^\"]+)\">([\\s\\S]+?)</a></div>", listOf(1, 2))?.let {
                             return mutableListOf<BookChapterInfo>().apply {
                                 it.forEach {
                                     add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
@@ -217,7 +215,7 @@ class ReadBookResolveUtil {
                 if (startResolving) {
                     readResolveBean.readBookBean?.run {
                         //<UL>	<li><a href="https://www.qk6.org/book/xiannichangsheng/71633199.html">第19章 神乌魂印</a></li>
-                        StringKtUtil.getDataFromContentByRegex(it.trim(), "<li><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></li>", listOf(1, 2))?.let {
+                        StringKtUtil.getDataFromContentByRegex(it.trim(), "<li><a href=\"([^\"]+)\">([\\s\\S]+?)</a></li>", listOf(1, 2))?.let {
                             result.add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
                                     it[0], StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                         }
@@ -233,8 +231,9 @@ class ReadBookResolveUtil {
             readResolveBean.responseBody.readLinesOfHtml().forEach {
                 if(lastNonEmptyLine == "<div class=\"liebiao_bottom\">"){
                     readResolveBean.readBookBean?.run {
+                        //<dd><a href="/html/65/65143/18844843.html">第三百一十二章 雷豆（六一快乐^^）</a></dd>
                         //<dd><a href="/html/65/65143/17223065.html">仙界篇外传一</a></dd>
-                        StringKtUtil.getDataListFromContentByRegex(it, "<dd><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></dd>", listOf(1, 2))?.let {
+                        StringKtUtil.getDataListFromContentByRegex(it, "<dd><a href=\"([^\"]+)\">([\\s\\S]+?)(?=</a></dd>)", listOf(1, 2))?.let {
                             return mutableListOf<BookChapterInfo>().apply {
                                 it.forEach {
                                     add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,

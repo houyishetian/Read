@@ -19,23 +19,23 @@ class SearchBookResolveUtil {
                 bookInfo?.let {
                     it.takeIf { it.bookName.isEmpty() }?.let {
                         //<td class="odd"><a href="https://www.biquge5200.cc/80_80767/">凌仙神帝</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></td>", listOf(1, 2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"]+)\">([\\s\\S]+?)(?=</a></td>)", listOf(1, 2))?.run {
                             it.chapterLink = this[0]
                             it.bookName = this[1]
                         }
                     } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
                         //<td class="even"><a href="https://www.biquge5200.cc/80_80767/154713700.html" target="_blank"> 第六百一十七章</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"^\n]+)\" target=\"_blank\">([^\"^\n]+)</a></td>", listOf(2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)(?=</a></td>)", listOf(2))?.run {
                             it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
                         }
                     } ?: it.takeIf { it.authorName.isEmpty() }?.let {
                         //<td class="odd">逆仙龙</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([^\"^\n]+)</td>", listOf(1))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                             it.authorName = this[0]
                         }
                     } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
                         //<td class="odd" align="center">2018-06-20</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([^\"^\n]{1,})</td>", listOf(1))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             result.add(it)
                         }
@@ -61,23 +61,23 @@ class SearchBookResolveUtil {
                 bookInfo?.let {
                     it.takeIf { it.bookName.isEmpty() }?.let {
                         //<td class="odd"><a href="https://www.x23us.com/book/352"><b style="color:red">仙逆</b></a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"[^\"^\n]+\">([^\"^\n]+)</a></td>", listOf(1), true)?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"[^\"]+\">([\\s\\S]+?)(?=</a></td>)", listOf(1))?.run {
                             it.bookName = this[0]
                         }
                     } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
                         //<td class="even"><a href="https://www.x23us.com/html/0/352/" target="_blank"> 后记</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"^\n]+)\" target=\"_blank\">([^\"^\n]+)</a></td>", listOf(1, 2), true)?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)(?=</a></td>)", listOf(1, 2))?.run {
                             it.chapterLink = this[0]
                             it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[1])
                         }
                     } ?: it.takeIf { it.authorName.isEmpty() }?.let {
                         //<td class="odd">耳根</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([^\"^\n]+)</td>", listOf(1), true)?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                             it.authorName = this[0]
                         }
                     } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
                         //<td class="odd" align="center">14-11-07</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([^\"^\n]+)</td>", listOf(1), true)?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"center\">([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             result.add(it)
                         }
@@ -96,18 +96,18 @@ class SearchBookResolveUtil {
                     bookInfo?.let {
                         it.takeIf { it.authorName.isEmpty() && current.contains("</td><th>") }?.let {
                             //98<th>文章作者</th><td>&nbsp;忘语</td><th>文章状态</th><td>&nbsp;已完成</td></tr>
-                            StringKtUtil.getDataFromContentByRegex(current, "<th>文章作者</th><td>&nbsp;([^\n^<]+)</td>", listOf(1))?.run {
+                            StringKtUtil.getDataFromContentByRegex(current, "<th>文章作者</th><td>&nbsp;([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                                 it.authorName = this[0]
                             }
                         }
                                 ?: it.takeIf { it.authorName.isNotEmpty() && it.lastUpdate.isEmpty() && current.contains("</td><th>") }?.let {
                                     //99<th>最后更新</th><td>&nbsp;2018-03-31</td></tr>
-                                    StringKtUtil.getDataFromContentByRegex(current, "<th>最后更新</th><td>&nbsp;([^\n^<]+)</td>", listOf(1))?.run {
+                                    StringKtUtil.getDataFromContentByRegex(current, "<th>最后更新</th><td>&nbsp;([\\s\\S]+?)(?=</td>)", listOf(1))?.run {
                                         it.lastUpdate = this[0]
                                     }
                                 } ?: it.takeIf { it.authorName.isNotEmpty() && it.lastUpdate.isNotEmpty() }?.let {
                                     //137最新章节：<a href="https://www.x23us.com/html/45/45945/">关于小凡人完结和新书</a></p>
-                                    StringKtUtil.getDataFromContentByRegex(current, "最新章节：<a href=\"([^\n^\"]+)\">([^\\n]+)</a></p>", listOf(1, 2))?.run {
+                                    StringKtUtil.getDataFromContentByRegex(current, "最新章节：<a href=\"([^\n]+)\">([\\s\\S]+?)(?=</a></p>)", listOf(1, 2))?.run {
                                         it.chapterLink = this[0]
                                         it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[1])
                                         result.add(it)
@@ -167,23 +167,23 @@ class SearchBookResolveUtil {
                 bookInfo?.let {
                     it.takeIf { it.bookName.isEmpty() }?.let {
                         //<li class="neirong1"><a href="/xs/125988/">仙逆</a><a href="/xs/125988.txt" title="仙逆TXT下载">TXT下载</a></li>
-                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong1\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a><a href=\"([^\"^\n]+)\" title", listOf(1, 2, 3))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong1\"><a href=\"([^\"]+)\">([\\s\\S]+?)(</a><a href=\")", listOf(1, 2))?.run {
                             it.chapterLink = StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[Constants.RESOLVE_FROM_AISHU]!!,this[0])
                             it.bookName = this[1]
                         }
                     } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
                         //<li class="neirong2"><a href="/xs/125988/6114823/">第一卷 平庸少年 第二十一章 夺灵</a></li>
-                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong2\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></li>", listOf(2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong2\"><a href=\"([^\"]+)\">([\\s\\S]+?)(?=</a></li>)", listOf(2))?.run {
                             it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
                         }
                     } ?: it.takeIf { it.authorName.isEmpty() }?.let {
                         //<li class="neirong4"><a href="//www.22ff.org/author/洛山">洛山</a></li>
-                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong4\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></li>", listOf(2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong4\"><a href=\"([^\"]+)\">([\\s\\S]+?)(?=</a></li>)", listOf(2))?.run {
                             it.authorName = this[0]
                         }
                     } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
                         //<li class="neirong3">06-17 13:49</li>
-                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong3\">([^\"^\n]+)</li>", listOf(1))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<li class=\"neirong3\">([\\s\\S]+?)(?=</li>)", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             result.add(it)
                         }
@@ -202,7 +202,7 @@ class SearchBookResolveUtil {
                 val current = it.trim()
                 takeIf { bookInfo == null }?.let {
                     //<span class="sp_name"><a class="sp_bookname" href="https://www.qk6.org/book/xiannichangsheng/info.html" target="_blank">仙逆长生</a> / 莺歌</span>
-                    StringKtUtil.getDataFromContentByRegex(current, "<span class=\"sp_name\"><a class=\"sp_bookname\" href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"^<]+)</a>([^\n^\"^<]+)</span>",
+                    StringKtUtil.getDataFromContentByRegex(current, "<span class=\"sp_name\"><a class=\"sp_bookname\" href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)</a>([\\s\\S]+?)</span>",
                             listOf(1, 2, 3))?.run {
                         bookInfo = SearchBookBean(Constants.RESOLVE_FROM_QINGKAN)
                         bookInfo?.let {
@@ -213,7 +213,7 @@ class SearchBookResolveUtil {
                     }
                 } ?: let {
                     //<a class="sp_chaptername" href="https://www.qk6.org/book/yixiannitianzhilv_shenjun_biepao_/69036030.html" target="_blank">9 6</a>（2018-12-09 12:12:01）</h4>
-                    StringKtUtil.getDataFromContentByRegex(current, "<a class=\"sp_chaptername\" href=\"([^\n^\"]+)\" target=\"_blank\">([^\n^\"]+)</a>([^\n^\"]+)</h4>", listOf(2, 3))?.run {
+                    StringKtUtil.getDataFromContentByRegex(current, "<a class=\"sp_chaptername\" href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)</a>([\\s\\S]+?)</h4>", listOf(2, 3))?.run {
                         bookInfo?.let {
                             it.lastChapter = this[0]
                             it.lastUpdate = StringKtUtil.removeSeconds(this[1].replace("[（）]".toRegex(), ""))
@@ -242,23 +242,23 @@ class SearchBookResolveUtil {
                 searchBookBean?.let {
                     it.takeIf { it.bookName.isEmpty() }?.let {
                         //<td class="odd"><a href="https://www.37shuwu.com/html/65/65143/index.html">凡人修仙之仙界篇</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"^\n]+)\">([^\"^\n]+)</a></td>", listOf(1, 2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"]+)\">([\\s\\S]+?)</a></td>", listOf(1, 2))?.run {
                             it.chapterLink = this[0]
                             it.bookName = this[1]
                         }
                     } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
                         //<td class="even"><a href="/html/65/65143/20979788.html" target="_blank"> 第一千零六十八章 出手</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"^\n]+)\" target=\"_blank\">([^\"^\n]+)</a></td>", listOf(2))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)</a></td>", listOf(2))?.run {
                             it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
                         }
                     } ?: it.takeIf { it.authorName.isEmpty() }?.let {
                         //<td class="odd">忘语</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([^\"^\n]+)</td>", listOf(1))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([\\s\\S]+?)</td>", listOf(1))?.run {
                             it.authorName = this[0]
                         }
                     } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
                         //<td class="odd" align="">19-08-17</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"\">([^\"^\n]{1,})</td>", listOf(1))?.run {
+                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"\">([\\s\\S]+?)</td>", listOf(1))?.run {
                             it.lastUpdate = this[0]
                             result.add(it)
                         }
