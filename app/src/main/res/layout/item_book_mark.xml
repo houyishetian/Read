@@ -1,157 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical">
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="7.5"
-            android:orientation="vertical">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="7.5"
+                android:layout_marginLeft="15dp"
+                android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
-                    <TextView
+                <TextView
                         android:id="@+id/mark_item_bookname"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="0.8"
                         android:ellipsize="end"
-                        android:gravity="center"
+                        android:gravity="left"
                         android:lines="1"
                         android:text="--"
                         android:textColor="@android:color/holo_blue_dark"
-                        android:textSize="22sp" />
+                        android:textSize="22sp"/>
 
-                    <TextView
-                        android:id="@+id/mark_item_authorname"
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="0.3"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:lines="1"
-                        android:text="--"
-                        android:textColor="#848484"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center_vertical"
-                    android:orientation="vertical">
+                        android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/mark_item_booktype"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="center"
-                        android:text="--" />
+                            android:id="@+id/mark_item_authorname"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:lines="1"
+                            android:text="--"
+                            android:textColor="#848484"
+                            android:textSize="13sp"/>
 
                     <TextView
-                        android:id="@+id/mark_item_lastread"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:lines="1"
-                        android:text="--"
-                        android:textColor="#848484"
-                        android:textSize="11sp" />
+                            android:id="@+id/mark_item_lastread"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="right"
+                            android:lines="1"
+                            android:text="--"
+                            android:textColor="#848484"
+                            android:textSize="13sp"/>
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/mark_item_lastchapter"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical|left"
-                    android:lines="1"
-                    android:text="--" />
+                        android:id="@+id/mark_item_lastchapter"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical|left"
+                        android:lines="1"
+                        android:text="--"/>
 
             </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="90dp"
-            android:layout_height="match_parent">
-
-            <CheckBox
-                android:id="@+id/mark_select_cb"
-                android:visibility="gone"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:button="@null"
-                android:layout_centerInParent="true"
-                android:checked="false"
-                android:background="@drawable/selector_book_mark_item"/>
-
-            <RelativeLayout
-                android:id="@+id/mark_reading_layout"
-                android:layout_width="match_parent"
+                android:layout_width="90dp"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/mark_item_web_name"
-                    android:layout_width="42dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/shape_scan_type_item_selected"
-                    android:paddingBottom="3dp"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingTop="3dp"
-                    android:text="--"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:textSize="9sp" />
-
-                <TextView
-                    android:id="@+id/mark_item_continue_read"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <CheckBox
+                    android:id="@+id/mark_select_cb"
+                    android:visibility="gone"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:button="@null"
                     android:layout_centerInParent="true"
-                    android:text="继续阅读"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="13sp" />
+                    android:checked="false"
+                    android:background="@drawable/selector_book_mark_item"/>
+
+            <RelativeLayout
+                    android:id="@+id/mark_reading_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                    <TextView
+                            android:id="@+id/mark_item_web_name"
+                            android:layout_width="42dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_scan_type_item_selected"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="7dp"
+                            android:paddingRight="7dp"
+                            android:paddingTop="3dp"
+                            android:text="--"
+                            android:gravity="center"
+                            android:visibility="visible"
+                            android:textSize="9sp"/>
+
+                    <TextView
+                            android:id="@+id/mark_item_continue_read"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="继续阅读"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@android:color/holo_blue_dark"
+                            android:textSize="13sp"/>
+                </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
-
     </LinearLayout>
 </RelativeLayout>

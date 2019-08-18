@@ -38,7 +38,6 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
         bookMarksData[position].run {
             holder?.itemView?.mark_item_bookname?.text = bookName
             holder?.itemView?.mark_item_authorname?.text = authorName
-            holder?.itemView?.mark_item_booktype?.visibility = View.GONE
             holder?.itemView?.mark_item_web_name?.text = Constants.SEARCH_WEB_NAME_MAP[webType]
             holder?.itemView?.mark_item_lastchapter?.text = lastReadChapter
             holder?.itemView?.mark_item_lastread?.text = StringKtUtil.formatTime(lastReadTime)

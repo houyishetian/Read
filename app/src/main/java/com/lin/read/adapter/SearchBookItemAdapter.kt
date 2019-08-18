@@ -27,17 +27,8 @@ class SearchBookItemAdapter(private val context: Context, private val allBookDat
         allBookData[position].run {
             holder?.itemView?.book_item_bookname?.text = bookName
             holder?.itemView?.book_item_authorname?.text = authorName
-            holder?.itemView?.book_item_booktype?.visibility = View.GONE
             holder?.itemView?.book_item_lastupdate?.text = lastUpdate
             holder?.itemView?.book_item_lastcontent?.text = lastChapter
-            holder?.itemView?.book_item_download?.visibility = View.GONE
-
-//            holder?.itemView?.book_item_download?.setOnClickListener {
-//                val intent = Intent()
-//                intent.action = "android.intent.action.VIEW"
-//                intent.data = Uri.parse(downloadLink)
-//                context.startActivity(intent)
-//            }
             holder?.itemView?.book_item_read?.setOnClickListener {
                 val intent = Intent(context, ReadBookActivity::class.java)
                 intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, chapterLink) as Parcelable)
