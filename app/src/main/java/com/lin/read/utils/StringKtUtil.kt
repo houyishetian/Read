@@ -109,7 +109,7 @@ class StringKtUtil {
             return url
         }
 
-        fun formatTime(time: Long): String = DateFormat.format("yyyy-MM-dd HH:mm", Date(time)).toString()
+        fun formatTime(time: Long): String = DateFormat.format("yy-MM-dd HH:mm", Date(time)).toString()
 
         fun removeSeconds(data: String): String = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}):\\d{2}").matcher(data).takeIf { it.matches() }?.group(1)
                 ?: data

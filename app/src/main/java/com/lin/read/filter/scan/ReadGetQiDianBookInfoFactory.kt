@@ -98,7 +98,11 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
         val result = mutableListOf<ScanBookBean>()
         val observableArray = arrayListOf<Observable<ResponseBody>>()
         bookInfoList.forEach{
-            val bookId = StringUtils.getBookId(it.bookLink)
+            val bookId = it.bookLink.replace("//book.qidian.com/info/", "").takeIf {
+                it.matches("\\d+".toRegex())
+            }?.let {
+                it
+            } ?: ""
             observableArray.add(service.getQiDianBookDetails(bookId).subscribeOn(Schedulers.io()).onErrorReturn {
                 (it as? HttpException)?.response()?.takeIf { it.code() >= 400 }?.errorBody()?.let {
                     Log.e("error for current item", it.string())

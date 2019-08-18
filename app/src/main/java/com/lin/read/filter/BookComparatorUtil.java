@@ -9,11 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import com.lin.read.R;
 import com.lin.read.adapter.DialogSortTypeAdapter;
 import com.lin.read.filter.scan.SortInfo;
-import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
 
 import java.util.ArrayList;
@@ -132,7 +130,7 @@ public class BookComparatorUtil {
     }
 
     private List<SortInfo> getSortInfoData(ScanBookBean oneItem) {
-        if (oneItem == null || StringUtils.isEmpty(oneItem.getScanWebName())) {
+        if (oneItem == null || TextUtils.isEmpty(oneItem.getScanWebName())) {
             return null;
         }
         if(Constants.WEB_QIDIAN.equals(oneItem.getScanWebName()) || Constants.WEB_YOU_SHU.equals(oneItem.getScanWebName()) || Constants.WEB_QIDIAN_FINISH.equals(oneItem.getScanWebName())){

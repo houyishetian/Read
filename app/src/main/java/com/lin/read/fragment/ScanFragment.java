@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,10 @@ import com.lin.read.decoration.ScanTypeItemDecoration;
 import com.lin.read.filter.BookComparator;
 import com.lin.read.filter.BookComparatorUtil;
 import com.lin.read.filter.ScanBookBean;
-import com.lin.read.filter.scan.*;
+import com.lin.read.filter.scan.ReadScanBean;
+import com.lin.read.filter.scan.ReadScanInputtedBean;
+import com.lin.read.filter.scan.ScanInfo;
+import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.utils.Constants;
 import com.lin.read.utils.NoDoubleClickListener;
 import com.lin.read.view.ScanTypeRecyclerViewUtil;
@@ -312,7 +316,7 @@ public class ScanFragment extends Fragment {
             @Override
             public void onItemClick(int position,String clickText) {
                 Log.d("Test", "current position:" + clickText);
-                if(!StringUtils.isEmpty(clickText)){
+                if(!TextUtils.isEmpty(clickText)){
                     hideSoft();
                     scanTypeRecyclerViewUtil.showWebLayout(scanWebTypeAdapter.getCheckedInfo().getKey());
                 }

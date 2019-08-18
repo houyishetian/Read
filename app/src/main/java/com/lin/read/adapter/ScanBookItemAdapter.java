@@ -2,13 +2,13 @@ package com.lin.read.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.lin.read.R;
 import com.lin.read.filter.ScanBookBean;
-import com.lin.read.filter.scan.StringUtils;
 import com.lin.read.utils.Constants;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         holder.bookName.setText(bookInfo.getBookName());
         holder.authorName.setText(bookInfo.getAuthorName());
         holder.webType.setText(bookInfo.getScanWebName());
-        holder.lastUpdate.setText(StringUtils.formatLastUpdate(bookInfo.getLastUpdate()));
-        if(StringUtils.isEmpty(bookInfo.getWordsNum())){
+        holder.lastUpdate.setText(bookInfo.getLastUpdate());
+        if(TextUtils.isEmpty(bookInfo.getWordsNum())){
             holder.wordsNum.setVisibility(View.INVISIBLE);
         }else{
             holder.wordsNum.setVisibility(View.VISIBLE);
@@ -52,7 +52,7 @@ public class ScanBookItemAdapter extends RecyclerView.Adapter<ScanBookItemAdapte
         } else {
             holder.viewBookItemInfos.setVisibility(View.VISIBLE);
         }
-        if(StringUtils.isEmpty(bookInfo.getScanWebName())){
+        if(TextUtils.isEmpty(bookInfo.getScanWebName())){
             holder.viewScoreInfos.setVisibility(View.INVISIBLE);
             holder.viewCommentInfos.setVisibility(View.INVISIBLE);
         }else{
