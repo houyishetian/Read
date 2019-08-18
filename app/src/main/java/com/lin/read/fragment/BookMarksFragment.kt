@@ -76,10 +76,10 @@ class BookMarksFragment : Fragment() {
             val bookMarksList = BookMarkUtil.getInstance(activity).getAllBookMarks()
             activity.runOnUiThread{
                 DialogUtil.getInstance().hideLoadingView()
+                book_marks_total_num.text = String.format("共%s条书签", "" + bookMarksList.size)
                 if(!bookMarksList.isNullOrEmpty()){
                     empty_view.visibility = View.GONE
                     book_marks_rcv.visibility = View.VISIBLE
-                    book_marks_total_num.text = String.format("共%s条书签", "" + bookMarksList.size)
                     allBookmarks.clear()
                     allBookmarks.addAll(bookMarksList)
                     book_marks_rcv.adapter.notifyDataSetChanged()
