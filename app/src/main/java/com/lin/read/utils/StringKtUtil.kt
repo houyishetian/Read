@@ -117,7 +117,7 @@ class StringKtUtil {
         fun removeAdsFromContent(content: String): String = let {
             var result = content
             listOf(
-                    "[顶点小说Ｘ２３ＵＳ．ＣＯＭ ]+?(更新最快)?"
+                    "顶点小说|Ｘ２３ＵＳ．ＣＯＭ|更新最快|点击收藏".map { if (it != '|') "$it ?" else "$it" }.joinToString("")
             ).forEach {
                 result = replaceDataOfContentByRegex(result, it)
             }
