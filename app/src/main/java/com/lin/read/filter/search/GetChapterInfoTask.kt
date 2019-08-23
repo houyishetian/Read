@@ -32,7 +32,7 @@ class GetChapterInfoTask(private val readBookBean: ReadBookBean, private val onT
                     override fun onNext(t: ResponseBody?) {
                         t?.let {
                             ReflectUtil.invokeMethod(ReadBookResolveUtil.Companion, "getChapterListFrom${readBookBean.webType}", List::class.java, ReadResolveBean(null, readBookBean, it)).let {
-                                val result = it as List<BookChapterInfo>
+                                val result = (it as List<BookChapterInfo>).distinctBy { it.chapterNameOri }
                                 onTaskListener.onSucc(result, result.split(eachPageSize, true))
                             }
                         }
