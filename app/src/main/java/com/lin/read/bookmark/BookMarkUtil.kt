@@ -36,6 +36,27 @@ class BookMarkUtil private constructor(ctx: Context) {
         }
     }
 
+    fun saveBookMarksList(newBookMarksList: List<BookMark>, coverBookMarkType: CoverBookMarkType = CoverBookMarkType.COVER_EXIST) {
+        if (newBookMarksList.isEmpty()) return
+        if (newMarksList2.isEmpty()) {
+            newMarksList2 = mutableListOf<BookMark>().apply { addAll(newBookMarksList) }
+            return
+        }
+        val tempExistingList = mutableListOf<BookMark>().apply { addAll(newMarksList2) }
+        newMarksList2 = mutableListOf<BookMark>().apply {
+            newBookMarksList.forEach { newBookItem ->
+                tempExistingList.firstOrNull { it.markKey == newBookItem.markKey }?.let {
+                    add(when (coverBookMarkType) {
+                        CoverBookMarkType.KEEP_EXIST -> it
+                        CoverBookMarkType.COVER_EXIST -> newBookItem
+                        CoverBookMarkType.SAVE_OLDER -> if (it.lastReadTime > newBookItem.lastReadTime) newBookItem else it
+                        CoverBookMarkType.SAVE_NEWER -> if (it.lastReadTime > newBookItem.lastReadTime) it else newBookItem
+                    })
+                } ?: add(newBookItem)
+            }
+        }
+    }
+
     fun getAllBookMarks(): List<BookMark> {
         return newMarksList2.apply {
             sortByDescending { it.lastReadTime }
@@ -48,5 +69,16 @@ class BookMarkUtil private constructor(ctx: Context) {
                 deletedItems.firstOrNull { it.markKey == pendingAddedItem.markKey } == null
             })
         }
+    }
+
+    enum class CoverBookMarkType {
+        //KEEP_EXIST:the legacy one is kept, abandon the new save item;
+        KEEP_EXIST,
+        //COVER_EXIST: the new save item is saved, abandon the legacy one;
+        COVER_EXIST,
+        //SAVE_OLDER: sort by time, save the older one;
+        SAVE_OLDER,
+        //SAVE_NEWER: sort by time, save the newer one
+        SAVE_NEWER
     }
 }

@@ -1,12 +1,19 @@
 package com.lin.read.utils
 
 import android.app.Activity
+import android.app.Dialog
+import android.database.Cursor
+import android.graphics.Point
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import com.lin.read.R
 import com.lin.read.filter.search.BookChapterInfo
 import okhttp3.ResponseBody
 import java.io.ByteArrayInputStream
@@ -85,5 +92,51 @@ fun ResponseBody.readLinesOfHtml(): List<String> {
 fun String.baseUrl(): String {
     URL(this).apply {
         return "$protocol://$host/"
+    }
+}
+
+fun Cursor.forEachRow(block: (Cursor) -> Unit) {
+    this.takeIf { it.moveToFirst() }?.run {
+        for (index in 0 until count) {
+            moveToPosition(index)
+            block(this)
+        }
+    }
+}
+
+fun Cursor.getAllColumnsByString(): LinkedHashMap<String, String> {
+    return linkedMapOf<String, String>().also {
+        for (index in 0 until columnCount) {
+            it.put(getColumnName(index), getString(index))
+        }
+    }
+}
+
+fun Cursor.getAllColumnsByType(): LinkedHashMap<String, Any> {
+    return linkedMapOf<String, Any>().also {
+        for (index in 0 until columnCount) {
+            it.put(getColumnName(index), when (getType(index)) {
+                Cursor.FIELD_TYPE_BLOB -> getBlob(index)
+                Cursor.FIELD_TYPE_FLOAT -> getFloat(index)
+                Cursor.FIELD_TYPE_INTEGER -> getInt(index)
+                Cursor.FIELD_TYPE_NULL -> ""
+                Cursor.FIELD_TYPE_STRING -> getString(index)
+                else -> throw java.lang.Exception("unsupported type!")
+            })
+        }
+    }
+}
+
+fun Activity.showFullScreenDialog(layoutId: Int, outCancellable: Boolean = false, block: (Dialog, View) -> Unit) {
+    Dialog(this, R.style.Dialog_Fullscreen).also {
+        it.show()
+        val view = LayoutInflater.from(this).inflate(layoutId, null)
+        Point().apply {
+            windowManager.defaultDisplay.getSize(this)
+            it.setContentView(view, ViewGroup.LayoutParams(x, y))
+        }
+        it.setCanceledOnTouchOutside(outCancellable)
+        it.setCancelable(true)
+        block(it, view)
     }
 }

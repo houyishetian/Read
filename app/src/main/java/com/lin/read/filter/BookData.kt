@@ -16,6 +16,20 @@ data class BookMark(val webType: String, val bookName: String, val authorName: S
     var isShowCheckBox: Boolean = false
 }
 
+class BookMarkKey {
+    companion object {
+        const val MARK_KEY = "markKey"
+        const val WEB_TYPE = "webType"
+        const val BOOK_NAME = "bookName"
+        const val AUTHOR_NAME = "authorName"
+        const val CHAPTER_LINK = "chapterLink"
+        const val PAGE = "page"
+        const val INDEX = "bookIndex"
+        const val LAST_READ_TIME = "lastReadTime"
+        const val LAST_READ_CHAPTER = "lastReadChapter"
+    }
+}
+
 @Parcelize
 data class ReadBookBean(val webType: String, val bookName: String, val authorName: String, val chapterLink: String) : Serializable, Parcelable {
     val markKey: String

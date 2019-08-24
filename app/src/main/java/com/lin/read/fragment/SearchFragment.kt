@@ -1,6 +1,5 @@
 package com.lin.read.fragment
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -22,6 +21,7 @@ import com.lin.read.filter.search.SearchBookTask
 import com.lin.read.filter.search.SearchWebBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.makeMsg
+import com.lin.read.utils.showFullScreenDialog
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -78,22 +78,16 @@ class SearchFragment : Fragment() {
     }
 
     private fun showSelectWebDialog() {
-        val selectWebDialog = Dialog(this.activity, R.style.Dialog_Fullscreen)
-        selectWebDialog.show()
-        val inflater = LayoutInflater.from(activity)
-        val viewDialog = inflater.inflate(R.layout.dialog_search_select_web, null)
-        val width = activity.windowManager.defaultDisplay.width
-        val height = activity.windowManager.defaultDisplay.height
-        //设置dialog的宽高为屏幕的宽高
-        selectWebDialog.setContentView(viewDialog, ViewGroup.LayoutParams(width, height))
-        (viewDialog.findViewById(R.id.dialog_select_web_rcv) as RecyclerView).run {
-            layoutManager = LinearLayoutManager(activity)
-            addItemDecoration(ScanBooksItemDecoration(activity))
-            adapter = DialogWebTypeAdapter(activity, webBeansList).apply {
-                onItemWebClickListener = object : DialogWebTypeAdapter.OnItemWebClickListener {
-                    override fun onItemWebClick(searchWebBean: SearchWebBean) {
-                        select_web.text = searchWebBean.webName
-                        selectWebDialog.dismiss()
+        activity.showFullScreenDialog(R.layout.dialog_search_select_web) { dialog, view ->
+            (view.findViewById(R.id.dialog_select_web_rcv) as RecyclerView).run {
+                layoutManager = LinearLayoutManager(activity)
+                addItemDecoration(ScanBooksItemDecoration(activity))
+                adapter = DialogWebTypeAdapter(activity, webBeansList).apply {
+                    onItemWebClickListener = object : DialogWebTypeAdapter.OnItemWebClickListener {
+                        override fun onItemWebClick(searchWebBean: SearchWebBean) {
+                            select_web.text = searchWebBean.webName
+                            dialog.dismiss()
+                        }
                     }
                 }
             }

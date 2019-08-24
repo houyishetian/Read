@@ -1,15 +1,11 @@
 package com.lin.read.activity
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
-import android.graphics.Point
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -322,15 +318,8 @@ class ReadBookActivity : Activity() {
     }
 
     private fun showSearchResultDialog(searchResult: List<BookChapterInfo>) {
-        val splitSearchResult = searchResult.split(20)
-        val dialog = Dialog(this, R.style.Dialog_Fullscreen)
-        dialog.show()
-        dialog.apply dialog@{
-            val view = LayoutInflater.from(this@ReadBookActivity).inflate(R.layout.dialog_search_chapter, null)
-            val point = Point()
-            windowManager.defaultDisplay.getSize(point)
-            setContentView(view, ViewGroup.LayoutParams(point.x, point.y))
-            setCanceledOnTouchOutside(false)
+        showFullScreenDialog(R.layout.dialog_search_chapter) { dialog, view ->
+            val splitSearchResult = searchResult.split(20)
             val searchChapterLv = view.findViewById(R.id.dialog_search_chapter_lv) as ListView
             val searchPrePage = view.findViewById(R.id.dialog_search_chapter_pre_page) as TextView
             val searchNextPage = view.findViewById(R.id.dialog_search_chapter_next_page) as TextView
@@ -343,7 +332,7 @@ class ReadBookActivity : Activity() {
                 setTag(keyTag, 0)
                 adapter = DialogSearchChapterAdapter(this@ReadBookActivity, displayList).apply adapter@{
                     setOnItemChapterClickListener {
-                        this@dialog.hide()
+                        dialog.dismiss()
                         getContentInfo(LoadChapter.NEXT, it)
                     }
                 }
@@ -367,7 +356,6 @@ class ReadBookActivity : Activity() {
                 it.isEnabled = page != splitSearchResult.size - 1
                 searchPrePage.isEnabled = true
             }
-
         }
     }
 

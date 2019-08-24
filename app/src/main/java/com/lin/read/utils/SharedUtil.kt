@@ -11,6 +11,7 @@ import kotlin.reflect.KProperty
 
 class SharedUtil<T>(private val ctx: Context, private val key: String, private val default: T, private val sharedName: String = Constants.DEFAULT_SHARED_NAME) : ReadWriteProperty<Any?, T> {
     private val shared: SharedPreferences by lazy { ctx.getSharedPreferences(sharedName, Context.MODE_PRIVATE) }
+    private val CHARSET_NAME = "ISO-8859-1"
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = shared.run {
         val result = when (default) {
             is String -> getString(key, default)
@@ -44,14 +45,14 @@ class SharedUtil<T>(private val ctx: Context, private val key: String, private v
         val byteOutputStream = ByteArrayOutputStream()
         val objOutputStream = ObjectOutputStream(byteOutputStream)
         objOutputStream.writeObject(value)
-        return byteOutputStream.toString("ISO-8859-1").apply {
+        return byteOutputStream.toString(CHARSET_NAME).apply {
             objOutputStream.close()
             byteOutputStream.close()
         }
     }
 
     private fun parseStr2Obj(value: String): T {
-        val byteInputStream = ByteArrayInputStream(value.toByteArray(charset("ISO-8859-1")))
+        val byteInputStream = ByteArrayInputStream(value.toByteArray(charset(CHARSET_NAME)))
         val objInputStream = ObjectInputStream(byteInputStream)
         return (objInputStream.readObject() as T).apply {
             byteInputStream.close()

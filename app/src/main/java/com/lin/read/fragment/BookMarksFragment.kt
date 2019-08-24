@@ -1,6 +1,8 @@
 package com.lin.read.fragment
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -10,15 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.adapter.BookMarksAdapter
+import com.lin.read.bookmark.BookMarkExportUtil
 import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.decoration.ScanBooksItemDecoration
 import com.lin.read.filter.BookMark
 import com.lin.read.utils.Constants
+import com.lin.read.utils.NoDoubleClickListener
+import com.lin.read.utils.makeMsg
+import com.lin.read.utils.showFullScreenDialog
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_book_marks.*
 
 class BookMarksFragment : Fragment() {
     private lateinit var allBookmarks: MutableList<BookMark>
+    private val REQUEST_STORAGE_CODE = 100
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(activity).inflate(R.layout.fragment_book_marks,null)
     }
@@ -37,6 +44,7 @@ class BookMarksFragment : Fragment() {
             adapter = BookMarksAdapter(this@BookMarksFragment, allBookmarks)
             (adapter as BookMarksAdapter).onItemLongClickListener = object :BookMarksAdapter.OnItemLongClickListener{
                 override fun onItemLongClick(view: View) {
+                    book_marks_export.visibility = View.GONE
                     book_marks_select_all.visibility = View.VISIBLE
                     book_marks_delete.visibility = View.VISIBLE
                     book_marks_delete.isEnabled = false
@@ -57,6 +65,89 @@ class BookMarksFragment : Fragment() {
         book_marks_delete.setOnClickListener{
             getData(true)
         }
+
+        book_marks_export.setOnClickListener {
+            mutableListOf<String>().apply {
+                if (activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                }
+                if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                }
+            }.takeIf { it.isNotEmpty() }?.run {
+                requestPermissions(this.toTypedArray(), REQUEST_STORAGE_CODE)
+            } ?: showExportDialog()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_STORAGE_CODE) {
+            val readIndex = permissions.withIndex().firstOrNull { it.value == Manifest.permission.READ_EXTERNAL_STORAGE }?.index
+                    ?: throw Exception("cannot get READ_EXTERNAL_STORAGE permission")
+            val writeIndex = permissions.withIndex().firstOrNull { it.value == Manifest.permission.WRITE_EXTERNAL_STORAGE }?.index
+                    ?: throw Exception("cannot get WRITE_EXTERNAL_STORAGE permission")
+            val permissionAllowed = grantResults[readIndex] == PackageManager.PERMISSION_GRANTED && grantResults[writeIndex] == PackageManager.PERMISSION_GRANTED
+            if(permissionAllowed){
+                activity.makeMsg("权限申请成功！")
+                showExportDialog()
+            }else{
+                activity.makeMsg("权限申请失败！")
+            }
+        }
+    }
+
+    private fun showExportDialog() {
+        activity.showFullScreenDialog(R.layout.dialog_export_bookmark, true) { dialog, view ->
+            val onClickListener = object:NoDoubleClickListener(){
+                override fun onNoDoubleClick(v: View?) {
+                    dialog.dismiss()
+                    when (v?.id) {
+                        R.id.dialog_export_manage_export -> BookMarkUtil.getInstance(activity).getAllBookMarks().takeIf { it.isNotEmpty() }?.let {
+                            BookMarkExportUtil.getInstance(activity).exportBookMark2Local(it).run {
+                                activity.makeMsg("书签已导出到 $this!")
+                            }
+                        } ?: activity.makeMsg("没有书签可供导出！")
+                        R.id.dialog_export_manage_import -> BookMarkExportUtil.getInstance(activity).getBookMarksFromLocal().takeIf { it.isNotEmpty() }?.run {
+                            BookMarkUtil.getInstance(activity).let {
+                                it.takeIf { it.getAllBookMarks().isEmpty() }?.saveBookMarksList(this)?.let {
+                                    activity.makeMsg("导入成功!")
+                                    getData()
+                                } ?: showCoverTypeExportDialog(this)
+                            }
+                        } ?: activity.makeMsg("本地不存在其他书签记录!")
+                    }
+                }
+            }
+            view.findViewById<View>(R.id.dialog_export_manage_cancel).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_export_manage_export).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_export_manage_import).setOnClickListener(onClickListener)
+        }
+    }
+
+    private fun showCoverTypeExportDialog(newBookMarkList: List<BookMark>) {
+        activity.showFullScreenDialog(R.layout.dialog_bookmark_select_cover_type) { dialog, view ->
+            val onClickListener = object : NoDoubleClickListener() {
+                override fun onNoDoubleClick(v: View?) {
+                    dialog.dismiss()
+                    val coverType = when (v?.id) {
+                        R.id.dialog_bookmark_cover_keep_exist -> BookMarkUtil.CoverBookMarkType.KEEP_EXIST
+                        R.id.dialog_bookmark_cover_cover_exist -> BookMarkUtil.CoverBookMarkType.COVER_EXIST
+                        R.id.dialog_bookmark_cover_newer -> BookMarkUtil.CoverBookMarkType.SAVE_NEWER
+                        R.id.dialog_bookmark_cover_older -> BookMarkUtil.CoverBookMarkType.SAVE_OLDER
+                        else -> throw java.lang.Exception("not found the id")
+                    }
+                    BookMarkUtil.getInstance(activity).saveBookMarksList(newBookMarkList, coverType).let {
+                        activity.makeMsg("导入成功!")
+                        getData()
+                    }
+                }
+            }
+            view.findViewById<View>(R.id.dialog_bookmark_cover_keep_exist).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_cover_exist).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_newer).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_older).setOnClickListener(onClickListener)
+        }
     }
 
     fun isEditMode():Boolean{
@@ -64,6 +155,7 @@ class BookMarksFragment : Fragment() {
     }
 
     fun exitEditMode(){
+        book_marks_export.visibility = View.VISIBLE
         book_marks_select_all.visibility = View.GONE
         book_marks_delete.visibility = View.GONE
         (book_marks_rcv.adapter as BookMarksAdapter).exitEditMode()

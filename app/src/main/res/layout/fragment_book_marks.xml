@@ -38,6 +38,15 @@
             android:text="删除"
             android:visibility="gone" />
 
+        <ImageView
+                android:id="@+id/book_marks_export"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/export"/>
+
     </RelativeLayout>
 
     <View

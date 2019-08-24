@@ -57,4 +57,5 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp-urlconnection:latest.release'
     implementation 'io.reactivex:rxjava:latest.release'
     implementation 'io.reactivex:rxandroid:latest.release'
+    implementation "org.jetbrains.anko:anko-sqlite:0.10.8"
 }
