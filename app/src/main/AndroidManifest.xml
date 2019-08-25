@@ -31,6 +31,15 @@
                 android:name=".activity.ReadBookActivity"
                 android:theme="@android:style/Theme.Light.NoTitleBar"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="@string/file_provider_auth"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/share_bookmarks_file_path"/>
+        </provider>
     </application>
 
 </manifest>

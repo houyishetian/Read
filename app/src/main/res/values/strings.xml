@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Read</string>
+    <string name="file_provider_auth">com.lin.read</string>
 </resources>
