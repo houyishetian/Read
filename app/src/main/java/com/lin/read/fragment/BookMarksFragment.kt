@@ -16,10 +16,7 @@ import com.lin.read.bookmark.BookMarkExportUtil
 import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.decoration.ScanBooksItemDecoration
 import com.lin.read.filter.BookMark
-import com.lin.read.utils.Constants
-import com.lin.read.utils.NoDoubleClickListener
-import com.lin.read.utils.makeMsg
-import com.lin.read.utils.showFullScreenDialog
+import com.lin.read.utils.*
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_book_marks.*
 
@@ -110,9 +107,12 @@ class BookMarksFragment : Fragment() {
                         } ?: activity.makeMsg("没有书签可供导出！")
                         R.id.dialog_export_manage_import -> BookMarkExportUtil.getInstance(activity).getBookMarksFromLocal().takeIf { it.isNotEmpty() }?.run {
                             BookMarkUtil.getInstance(activity).let {
-                                it.takeIf { it.getAllBookMarks().isEmpty() }?.saveBookMarksList(this)?.let {
-                                    activity.makeMsg("导入成功!")
-                                    getData()
+                                // if the existing list and new list have no same items, directly import
+                                it.getAllBookMarks().takeIf { it.isEmpty() || it.size == (it.minusBy(this) { it.markKey }).size }?.let { _ ->
+                                    it.saveBookMarksList(this).let {
+                                        activity.makeMsg("导入成功!")
+                                        getData()
+                                    }
                                 } ?: showCoverTypeExportDialog(this)
                             }
                         } ?: activity.makeMsg("本地不存在其他书签记录!")

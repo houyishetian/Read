@@ -3,6 +3,7 @@ package com.lin.read
 import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.StringKtUtil
 import com.lin.read.utils.baseUrl
+import com.lin.read.utils.minusBy
 import org.junit.Test
 import java.io.*
 import java.net.URLEncoder
@@ -140,5 +141,21 @@ class TestKt {
         val data = "%B7%B2%C8%CB%D0%DE%CF%C9"
         println(URLEncoder.encode("凡人修仙","gbk") == data)
         println(URLEncoder.encode("仙逆","gbk"))
+    }
+
+    @Test
+    fun testCollectionsExclude() {
+        data class Bean(val name: String, val age: Int)
+
+        val list0 = listOf(
+                Bean("a", 0),
+                Bean("b", 1)
+        )
+        val list1 = listOf(
+                Bean("a", 1),
+                Bean("c", 3)
+        )
+        println(list0.minusBy(list1) { it.name })
+        println(list0.minusBy(list1) { it.age })
     }
 }

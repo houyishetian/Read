@@ -140,3 +140,11 @@ fun Activity.showFullScreenDialog(layoutId: Int, outCancellable: Boolean = false
         block(it, view)
     }
 }
+
+inline fun <T, R> Iterable<T>.minusBy(elements: Iterable<T>, block: (T) -> R): List<T> {
+    return elements.toList().takeIf { it.isNotEmpty() }?.let {
+        this.filterNot { pendingRemovedItem ->
+            it.firstOrNull { block(pendingRemovedItem) == block(it) } != null
+        }
+    } ?: this.toList()
+}
