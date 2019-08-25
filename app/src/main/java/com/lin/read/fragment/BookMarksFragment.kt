@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.fragment_book_marks.*
 
 class BookMarksFragment : Fragment() {
     private lateinit var allBookmarks: MutableList<BookMark>
-    private val REQUEST_STORAGE_CODE = 100
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(activity).inflate(R.layout.fragment_book_marks,null)
     }
@@ -72,14 +71,14 @@ class BookMarksFragment : Fragment() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.takeIf { it.isNotEmpty() }?.run {
-                requestPermissions(this.toTypedArray(), REQUEST_STORAGE_CODE)
+                requestPermissions(this.toTypedArray(), Constants.CODE_FROM_STORAGE_PERMISSIONS)
             } ?: showExportDialog()
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_STORAGE_CODE) {
+        if (requestCode == Constants.CODE_FROM_STORAGE_PERMISSIONS) {
             val readIndex = permissions.withIndex().firstOrNull { it.value == Manifest.permission.READ_EXTERNAL_STORAGE }?.index
                     ?: throw Exception("cannot get READ_EXTERNAL_STORAGE permission")
             val writeIndex = permissions.withIndex().firstOrNull { it.value == Manifest.permission.WRITE_EXTERNAL_STORAGE }?.index
@@ -116,12 +115,18 @@ class BookMarksFragment : Fragment() {
                                 } ?: showCoverTypeExportDialog(this)
                             }
                         } ?: activity.makeMsg("本地不存在其他书签记录!")
+                        R.id.dialog_export_manage_share -> {
+                            BookMarkExportUtil.getInstance(activity).getExportedBookMarkPathIfExists()?.let {
+                                shareFile(it)
+                            } ?: makeMsg("未找到本地书签，请先导出！")
+                        }
                     }
                 }
             }
             view.findViewById<View>(R.id.dialog_export_manage_cancel).setOnClickListener(onClickListener)
             view.findViewById<View>(R.id.dialog_export_manage_export).setOnClickListener(onClickListener)
             view.findViewById<View>(R.id.dialog_export_manage_import).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_export_manage_share).setOnClickListener(onClickListener)
         }
     }
 
@@ -192,8 +197,8 @@ class BookMarksFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Constants.READ_REQUEST_CODE) {
-            getData()
+        when(requestCode){
+            Constants.CODE_FROM_READING_UPDATE_BOOKMARK -> getData()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

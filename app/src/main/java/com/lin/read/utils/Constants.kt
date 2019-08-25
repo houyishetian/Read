@@ -12,7 +12,8 @@ class Constants {
         const val TEXT_SCAN_BOOK_INFO_BY_CONDITION_GET_ONE = "扫描书籍，扫描到%d本..."
         const val TEXT_SCAN_BOOK_INFO_RESULT = "共找到%d本"
         const val SCAN_REQUEST_CODE = 12
-        const val READ_REQUEST_CODE = 15
+        const val CODE_FROM_READING_UPDATE_BOOKMARK = 15
+        const val CODE_FROM_STORAGE_PERMISSIONS = 16
 
         const val KEY_BUNDLE_FOR_BOOK_DATA = "KEY_BUNDLE_FOR_BOOK_DATA"
         const val KEY_INTENT_FOR_BOOK_DATA = "KEY_INTENT_FOR_BOOK_DATA"

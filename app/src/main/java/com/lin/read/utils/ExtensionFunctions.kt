@@ -2,8 +2,10 @@ package com.lin.read.utils
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.Point
+import android.net.Uri
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -18,6 +20,7 @@ import com.lin.read.filter.search.BookChapterInfo
 import okhttp3.ResponseBody
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.net.URL
 import java.nio.charset.Charset
 
@@ -47,6 +50,10 @@ fun FragmentActivity.hideFragment(fragment: Fragment){
 @JvmOverloads
 fun Activity.makeMsg(msg: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, msg, duration).show()
+}
+
+fun Fragment.makeMsg(msg: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(activity, msg, duration).show()
 }
 
 @JvmOverloads
@@ -147,4 +154,24 @@ inline fun <T, R> Iterable<T>.minusBy(elements: Iterable<T>, block: (T) -> R): L
             it.firstOrNull { block(pendingRemovedItem) == block(it) } != null
         }
     } ?: this.toList()
+}
+
+fun Fragment.shareFile(filePath: String, requestCode: Int? = null, title: String = "分享") {
+    Intent(Intent.ACTION_SEND).run {
+        type = "*/*"
+        putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(filePath)))
+        requestCode?.let {
+            startActivityForResult(Intent.createChooser(this, title), requestCode)
+        } ?: startActivity(Intent.createChooser(this, title))
+    }
+}
+
+fun Activity.shareFile(filePath: String, requestCode: Int? = null, title: String = "分享") {
+    Intent(Intent.ACTION_SEND).run {
+        type = "*/*"
+        putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(filePath)))
+        requestCode?.let {
+            startActivityForResult(Intent.createChooser(this, title), requestCode)
+        } ?: startActivity(Intent.createChooser(this, title))
+    }
 }

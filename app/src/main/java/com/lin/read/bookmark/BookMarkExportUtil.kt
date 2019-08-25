@@ -18,14 +18,19 @@ class BookMarkExportUtil(private val ctx: Context) {
     private val TAG = "BookMarkExportUtil"
     private val exportedPath = "/Books/read.db"
     private val bookmarkTable = "bookmark"
-    private val sqlHelper by lazy { MySQHelper(ctx, getExportedBookMarkPath()) }
-    private fun getExportedBookMarkPath(): String {
-        return (Environment.getExternalStorageDirectory().absolutePath + exportedPath).apply {
+    private val sqlHelper by lazy { MySQHelper(ctx, createExportedPathIfNotExists()) }
+    private val exportedFilePath by lazy { Environment.getExternalStorageDirectory().absolutePath + exportedPath }
+    private fun createExportedPathIfNotExists(): String {
+        return exportedFilePath.apply {
             File(this).takeIf { !it.exists() || it.isDirectory }?.run {
                 parentFile.mkdirs()
                 createNewFile()
             }
         }
+    }
+
+    fun getExportedBookMarkPathIfExists(): String? {
+        return exportedFilePath.takeIf { File(it).exists() }
     }
 
     fun exportBookMark2Local(bookMarksList: List<BookMark>): String {

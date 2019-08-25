@@ -74,7 +74,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
         bookMark.run {
             val intent = Intent(fragment.activity, ReadBookActivity::class.java)
             intent.putExtra(Constants.KEY_SKIP_TO_READ, ReadBookBean(webType, bookName, authorName, chapterLink) as Parcelable)
-            fragment.startActivityForResult(intent, Constants.READ_REQUEST_CODE)
+            fragment.startActivityForResult(intent, Constants.CODE_FROM_READING_UPDATE_BOOKMARK)
         }
     }
 

@@ -51,6 +51,18 @@
                 android:layout_height="1dp"
                 android:background="#8B7D7B"/>
         <TextView
+                android:id="@+id/dialog_export_manage_share"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textColor="@android:color/black"
+                android:text="分享本地书签"/>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#8B7D7B"/>
+        <TextView
                 android:id="@+id/dialog_export_manage_cancel"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
