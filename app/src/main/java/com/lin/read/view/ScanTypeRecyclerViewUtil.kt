@@ -255,7 +255,7 @@ class ScanTypeRecyclerViewUtil private constructor(private var context: Context,
             recyclerView.addItemDecoration(ScanTypeItemDecoration(context, 15))
             parent.addView(recyclerView)
 
-            adapter = ScanTypeAdapter(context, readScanTypeBean.data, use4Words)
+            adapter = ScanTypeAdapter(context, readScanTypeBean.data.map { it toPair false }, use4Words)
             recyclerView.adapter = adapter
         }
     }
