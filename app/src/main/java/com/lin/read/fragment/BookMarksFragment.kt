@@ -95,63 +95,57 @@ class BookMarksFragment : Fragment() {
 
     private fun showExportDialog() {
         activity.showFullScreenDialog(R.layout.dialog_export_bookmark, true) { dialog, view ->
-            val onClickListener = object:NoDoubleClickListener(){
-                override fun onNoDoubleClick(v: View?) {
-                    dialog.dismiss()
-                    when (v?.id) {
-                        R.id.dialog_export_manage_export -> BookMarkUtil.getInstance(activity).getAllBookMarks().takeIf { it.isNotEmpty() }?.let {
-                            BookMarkExportUtil.getInstance(activity).exportBookMark2Local(it).run {
-                                activity.makeMsg("书签已导出到 $this!")
-                            }
-                        } ?: activity.makeMsg("没有书签可供导出！")
-                        R.id.dialog_export_manage_import -> BookMarkExportUtil.getInstance(activity).getBookMarksFromLocal().takeIf { it.isNotEmpty() }?.run {
-                            BookMarkUtil.getInstance(activity).let {
-                                // if the existing list and new list have no same items, directly import
-                                it.getAllBookMarks().takeIf { it.isEmpty() || it.size == (it.minusBy(this) { it.markKey }).size }?.let { _ ->
-                                    it.saveBookMarksList(this).let {
-                                        activity.makeMsg("导入成功!")
-                                        getData()
-                                    }
-                                } ?: showCoverTypeExportDialog(this)
-                            }
-                        } ?: activity.makeMsg("本地不存在其他书签记录!")
-                        R.id.dialog_export_manage_share -> {
-                            BookMarkExportUtil.getInstance(activity).getExportedBookMarkPathIfExists()?.let {
-                                shareFile(it)
-                            } ?: makeMsg("未找到本地书签，请先导出！")
+            val onNoDoubleClickListenerBlocker = fun(v: View) {
+                dialog.dismiss()
+                when (v.id) {
+                    R.id.dialog_export_manage_export -> BookMarkUtil.getInstance(activity).getAllBookMarks().takeIf { it.isNotEmpty() }?.let {
+                        BookMarkExportUtil.getInstance(activity).exportBookMark2Local(it).run {
+                            activity.makeMsg("书签已导出到 $this!")
                         }
-                    }
+                    } ?: activity.makeMsg("没有书签可供导出！")
+                    R.id.dialog_export_manage_import -> BookMarkExportUtil.getInstance(activity).getBookMarksFromLocal().takeIf { it.isNotEmpty() }?.run {
+                        BookMarkUtil.getInstance(activity).let {
+                            // if the existing list and new list have no same items, directly import
+                            it.getAllBookMarks().takeIf { it.isEmpty() || it.size == (it.minusBy(this) { it.markKey }).size }?.let { _ ->
+                                it.saveBookMarksList(this).let {
+                                    activity.makeMsg("导入成功!")
+                                    getData()
+                                }
+                            } ?: showCoverTypeExportDialog(this)
+                        }
+                    } ?: activity.makeMsg("本地不存在其他书签记录!")
+                    R.id.dialog_export_manage_share -> BookMarkExportUtil.getInstance(activity).getExportedBookMarkPathIfExists()?.let {
+                        shareFile(it)
+                    } ?: makeMsg("未找到本地书签，请先导出！")
                 }
             }
-            view.findViewById<View>(R.id.dialog_export_manage_cancel).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_export_manage_export).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_export_manage_import).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_export_manage_share).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_export_manage_cancel).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_export_manage_export).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_export_manage_import).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_export_manage_share).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
         }
     }
 
     private fun showCoverTypeExportDialog(newBookMarkList: List<BookMark>) {
         activity.showFullScreenDialog(R.layout.dialog_bookmark_select_cover_type) { dialog, view ->
-            val onClickListener = object : NoDoubleClickListener() {
-                override fun onNoDoubleClick(v: View?) {
-                    dialog.dismiss()
-                    val coverType = when (v?.id) {
-                        R.id.dialog_bookmark_cover_keep_exist -> BookMarkUtil.CoverBookMarkType.KEEP_EXIST
-                        R.id.dialog_bookmark_cover_cover_exist -> BookMarkUtil.CoverBookMarkType.COVER_EXIST
-                        R.id.dialog_bookmark_cover_newer -> BookMarkUtil.CoverBookMarkType.SAVE_NEWER
-                        R.id.dialog_bookmark_cover_older -> BookMarkUtil.CoverBookMarkType.SAVE_OLDER
-                        else -> throw java.lang.Exception("not found the id")
-                    }
-                    BookMarkUtil.getInstance(activity).saveBookMarksList(newBookMarkList, coverType).let {
-                        activity.makeMsg("导入成功!")
-                        getData()
-                    }
+            val onNoDoubleClickListenerBlocker = fun(v: View) {
+                dialog.dismiss()
+                val coverType = when (v.id) {
+                    R.id.dialog_bookmark_cover_keep_exist -> BookMarkUtil.CoverBookMarkType.KEEP_EXIST
+                    R.id.dialog_bookmark_cover_cover_exist -> BookMarkUtil.CoverBookMarkType.COVER_EXIST
+                    R.id.dialog_bookmark_cover_newer -> BookMarkUtil.CoverBookMarkType.SAVE_NEWER
+                    R.id.dialog_bookmark_cover_older -> BookMarkUtil.CoverBookMarkType.SAVE_OLDER
+                    else -> throw java.lang.Exception("not found the id")
+                }
+                BookMarkUtil.getInstance(activity).saveBookMarksList(newBookMarkList, coverType).let {
+                    activity.makeMsg("导入成功!")
+                    getData()
                 }
             }
-            view.findViewById<View>(R.id.dialog_bookmark_cover_keep_exist).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_bookmark_cover_cover_exist).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_bookmark_cover_newer).setOnClickListener(onClickListener)
-            view.findViewById<View>(R.id.dialog_bookmark_cover_older).setOnClickListener(onClickListener)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_keep_exist).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_cover_exist).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_newer).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
+            view.findViewById<View>(R.id.dialog_bookmark_cover_older).setOnNoDoubleClickListener(onNoDoubleClickListenerBlocker)
         }
     }
 

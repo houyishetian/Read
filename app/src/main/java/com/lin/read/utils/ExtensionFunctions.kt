@@ -177,3 +177,11 @@ fun Activity.shareFile(filePath: String, requestCode: Int? = null, title: String
         } ?: startActivity(Intent.createChooser(this, title))
     }
 }
+
+fun View.setOnNoDoubleClickListener(block: (View) -> Unit) {
+    this.setOnClickListener(object : NoDoubleClickListener() {
+        override fun onNoDoubleClick(v: View) {
+            block(v)
+        }
+    })
+}

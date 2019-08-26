@@ -58,16 +58,17 @@ class ReadBookActivity : Activity() {
                 getContentInfo(LoadChapter.NEXT, it)
             }
         }
-        chapter_menu.setOnClickListener {
+        chapter_menu.setOnNoDoubleClickListener {
             showMenu()
             goToPage(currentReadInfo.bookChapterInfo.page)
         }
-        chapter_blank_view.setOnClickListener {
+        chapter_blank_view.setOnNoDoubleClickListener {
             hideSoft()
-            hideMenu()
+            it.isClickable = false
+            hideMenu { it.isClickable = true }
             goToPage(currentReadInfo.bookChapterInfo.page)
         }
-        chapter_previous_page.setOnClickListener {
+        chapter_previous_page.setOnNoDoubleClickListener {
             hideSoft()
             if (currentReadInfo.hasPreviousPage) {
                 goToPage(currentShownPage - 1)
@@ -75,7 +76,7 @@ class ReadBookActivity : Activity() {
                 makeMsg("已经是第一页！")
             }
         }
-        chapter_next_page.setOnClickListener {
+        chapter_next_page.setOnNoDoubleClickListener {
             hideSoft()
             if (currentReadInfo.hasNextPage) {
                 goToPage(currentShownPage + 1)
@@ -83,7 +84,7 @@ class ReadBookActivity : Activity() {
                 makeMsg("已经是最后一页！")
             }
         }
-        chapter_previous_chapter.setOnClickListener {
+        chapter_previous_chapter.setOnNoDoubleClickListener {
             hideSoft()
             if(currentReadInfo.hasPreviousChapter){
                 getContentInfo(LoadChapter.PREVIOUS)
@@ -91,7 +92,7 @@ class ReadBookActivity : Activity() {
                 makeMsg("已经是第一章！")
             }
         }
-        chapter_next_chapter.setOnClickListener {
+        chapter_next_chapter.setOnNoDoubleClickListener {
             hideSoft()
             if(currentReadInfo.hasNextChapter){
                 getContentInfo(LoadChapter.NEXT)
@@ -99,7 +100,7 @@ class ReadBookActivity : Activity() {
                 makeMsg("已经是最后一章！")
             }
         }
-        page_skip.setOnClickListener {
+        page_skip.setOnNoDoubleClickListener {
             hideSoft()
             try {
                 val skipPage = page_skip_et.text.toString().toInt()
@@ -112,7 +113,7 @@ class ReadBookActivity : Activity() {
                 goToPage(currentReadInfo.bookChapterInfo.page)
             }
         }
-        chapter_search_iv.setOnClickListener {
+        chapter_search_iv.setOnNoDoubleClickListener {
             showSearchChapterLayout()
         }
         chapter_search_et.setOnEditorActionListener { _, actionId, _ ->
@@ -121,7 +122,7 @@ class ReadBookActivity : Activity() {
             }
             return@setOnEditorActionListener false
         }
-        chapter_search_btn.setOnClickListener {
+        chapter_search_btn.setOnNoDoubleClickListener {
             searchByChapterName()
         }
         chapter_content.setOnTouchListener { _, _ ->
@@ -193,11 +194,12 @@ class ReadBookActivity : Activity() {
         layout_chapters.visibility = View.VISIBLE
     }
 
-    private fun hideMenu(){
+    private fun hideMenu(afterHide: (() -> Unit)? = null) {
         layout_chapters.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_scan_filter_menu_out).apply {
             setAnimationListener(object:ReadAnimationListener{
                 override fun onAnimationEnd(animation: Animation?) {
                     layout_chapters.visibility = View.GONE
+                    afterHide?.invoke()
                 }
             })
         })
@@ -344,13 +346,13 @@ class ReadBookActivity : Activity() {
                 (searchChapterLv.adapter as DialogSearchChapterAdapter).notifyDataSetChanged()
                 searchChapterLv.smoothScrollToPosition(0)
             }
-            searchPrePage.setOnClickListener {
+            searchPrePage.setOnNoDoubleClickListener {
                 val page = (searchChapterLv.getTag(keyTag) as Int) - 1
                 lambdaForPage(page)
                 it.isEnabled = page != 0
                 searchNextPage.isEnabled = true
             }
-            searchNextPage.setOnClickListener {
+            searchNextPage.setOnNoDoubleClickListener {
                 val page = (searchChapterLv.getTag(keyTag) as Int) + 1
                 lambdaForPage(page)
                 it.isEnabled = page != splitSearchResult.size - 1
