@@ -49,3 +49,11 @@ data class ReadScanInputtedBean(val typeName: String?, val key: String, val inpu
 data class ScanInfo(val webName: String?, val mainUrl: List<String>?, val rolePathValue: String?, val roleParamPairs: Map<String,String>?, val inputtedBeans: List<ReadScanInputtedBean>?, var page: Int = 1) : Serializable
 
 data class BookLinkInfo(val bookLink: String, var page: Int?, var position: Int?) : Serializable
+
+data class VarPair<A, B>(var first: A, var second: B) : Serializable
+
+infix fun <A, B> A.toPair(that: B): VarPair<A, B> = VarPair(this, that)
+
+data class VarTriple<A, B, C>(var first: A, var second: B, var third: C) : Serializable
+
+fun <A, B, C> A.toTriple(second: B, third: C): VarTriple<A, B, C> = VarTriple(this, second, third)

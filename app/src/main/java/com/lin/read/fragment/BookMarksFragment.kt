@@ -16,12 +16,14 @@ import com.lin.read.bookmark.BookMarkExportUtil
 import com.lin.read.bookmark.BookMarkUtil
 import com.lin.read.decoration.ScanBooksItemDecoration
 import com.lin.read.filter.BookMark
+import com.lin.read.filter.scan.VarPair
+import com.lin.read.filter.scan.toPair
 import com.lin.read.utils.*
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_book_marks.*
 
 class BookMarksFragment : Fragment() {
-    private lateinit var allBookmarks: MutableList<BookMark>
+    private lateinit var allBookmarks: MutableList<VarPair<BookMark, Boolean>>
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(activity).inflate(R.layout.fragment_book_marks,null)
     }
@@ -163,7 +165,7 @@ class BookMarksFragment : Fragment() {
     private fun getData(afterDelete:Boolean = false){
         DialogUtil.getInstance().showLoadingDialog(activity)
         Handler().post{
-            if (afterDelete) BookMarkUtil.getInstance(activity).deleteBookMarks((book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems())
+            if (afterDelete) BookMarkUtil.getInstance(activity).deleteBookMarks((book_marks_rcv.adapter as BookMarksAdapter).getAllSelectedItems().map { it.first })
             val bookMarksList = BookMarkUtil.getInstance(activity).getAllBookMarks()
             activity.runOnUiThread{
                 DialogUtil.getInstance().hideLoadingView()
@@ -172,7 +174,7 @@ class BookMarksFragment : Fragment() {
                     empty_view.visibility = View.GONE
                     book_marks_rcv.visibility = View.VISIBLE
                     allBookmarks.clear()
-                    allBookmarks.addAll(bookMarksList)
+                    allBookmarks.addAll(bookMarksList.map { it toPair false })
                     book_marks_rcv.adapter.notifyDataSetChanged()
                 }else{
                     empty_view.visibility = View.VISIBLE
