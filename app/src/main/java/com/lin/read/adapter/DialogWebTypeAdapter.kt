@@ -26,9 +26,6 @@ class DialogWebTypeAdapter(private val context: Context, private val webInfos: L
                 it.downloadText.visibility = if (canDownload) View.VISIBLE else View.GONE
                 it.webName.setOnClickListener{
                     onItemWebClickListener.onItemWebClick(this)
-                    webInfos.forEach {
-                        it.checked = this === it
-                    }
                 }
             }
         }

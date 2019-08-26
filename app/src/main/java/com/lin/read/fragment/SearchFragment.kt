@@ -44,10 +44,7 @@ class SearchFragment : Fragment() {
         webBeansList = getWebTypeBeans()
         allBookInfo = mutableListOf()
         //set default value
-        select_web.text = webBeansList.firstOrNull { it.default }?.webName ?: let {
-            webBeansList[0].default = true
-            webBeansList[0].webName
-        }
+        select_web.text = webBeansList[0].webName
         select_web.setOnClickListener{
             showSelectWebDialog()
         }
@@ -71,8 +68,8 @@ class SearchFragment : Fragment() {
 
     private fun getWebTypeBeans(): List<SearchWebBean> {
         return mutableListOf<SearchWebBean>().apply {
-            Constants.SEARCH_WEB_NAME_MAP.forEach { tag, webName ->
-                add(SearchWebBean(webName, tag))
+            Constants.SEARCH_WEB_NAME_MAP.forEach { webType, webName ->
+                add(SearchWebBean(webType, webName))
             }
         }
     }
@@ -104,10 +101,7 @@ class SearchFragment : Fragment() {
             return
         }
         DialogUtil.getInstance().showLoadingDialog(activity)
-        val currentSelectWeb = webBeansList.firstOrNull { it.checked!! } ?: let {
-            webBeansList[0].checked = true
-            webBeansList[0]
-        }
+        val currentSelectWeb = webBeansList.first { it.webName == select_web.text }
         SearchBookTask(currentSelectWeb, et_search_bookname.text.toString(), object : SearchBookTask.OnSearchResult {
             override fun onSucceed(allBooks: List<SearchBookBean>?) {
                 DialogUtil.getInstance().hideLoadingView()

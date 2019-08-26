@@ -37,17 +37,17 @@ class SearchBookTask(val searchWebBean: SearchWebBean, val bookName: String,val 
     }
 
     private fun getObservable(): Observable<ResponseBody> {
-        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
-            val param = Constants.SEARCH_WEB_RETRO_PARAMS_MAP(searchWebBean.tag, bookName)
-            return ReflectUtil.invokeMethod(RetrofitInstance(it).create(ReadRetrofitService::class.java), "searchFrom${searchWebBean.tag}", Observable::class.java, param) as Observable<ResponseBody>
-        } ?: throw Exception("cannot get observable by  ${searchWebBean.tag}! Pls check tag!")
+        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.webType]?.let {
+            val param = Constants.SEARCH_WEB_RETRO_PARAMS_MAP(searchWebBean.webType, bookName)
+            return ReflectUtil.invokeMethod(RetrofitInstance(it).create(ReadRetrofitService::class.java), "searchFrom${searchWebBean.webType}", Observable::class.java, param) as Observable<ResponseBody>
+        } ?: throw Exception("cannot get observable by  ${searchWebBean.webType}! Pls check tag!")
     }
 
     @SuppressWarnings("unchecked")
     private fun getBookList(responseBody: ResponseBody): List<SearchBookBean>? {
-        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.tag]?.let {
-            return ReflectUtil.invokeMethod(SearchBookResolveUtil.Companion, "resolveFrom${searchWebBean.tag}", List::class.java, SearchResolveBean(it, bookName, responseBody)) as? List<SearchBookBean>
-        } ?: throw java.lang.Exception("cannot get ${searchWebBean.tag}'s booklist!")
+        Constants.SEARCH_WEB_BASEURL_MAP[searchWebBean.webType]?.let {
+            return ReflectUtil.invokeMethod(SearchBookResolveUtil.Companion, "resolveFrom${searchWebBean.webType}", List::class.java, SearchResolveBean(it, bookName, responseBody)) as? List<SearchBookBean>
+        } ?: throw java.lang.Exception("cannot get ${searchWebBean.webType}'s booklist!")
     }
 
     interface OnSearchResult{

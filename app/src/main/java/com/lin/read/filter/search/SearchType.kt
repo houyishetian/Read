@@ -4,10 +4,7 @@ import com.lin.read.filter.ReadBookBean
 import okhttp3.ResponseBody
 import java.io.Serializable
 
-data class SearchWebBean @JvmOverloads constructor(val webName: String, val tag: String, val canDownload: Boolean = false, var default: Boolean = false) : Serializable {
-    var checked: Boolean? = null
-        get() = if (field == null) default else field
-}
+data class SearchWebBean @JvmOverloads constructor(val webType: String, val webName: String, var canDownload: Boolean = false) : Serializable
 
 data class SearchResolveBean(val baseUrl: String, val bookName: String, val responseBody: ResponseBody) : Serializable
 
