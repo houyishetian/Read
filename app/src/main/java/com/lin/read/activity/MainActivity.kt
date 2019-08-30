@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class  MainActivity : FragmentActivity(),View.OnClickListener {
     private lateinit var fragmentViews:HashMap<View,Fragment>
-    private lateinit var scanFragment:ScanFragment
+    private lateinit var scanFragment: ScanFragment
     private lateinit var searchFragment: SearchFragment
     private lateinit var bookMarksFragment: BookMarksFragment
 
@@ -55,9 +55,9 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if(v !== scanFragment && scanFragment.isFilterLayoutVisble){
-            scanFragment.hideFilterLayoutWithoutAnimation()
-        }
+//        if(v != scanFragment && scanFragment.isFilterLayoutVisible()){
+//            scanFragment.hideFilter(false)
+//        }
         setClickedRlBackground(v!!)
         fragmentViews.forEach{(view,fragment)->
             if(v === view) showFragment(fragment) else hideFragment(fragment)
@@ -79,8 +79,8 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
 
     private var lastClickTime:Long = 0
     override fun onBackPressed() {
-        if(scanFragment.isFilterLayoutVisble){
-            scanFragment.hideFilterLayout()
+        if(scanFragment.isFilterLayoutVisible()){
+            scanFragment.hideFilter()
             return
         }
         if(bookMarksFragment.isEditMode()){

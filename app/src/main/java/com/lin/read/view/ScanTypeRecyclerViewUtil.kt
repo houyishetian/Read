@@ -19,6 +19,8 @@ import com.lin.read.utils.ReflectUtil
 import com.lin.read.utils.SingleInstanceHolderWith3Params
 import com.lin.read.utils.UIUtils
 import java.util.*
+import android.text.InputType
+
 
 class ScanTypeRecyclerViewUtil private constructor(private var context: Context, private var parentLayout: LinearLayout, private val readScanBean: ReadScanBean) {
     private var scanTypeViews: HashMap<String, HashMap<String, ScanTypeView>>
@@ -107,36 +109,32 @@ class ScanTypeRecyclerViewUtil private constructor(private var context: Context,
                 scanTypeBean.data.forEach{scanTypeData ->
                     if(scanTypeData.hasNoSubItems != null && scanTypeData.hasNoSubItems.isNotEmpty()){
                         if(scanTypeData.default) lastHiddenItems.addAll(scanTypeData.hasNoSubItems)
-                        scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name, object : ScanTypeAdapter.OnScanItemClickListener {
-                            override fun onItemClick(position: Int, clickText: String) {
-                                Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
-                                lastHiddenItems.forEach {
-                                    Log.e("Test", "show $it")
-                                    scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
-                                }
-                                lastHiddenItems.clear()
-                                if (clickText == scanTypeData.name) {
-                                    scanTypeData.hasNoSubItems.forEach {
-                                        Log.e("Test", "hide $it")
-                                        scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.GONE
-                                        lastHiddenItems.add(it)
-                                    }
-                                }
-                                saveScanViewVisis(webInfo.key)
+                        scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name) { _, clickText ->
+                            Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
+                            lastHiddenItems.forEach {
+                                Log.e("Test", "show $it")
+                                scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
                             }
-                        })
+                            lastHiddenItems.clear()
+                            if (clickText == scanTypeData.name) {
+                                scanTypeData.hasNoSubItems.forEach {
+                                    Log.e("Test", "hide $it")
+                                    scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.GONE
+                                    lastHiddenItems.add(it)
+                                }
+                            }
+                            saveScanViewVisis(webInfo.key)
+                        }
                     }else{
-                        scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name, object : ScanTypeAdapter.OnScanItemClickListener {
-                            override fun onItemClick(position: Int, clickText: String) {
-                                Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
-                                lastHiddenItems.forEach {
-                                    Log.e("Test", "show $it")
-                                    scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
-                                }
-                                lastHiddenItems.clear()
-                                saveScanViewVisis(webInfo.key)
+                        scanTypeViews[webInfo.key]?.get(scanTypeBean.key)?.adapter?.onScanItemClickListenerMap?.put(scanTypeData.name) { _, clickText ->
+                            Log.e("Test", "${webInfo.key} -> $clickText / ${scanTypeData.name} -> lastHidden $lastHiddenItems")
+                            lastHiddenItems.forEach {
+                                Log.e("Test", "show $it")
+                                scanTypeViews[webInfo.key]?.get(it)?.parent?.visibility = View.VISIBLE
                             }
-                        })
+                            lastHiddenItems.clear()
+                            saveScanViewVisis(webInfo.key)
+                        }
                     }
                 }
             }
@@ -214,12 +212,7 @@ class ScanTypeRecyclerViewUtil private constructor(private var context: Context,
         return ScanInfo(getWebName(webType), ReflectUtil.getProperty(readScanBean, webType, ReadScanDetailsInfo::class.java)?.mainUrl, rolePathValue, roleParamPairs, getInputtedFields(webType))
     }
 
-    fun getFocusOfEditText(webType: String):EditText?{
-        scanInputViews[webType]?.inputViews?.forEach { (_, editText) ->
-            if(editText.hasFocus()) return editText
-        }
-        return null
-    }
+    fun getFocusOfEditText(webType: String): EditText? = scanInputViews[webType]?.inputViews?.values?.firstOrNull { it.hasFocus() }
 
     class ScanTypeView(context: Context, var readScanTypeBean: ReadScanTypeBean) {
         private lateinit var promptTv: TextView
@@ -283,7 +276,7 @@ class ScanTypeRecyclerViewUtil private constructor(private var context: Context,
             inputEt.hint = readScanInputData.hint
             when (readScanInputData.inputType) {
                 "int" -> inputEt.inputType = EditorInfo.TYPE_CLASS_NUMBER
-                "float" -> inputEt.inputType = EditorInfo.TYPE_NUMBER_FLAG_DECIMAL
+                "float" -> inputEt.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_VARIATION_NORMAL
             }
             inputEt.setSingleLine()
             inputEt.setPadding(UIUtils.dip2px(context, 5f), 0, UIUtils.dip2px(context, 5f), 0)

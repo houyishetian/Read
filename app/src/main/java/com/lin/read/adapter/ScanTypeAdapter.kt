@@ -14,14 +14,13 @@ import com.lin.read.filter.scan.VarPair
 class ScanTypeAdapter @JvmOverloads constructor(private val context: Context, private val data: List<VarPair<ReadScanTypeData,Boolean>>, use4Words: Boolean = false) : RecyclerView.Adapter<ScanTypeAdapter.ViewHolder>() {
     private var isBinding = false
     private var layoutId: Int
-    var onScanItemClickListener:OnScanItemClickListener? = null
-    val onScanItemClickListenerMap:HashMap<String,OnScanItemClickListener>
+    var onScanItemClickListener: ((Int, String) -> Unit)? = null
+    val onScanItemClickListenerMap: HashMap<String, (Int, String) -> Unit>
 
     init {
         layoutId = if (use4Words) R.layout.item_scan_type_4_chars else R.layout.item_scan_type
         onScanItemClickListenerMap = hashMapOf()
-        initCheckedStatus()
-        data.takeIf { getCheckedInfo() == null && it.isNotEmpty() }?.run { this[0].second = true }
+        data.forEach { it.second = it.first.default }
     }
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(layoutId, null))
@@ -41,19 +40,13 @@ class ScanTypeAdapter @JvmOverloads constructor(private val context: Context, pr
         isBinding = false
     }
 
-    fun getCheckedInfo(): ReadScanTypeData? = data.firstOrNull { it.second }?.first
+    fun getCheckedInfo(): ReadScanTypeData = data.first { it.second }.first
 
-    fun getCheckedText():String? = data.firstOrNull { it.second }?.first?.name
+    fun getCheckedText(): String = data.first { it.second }.first.name
 
     private fun setCheckedStatus(text: String) {
         data.forEach { it.second = it.first.name == text }
         notifyDataSetChanged()
-    }
-
-    private fun initCheckedStatus() = data.forEach { it.second = it.first.default }
-
-    interface OnScanItemClickListener {
-        fun onItemClick(position: Int, clickText: String)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -67,8 +60,8 @@ class ScanTypeAdapter @JvmOverloads constructor(private val context: Context, pr
                     if (!isBinding) {
                         setCheckedStatus(this@ViewHolder.text.text.toString())
                         if (isChecked) {
-                            onScanItemClickListener?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
-                            onScanItemClickListenerMap[this@ViewHolder.text.text.toString()]?.onItemClick(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
+                            onScanItemClickListener?.invoke(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
+                            onScanItemClickListenerMap[this@ViewHolder.text.text.toString()]?.invoke(this@ViewHolder.text.tag as Int, this@ViewHolder.text.text.toString())
                         }
                     }
                 }

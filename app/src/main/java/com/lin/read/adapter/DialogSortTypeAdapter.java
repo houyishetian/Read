@@ -7,20 +7,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.lin.read.R;
-import com.lin.read.filter.scan.SortInfo;
 import com.lin.read.utils.NoDoubleClickListener;
 
 import java.util.List;
+
+import kotlin.Pair;
 
 /**
  * Created by lisonglin on 2018/4/22
  */
 
 public class DialogSortTypeAdapter extends BaseAdapter {
-    private List<SortInfo> allInfo;
+    private List<Pair<String,Integer>> allInfo;
     private Context context;
 
-    public DialogSortTypeAdapter(Context context, List<SortInfo> allInfo) {
+    public DialogSortTypeAdapter(Context context, List<Pair<String,Integer>> allInfo) {
         this.allInfo = allInfo;
         this.context = context;
     }
@@ -50,8 +51,8 @@ public class DialogSortTypeAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        final SortInfo info = allInfo.get(position);
-        holder.name.setText(info.getSortText());
+        final Pair<String,Integer> info = allInfo.get(position);
+        holder.name.setText(info.getFirst());
         if (position == allInfo.size() - 1) {
             holder.divider.setVisibility(View.GONE);
         } else {
@@ -61,7 +62,7 @@ public class DialogSortTypeAdapter extends BaseAdapter {
             @Override
             public void onNoDoubleClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(info.getSortId());
+                    onItemClickListener.onItemClick(info.getSecond());
                 }
             }
         });
