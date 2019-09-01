@@ -55,9 +55,9 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-//        if(v != scanFragment && scanFragment.isFilterLayoutVisible()){
-//            scanFragment.hideFilter(false)
-//        }
+        if(v != rl_scan && scanFragment.isFilterLayoutVisible()){
+            scanFragment.hideFilter(false)
+        }
         setClickedRlBackground(v!!)
         fragmentViews.forEach{(view,fragment)->
             if(v === view) showFragment(fragment) else hideFragment(fragment)
