@@ -120,11 +120,12 @@ class ScanFragment : Fragment() {
         }
     }
 
-    fun hideFilter(showAnimation: Boolean = true) {
+    fun hideFilter(showAnimation: Boolean = true,afterAnimation:(()->Unit)? = null) {
         hideSoft()
         val logic = fun() {
             layout_scan_filter.visibility = View.GONE
             scroll_view.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
+            afterAnimation?.invoke()
         }
         if (showAnimation) {
             AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_out).apply {

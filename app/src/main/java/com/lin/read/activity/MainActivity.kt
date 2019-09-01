@@ -3,6 +3,7 @@ package com.lin.read.activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.view.KeyEvent
 import android.view.View
 import com.lin.read.R
 import com.lin.read.fragment.BookMarksFragment
@@ -77,18 +78,22 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
         rl_search.performClick()
     }
 
-    private var lastClickTime:Long = 0
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean = if (event?.keyCode == KeyEvent.KEYCODE_BACK && disableBack) true else super.dispatchKeyEvent(event)
+
+    private var lastClickTime: Long = 0
+    private var disableBack = false
     override fun onBackPressed() {
-        if(scanFragment.isFilterLayoutVisible()){
-            scanFragment.hideFilter()
+        if (scanFragment.isFilterLayoutVisible()) {
+            disableBack = true
+            scanFragment.hideFilter { disableBack = false }
             return
         }
-        if(bookMarksFragment.isEditMode()){
+        if (bookMarksFragment.isEditMode()) {
             bookMarksFragment.exitEditMode()
             return
         }
         val currentClickTime = System.currentTimeMillis()
-        if(currentClickTime - lastClickTime <=2000){
+        if (currentClickTime - lastClickTime <= 2000) {
             super.onBackPressed()
             return
         }
