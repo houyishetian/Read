@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.Toast
 import com.lin.read.R
 import com.lin.read.filter.search.BookChapterInfo
@@ -182,6 +183,22 @@ fun View.setOnNoDoubleClickListener(block: (View) -> Unit) {
     this.setOnClickListener(object : NoDoubleClickListener() {
         override fun onNoDoubleClick(v: View) {
             block(v)
+        }
+    })
+}
+
+fun Animation.animationListener(start: ((Animation?) -> Unit)? = null, repeat: ((Animation?) -> Unit)? = null, end: ((Animation?) -> Unit)? = null) {
+    this.setAnimationListener(object : Animation.AnimationListener {
+        override fun onAnimationRepeat(animation: Animation?) {
+            repeat?.invoke(animation)
+        }
+
+        override fun onAnimationEnd(animation: Animation?) {
+            end?.invoke(animation)
+        }
+
+        override fun onAnimationStart(animation: Animation?) {
+            start?.invoke(animation)
         }
     })
 }

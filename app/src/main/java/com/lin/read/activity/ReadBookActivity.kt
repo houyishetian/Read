@@ -146,12 +146,10 @@ class ReadBookActivity : Activity() {
     private fun showSearchChapterLayout(){
         chapter_content_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_chapter_view_out))
         chapter_search_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_search_view_in).apply {
-            setAnimationListener(object : ReadAnimationListener {
-                override fun onAnimationEnd(animation: Animation?) {
-                    chapter_search_layout.visibility = View.VISIBLE
-                    chapter_content_layout.visibility = View.GONE
-                }
-            })
+            animationListener {
+                chapter_search_layout.visibility = View.VISIBLE
+                chapter_content_layout.visibility = View.GONE
+            }
         })
     }
 
@@ -159,13 +157,11 @@ class ReadBookActivity : Activity() {
         if(chapter_search_layout.visibility == View.VISIBLE){
             chapter_search_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_search_view_out))
             chapter_content_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_chapter_view_in).apply {
-                setAnimationListener(object: ReadAnimationListener {
-                    override fun onAnimationEnd(animation: Animation?) {
-                        chapter_search_layout.visibility = View.GONE
-                        chapter_content_layout.visibility = View.VISIBLE
-                        chapter_search_et.setText("")
-                    }
-                })
+                animationListener {
+                    chapter_search_layout.visibility = View.GONE
+                    chapter_content_layout.visibility = View.VISIBLE
+                    chapter_search_et.setText("")
+                }
             })
         }
     }
@@ -196,12 +192,10 @@ class ReadBookActivity : Activity() {
 
     private fun hideMenu(afterHide: (() -> Unit)? = null) {
         layout_chapters.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_scan_filter_menu_out).apply {
-            setAnimationListener(object:ReadAnimationListener{
-                override fun onAnimationEnd(animation: Animation?) {
-                    layout_chapters.visibility = View.GONE
-                    afterHide?.invoke()
-                }
-            })
+            animationListener {
+                layout_chapters.visibility = View.GONE
+                afterHide?.invoke()
+            }
         })
     }
 

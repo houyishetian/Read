@@ -30,10 +30,7 @@ import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.ReadScanBean
 import com.lin.read.filter.scan.ScanInfo
 import com.lin.read.filter.scan.toPair
-import com.lin.read.utils.Constants
-import com.lin.read.utils.ReadAnimationListener
-import com.lin.read.utils.makeMsg
-import com.lin.read.utils.setOnNoDoubleClickListener
+import com.lin.read.utils.*
 import com.lin.read.view.ScanTypeRecyclerViewUtil
 import kotlinx.android.synthetic.main.fragment_scan.*
 import kotlinx.android.synthetic.main.layout_scan_filter.*
@@ -129,11 +126,9 @@ class ScanFragment : Fragment() {
         }
         if (showAnimation) {
             AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_out).apply {
-                setAnimationListener(object : ReadAnimationListener {
-                    override fun onAnimationEnd(animation: Animation?) {
-                        logic.invoke()
-                    }
-                })
+                animationListener {
+                    logic.invoke()
+                }
                 layout_scan_filter.startAnimation(this)
             }
         } else {
