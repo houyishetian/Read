@@ -78,14 +78,10 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
         rl_search.performClick()
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean = if (event?.keyCode == KeyEvent.KEYCODE_BACK && disableBack) true else super.dispatchKeyEvent(event)
-
     private var lastClickTime: Long = 0
-    private var disableBack = false
     override fun onBackPressed() {
         if (scanFragment.isFilterLayoutVisible()) {
-            disableBack = true
-            scanFragment.hideFilter { disableBack = false }
+            scanFragment.hideFilter()
             return
         }
         if (bookMarksFragment.isEditMode()) {

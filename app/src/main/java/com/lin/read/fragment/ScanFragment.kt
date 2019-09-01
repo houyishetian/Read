@@ -43,6 +43,7 @@ class ScanFragment : Fragment() {
     private var lastHeight = -1
     private lateinit var allBookData: MutableList<ScanBookBean>
     private var bookComparatorUtil: BookComparatorUtil? = null
+    private var scanMenuIsSliding = false
     private val globalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
         // the input view height
         val inputViewHeight = activity.window.decorView.rootView.height - Rect().also { activity.window.decorView.getWindowVisibleDisplayFrame(it) }.bottom
@@ -117,17 +118,18 @@ class ScanFragment : Fragment() {
         }
     }
 
-    fun hideFilter(showAnimation: Boolean = true,afterAnimation:(()->Unit)? = null) {
+    fun hideFilter(showAnimation: Boolean = true) {
         hideSoft()
         val logic = fun() {
             layout_scan_filter.visibility = View.GONE
             scroll_view.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
-            afterAnimation?.invoke()
         }
-        if (showAnimation) {
+        if (showAnimation && !scanMenuIsSliding) {
+            scanMenuIsSliding = true
             AnimationUtils.loadAnimation(getActivity(), R.anim.set_scan_filter_menu_out).apply {
                 animationListener {
                     logic.invoke()
+                    scanMenuIsSliding = false
                 }
                 layout_scan_filter.startAnimation(this)
             }

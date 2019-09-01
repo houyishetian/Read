@@ -35,6 +35,8 @@ class ReadBookActivity : Activity() {
     private lateinit var currentDisplayChapterList:MutableList<BookChapterInfo>
     private lateinit var chaptersList: MutableList<BookChapterInfo>
     private lateinit var splitChaptersList:MutableList<List<BookChapterInfo>>
+    private var chapterMenuIsSliding = false
+    private var searchChapterLayoutIsSliding = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_book)
@@ -65,7 +67,7 @@ class ReadBookActivity : Activity() {
         chapter_blank_view.setOnNoDoubleClickListener {
             hideSoft()
             it.isClickable = false
-            hideMenu { it.isClickable = true }
+            hideMenu()
             goToPage(currentReadInfo.bookChapterInfo.page)
         }
         chapter_previous_page.setOnNoDoubleClickListener {
@@ -154,13 +156,15 @@ class ReadBookActivity : Activity() {
     }
 
     private fun hideSearchChapterLayout(){
-        if(chapter_search_layout.visibility == View.VISIBLE){
+        if(chapter_search_layout.visibility == View.VISIBLE && !searchChapterLayoutIsSliding){
+            searchChapterLayoutIsSliding = true
             chapter_search_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_search_view_out))
             chapter_content_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_chapter_view_in).apply {
                 animationListener {
                     chapter_search_layout.visibility = View.GONE
                     chapter_content_layout.visibility = View.VISIBLE
                     chapter_search_et.setText("")
+                    searchChapterLayoutIsSliding = false
                 }
             })
         }
@@ -190,13 +194,16 @@ class ReadBookActivity : Activity() {
         layout_chapters.visibility = View.VISIBLE
     }
 
-    private fun hideMenu(afterHide: (() -> Unit)? = null) {
-        layout_chapters.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_scan_filter_menu_out).apply {
-            animationListener {
-                layout_chapters.visibility = View.GONE
-                afterHide?.invoke()
-            }
-        })
+    private fun hideMenu() {
+        if (!chapterMenuIsSliding) {
+            chapterMenuIsSliding = true
+            layout_chapters.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_scan_filter_menu_out).apply {
+                animationListener {
+                    layout_chapters.visibility = View.GONE
+                    chapterMenuIsSliding = false
+                }
+            })
+        }
     }
 
     private fun setChapterAndPageEnable(){
