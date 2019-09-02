@@ -66,7 +66,6 @@ class ReadBookActivity : Activity() {
         }
         chapter_blank_view.setOnNoDoubleClickListener {
             hideSoft()
-            it.isClickable = false
             hideMenu()
             goToPage(currentReadInfo.bookChapterInfo.page)
         }
