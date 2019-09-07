@@ -8,7 +8,7 @@ import android.view.View
 import com.lin.read.R
 import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.ReadGetBookInfoFactory
-import com.lin.read.filter.scan.ScanInfo
+import com.lin.read.filter.scan.ScanDataBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.MessageUtils
 import kotlinx.android.synthetic.main.activity_loading_dialog.*
@@ -61,30 +61,28 @@ class LoadingDialogActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        val scanInfo = intent.getSerializableExtra(Constants.KEY_SEARCH_INFO) as ScanInfo
-        this.takeIf { scanInfo.webName != null }?.let {
-            ReadGetBookInfoFactory.getInstance(scanInfo.webName!!)?.getBookInfo(this, handler, scanInfo, object : ReadGetBookInfoFactory.OnScanResult {
-                override fun onSucceed(totalNum: Int, bookInfoList: List<ScanBookBean>) {
-                    setResult(Constants.SCAN_RESPONSE_SUCC, Intent().apply {
-                        if (Constants.WEB_YOU_SHU == scanInfo.webName) {
-                            putExtra(MessageUtils.TOTAL_PAGE, totalNum)
-                            putExtra(MessageUtils.CURRENT_PAGE, scanInfo.page)
-                        }
-                        putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, Bundle().apply {
-                            putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, bookInfoList as ArrayList<ScanBookBean>)
-                        })
+        val scanInfo = intent.getSerializableExtra(Constants.KEY_SEARCH_INFO) as ScanDataBean
+        ReadGetBookInfoFactory.getInstance(scanInfo.webName)?.getBookInfo(this, handler, scanInfo, object : ReadGetBookInfoFactory.OnScanResult {
+            override fun onSucceed(totalNum: Int, bookInfoList: List<ScanBookBean>) {
+                setResult(Constants.SCAN_RESPONSE_SUCC, Intent().apply {
+                    if (Constants.WEB_YOU_SHU == scanInfo.webName) {
+                        putExtra(MessageUtils.TOTAL_PAGE, totalNum)
+                        putExtra(MessageUtils.CURRENT_PAGE, scanInfo.page)
+                    }
+                    putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, Bundle().apply {
+                        putParcelableArrayList(Constants.KEY_BUNDLE_FOR_BOOK_DATA, bookInfoList as ArrayList<ScanBookBean>)
                     })
-                    finish()
-                }
+                })
+                finish()
+            }
 
-                override fun onFailed(e: Throwable?) {
-                    setResult(Constants.SCAN_RESPONSE_FAILED, Intent().apply {
-                        putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, Bundle())
-                    })
-                    finish()
-                }
-            })
-        }
+            override fun onFailed(e: Throwable?) {
+                setResult(Constants.SCAN_RESPONSE_FAILED, Intent().apply {
+                    putExtra(Constants.KEY_INTENT_FOR_BOOK_DATA, Bundle())
+                })
+                finish()
+            }
+        })
     }
 
     override fun onBackPressed() {

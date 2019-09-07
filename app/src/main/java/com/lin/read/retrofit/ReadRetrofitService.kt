@@ -8,12 +8,12 @@ interface ReadRetrofitService {
     //get qidian book list
     @GET("/rank/{last}?")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
-    fun getQiDianBookList(@Path("last") path: String, @QueryMap(encoded = true) map: Map<String, String>, @Query("page") page: Int = 1): Observable<ResponseBody>
+    fun getQiDianBookList(@Path("last") path: String, @QueryMap(encoded = true) map: Map<String, String?>, @Query("page") page: Int = 1): Observable<ResponseBody>
 
     //get qidian finish book list
     @GET("/finish")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
-    fun getQiDianBookList(@QueryMap(encoded = true) map: Map<String, String>, @Query("page") page: Int = 1): Observable<ResponseBody>
+    fun getQiDianBookList(@QueryMap(encoded = true) map: Map<String, String?>, @Query("page") page: Int = 1): Observable<ResponseBody>
 
     //get qidian book details
     @GET("/book/{bookId}")
@@ -23,7 +23,7 @@ interface ReadRetrofitService {
     //get you shu book list and book details
     @GET("/category/{last}")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
-    fun getYouShuBookList(@Path("last") path: String, @QueryMap(encoded = true) map: Map<String, String>, @Query("page") page: Int): Observable<ResponseBody>
+    fun getYouShuBookList(@Path("last") path: String, @QueryMap(encoded = true) map: Map<String, String?>, @Query("page") page: Int): Observable<ResponseBody>
 
     @GET("/modules/article/search.php")
     @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/scan_sub_item_et"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_scan_type_item_unselected"
+            android:maxLength="4"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/scan_sub_item_unit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</RelativeLayout>

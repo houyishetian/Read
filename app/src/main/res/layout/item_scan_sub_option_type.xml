@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <CheckBox
+        android:id="@+id/scan_sub_item_chbox0"
+        android:layout_width="45dp"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selector_scan_type_item"
+        android:button="@null"
+        android:checked="true"
+        android:padding="3dp"
+        android:text="全部类"
+        android:gravity="center"
+        android:textSize="12sp" />
+
+    <CheckBox
+        android:id="@+id/scan_sub_item_chbox1"
+        android:layout_width="55dp"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selector_scan_type_item"
+        android:button="@null"
+        android:checked="true"
+        android:padding="3dp"
+        android:gravity="center"
+        android:text="100-200万"
+        android:textSize="10sp" />
+
+</RelativeLayout>

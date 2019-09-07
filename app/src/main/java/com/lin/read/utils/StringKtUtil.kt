@@ -2,7 +2,7 @@ package com.lin.read.utils
 
 import android.text.format.DateFormat
 import com.lin.read.filter.ScanBookBean
-import com.lin.read.filter.scan.ScanInfo
+import com.lin.read.filter.scan.ScanDataBean
 import java.util.*
 import java.util.regex.Pattern
 
@@ -13,17 +13,13 @@ class StringKtUtil {
          * @param scanBookBean pending for compare
          * @return true-the book is ok, false-the book is not ok
          */
-        fun compareFilterInfo(scanInfo: ScanInfo, scanBookBean: ScanBookBean): Boolean = scanInfo.inputtedBeans?.takeIf { it.isNotEmpty() }?.let {
+        fun compareFilterInfo(scanInfo: ScanDataBean, scanBookBean: ScanBookBean): Boolean = scanInfo.inputDatas.takeIf { it.isNotEmpty() }?.let {
             loop@ for (item in it) {
-                val thisInfo = ReflectUtil.getProperty(scanBookBean, item.key, String::class.java)
-                when (item.inputType) {
-                    Constants.INPUT_INT, Constants.INPUT_FLOAT -> {
-                        val valueStandard = item.value?.takeIf { it.toString().isNotEmpty() }?.toFloat() ?: -1f
-                        val valuePendingCompare = thisInfo?.takeIf { it.isNotEmpty() }?.toFloat() ?: -1f
-                        if (valueStandard < 0 || valuePendingCompare < 0 || valueStandard > valuePendingCompare) return false
-                    }
-                    else -> continue@loop
-                }
+                val thisInfo = ReflectUtil.getProperty(scanBookBean, item.id, String::class.java)
+                val valueStandard = item.value.takeIf { it.toString().isNotEmpty() }?.toFloat()
+                        ?: -1f
+                val valuePendingCompare = thisInfo?.takeIf { it.isNotEmpty() }?.toFloat() ?: -1f
+                if (valueStandard < 0 || valuePendingCompare < 0 || valueStandard > valuePendingCompare) return false
             }
             true
         } ?: true

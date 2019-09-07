@@ -6,7 +6,7 @@ import com.lin.read.filter.ScanBookBean
 import com.lin.read.utils.Constants
 
 abstract class ReadGetBookInfoFactory {
-    abstract fun getBookInfo(context: Context,handler: Handler, searchInfo: ScanInfo, onScanResult: OnScanResult)
+    abstract fun getBookInfo(context: Context,handler: Handler, searchInfo: ScanDataBean, onScanResult: OnScanResult)
     companion object {
         fun getInstance(type: String): ReadGetBookInfoFactory? {
             return when (type) {

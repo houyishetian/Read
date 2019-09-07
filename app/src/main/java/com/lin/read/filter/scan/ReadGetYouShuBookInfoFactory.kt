@@ -18,13 +18,13 @@ class ReadGetYouShuBookInfoFactory : ReadGetBookInfoFactory() {
     init {
         tag = ReadGetYouShuBookInfoFactory::class.java.simpleName
     }
-    override fun getBookInfo(context: Context, handler: Handler, searchInfo: ScanInfo, onScanResult: OnScanResult) {
+    override fun getBookInfo(context: Context, handler: Handler, searchInfo: ScanDataBean, onScanResult: OnScanResult) {
         MessageUtils.sendWhat(handler, MessageUtils.SCAN_START)
         Log.e(tag, "scan start")
         try {
-            val service = RetrofitInstance(searchInfo.mainUrl!![0]).create(ReadRetrofitService::class.java)
+            val service = RetrofitInstance(searchInfo.mainUrl[0]).create(ReadRetrofitService::class.java)
 
-            service.getYouShuBookList(searchInfo.rolePathValue!!, searchInfo.roleParamPairs!!, searchInfo.page)
+            service.getYouShuBookList(searchInfo.rolePathValue, searchInfo.roleParamPairs, searchInfo.page)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
                     .subscribe(object : Observer<ResponseBody> {

@@ -10,11 +10,14 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.FileProvider
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.widget.EditText
 import android.widget.Toast
 import com.lin.read.R
 import com.lin.read.filter.search.BookChapterInfo
@@ -199,6 +202,45 @@ fun Animation.animationListener(start: ((Animation?) -> Unit)? = null, repeat: (
 
         override fun onAnimationStart(animation: Animation?) {
             start?.invoke(animation)
+        }
+    })
+}
+
+fun Any?.isNull(): Boolean = this == null
+fun Any?.isNotNull(): Boolean = this != null
+
+val String.pairBean: Pair<String, String>
+    get() {
+        return when (this.count { it == '_' }) {
+            0 -> this to ""
+            else -> this.split("_").let { it[0] to it[1] }
+        }
+    }
+val String.tripleBean: Triple<String, String, String?>
+    get() {
+        return when (this.count { it == '_' }) {
+            0 -> Triple(this, "", null)
+            1 -> this.split("_").let { Triple(it[0], it[1], null) }
+            else -> this.split("_").let { Triple(it[0], it[1], it[2]) }
+        }
+    }
+
+fun Any?.logE(msg: String, tag: String? = null) {
+    Log.e(tag ?: this?.javaClass?.name ?: "null", msg)
+}
+
+fun EditText.textWatcher(beforeChange: ((CharSequence?, Int, Int, Int) -> Unit)? = null, onChange: ((CharSequence?, Int, Int, Int) -> Unit)? = null, afterChange: ((Editable?) -> Unit)? = null) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            afterChange?.invoke(s)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            beforeChange?.invoke(s, start, count, after)
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            onChange?.invoke(s, start, before, count)
         }
     })
 }

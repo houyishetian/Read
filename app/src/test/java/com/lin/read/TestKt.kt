@@ -1,9 +1,6 @@
 package com.lin.read
 
-import com.lin.read.utils.ReflectUtil
-import com.lin.read.utils.StringKtUtil
-import com.lin.read.utils.baseUrl
-import com.lin.read.utils.minusBy
+import com.lin.read.utils.*
 import org.junit.Test
 import java.io.*
 import java.net.URLEncoder
@@ -157,5 +154,40 @@ class TestKt {
         )
         println(list0.minusBy(list1) { it.name })
         println(list0.minusBy(list1) { it.age })
+    }
+
+    @Test
+    fun testExtensionProperty(){
+        val data0 = "abc"
+        val data1 = "abc_bcd"
+        val data2 = "abc_bcd_def"
+        val data3 = "abc_bcd_def_ffff"
+
+        println(data0.pairBean)
+        println(data1.pairBean)
+        println(data2.pairBean)
+        println(data3.pairBean)
+
+        println(data0.tripleBean)
+        println(data1.tripleBean)
+        println(data2.tripleBean)
+        println(data3.tripleBean)
+    }
+
+    @Test
+    fun testHashCode(){
+        data class Bean(var a:String){
+            override fun hashCode(): Int {
+                return 0
+            }
+        }
+        val list = mutableListOf<Bean>().apply {
+            add(Bean("a"))
+            add(Bean("b"))
+            add(Bean("c"))
+        }
+        println(list.hashCode())
+        list.first().a = "new"
+        println(list.hashCode())
     }
 }

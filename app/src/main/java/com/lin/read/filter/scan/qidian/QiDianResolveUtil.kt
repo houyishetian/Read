@@ -2,7 +2,7 @@ package com.lin.read.filter.scan.qidian
 
 import com.lin.read.filter.ScanBookBean
 import com.lin.read.filter.scan.BookLinkInfo
-import com.lin.read.filter.scan.ScanInfo
+import com.lin.read.filter.scan.ScanDataBean
 import com.lin.read.utils.StringKtUtil
 import okhttp3.ResponseBody
 
@@ -36,9 +36,9 @@ class QiDianResolveUtil {
             return result
         }
 
-        fun getBookDetailsInfo(scanInfo: ScanInfo, responseBody: ResponseBody): ScanBookBean? {
+        fun getBookDetailsInfo(scanInfo: ScanDataBean, responseBody: ResponseBody): ScanBookBean? {
             responseBody.byteStream().bufferedReader().useLines {
-                val scanBookBean = ScanBookBean(scanInfo.webName!!)
+                val scanBookBean = ScanBookBean(scanInfo.webName)
                 it.forEach {
                     val current = it.trim()
                     scanBookBean.takeIf { it.lastChapter.isEmpty() }?.let {
