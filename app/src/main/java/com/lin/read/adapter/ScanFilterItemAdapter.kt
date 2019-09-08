@@ -33,28 +33,36 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
     init {
         allSplitData = mutableListOf()
         allInputValues = hashMapOf()
+        // add default web's options
+        selectWeb = scanBean.webs.keys.first().tripleBean.third.let { defaultWeb ->
+            defaultWeb.takeIf { scanBean.webs.values.first().firstOrNull { it.id == defaultWeb }.isNotNull() }
+                    ?: scanBean.webs.values.first().first().id!!
+        }
         // only need to resolve the first element
-        webData = Pair(scanBean.webs.keys.first(), scanBean.webs.values.first().map { (it as ScanBaseItemBean) toPair (scanBean.webs.keys.first().tripleBean.third == it.id) })
+        webData = Pair(scanBean.webs.keys.first(), scanBean.webs.values.first().map { (it as ScanBaseItemBean) toPair (selectWeb == it.id) })
         optionData = hashMapOf<String, MutableList<Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>>().apply {
             scanBean.details.forEach { webKey, detailItem ->
                 put(webKey, mutableListOf<Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>().apply {
                     detailItem.options.forEach { optionKey, optionData ->
-                        add(Pair(optionKey, optionData.map { (it as ScanBaseItemBean) toPair (optionKey.tripleBean.third == it.id) }))
+                        val defaultSelectId = optionKey.tripleBean.third.let { defaultId ->
+                            defaultId.takeIf { optionData.firstOrNull { it.id == defaultId }.isNotNull() }
+                                    ?: optionData.first().id
+                        }
+                        add(Pair(optionKey, optionData.map { (it as ScanBaseItemBean) toPair (defaultSelectId == it.id) }))
                     }
                 })
             }
         }
         inputData = hashMapOf<String, Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>().apply {
             scanBean.details.forEach { webKey, detailItem ->
-                put(webKey, detailItem.inputs.let {
-                    // only need to resolve the first element
-                    Pair(it.keys.first(), it.values.first().map { (it as ScanBaseItemBean) toPair false })
-                })
+                detailItem.inputs?.run {
+                    put(webKey, this.let {
+                        // only need to resolve the first element
+                        Pair(it.keys.first(), it.values.first().map { (it as ScanBaseItemBean) toPair false })
+                    })
+                }
             }
         }
-        // add default web's options
-        selectWeb = scanBean.webs.keys.first().tripleBean.third
-                ?: scanBean.webs.values.first().first().id!!
         updateAllSplitData()
     }
 
@@ -62,7 +70,7 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
         optionData[selectWeb]?.forEach {
             val groupKey = it.first.tripleBean.first
             val selectedId = (it.second.first { it.second }.first as ScanOptionItemBean).id
-            scanBean.details[selectWeb]!!.hasNoKeys["${groupKey}_$selectedId"]?.let {
+            scanBean.details[selectWeb]!!.hasNoKeys?.get("${groupKey}_$selectedId")?.let {
                 addAll(it)
             }
         }
@@ -152,7 +160,8 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
                 } else {
                     when (pairBean.second[0].first) {
                         is ScanOptionItemBean -> {
-                            val use4Words = scanBean.details[selectWeb]!!.use4WordsList.contains(pairBean.first.pairBean.first)
+                            val use4Words = scanBean.details[selectWeb]!!.use4WordsList?.contains(pairBean.first.pairBean.first)
+                                    ?: false
                             rcv_scan_group_type.run {
                                 this.setHasFixedSize(true)
                                 layoutManager = GridLayoutManager(ctx, if (use4Words) 3 else 4)

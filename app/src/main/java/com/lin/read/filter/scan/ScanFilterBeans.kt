@@ -5,9 +5,9 @@ import java.io.Serializable
 
 data class ScanBean(@Expose val webs: LinkedHashMap<String, List<ScanOptionItemBean>>, @Expose val details: Map<String, ScanDetailItemBean>) : Serializable
 
-data class ScanDetailItemBean(@Expose val mainUrl: List<String>, @Expose val rolePathKey: String, @Expose val roleParamsKeys: Map<String, String>, @Expose val use4WordsList: List<String>,
-                              @Expose val hasNoKeys: Map<String, List<String>>, @Expose val options: LinkedHashMap<String, List<ScanOptionItemBean>>,
-                              @Expose val inputs: LinkedHashMap<String, List<ScanInputItemBean>>) : Serializable
+data class ScanDetailItemBean(@Expose val mainUrl: List<String>, @Expose val rolePathKey: String, @Expose val roleParamsKeys: Map<String, String>, @Expose val use4WordsList: List<String>?,
+                              @Expose val hasNoKeys: Map<String, List<String>>?, @Expose val options: LinkedHashMap<String, List<ScanOptionItemBean>>,
+                              @Expose val inputs: LinkedHashMap<String, List<ScanInputItemBean>>?) : Serializable
 
 sealed class ScanBaseItemBean : Serializable
 data class ScanOptionItemBean(@Expose val id: String?, @Expose val name: String) : ScanBaseItemBean()

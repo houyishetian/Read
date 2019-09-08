@@ -2,7 +2,8 @@
 	"webs": {
 		"web_网站_qidian": [
 			{"id":"qidian","name": "起点"},
-			{"id":"qidianfinish","name": "完本"}
+			{"id":"qidianfinish","name": "完本"},
+			{"id":"chuangshi","name": "创世"}
 		]
 	},
 	"details": {
@@ -22,7 +23,7 @@
 				"rankType_pubnewbook": ["recomDate"],
 				"rankType_vipup": ["recomDate"],
 				"rankType_vipcollect": ["recomDate"],
-				"rankType_vipreward":["recomDate","bookType","filter"]
+				"rankType_vipreward":["recomDate","bookType"]
 			},
 			"options": {
 				"rankType_榜单_recom": [
@@ -131,6 +132,61 @@
 					{"id":"score","inputType": "float","hint": "8.0-10","unitText": "分","defaultValue": 8.0,"min": 8.0,"max": 10.0},
 					{"id":"scoreNum","inputType": "int","hint": "300","unitText": "人评分","defaultValue": 300,"min": 300},
 					{"id":"wordsNum","inputType": "int","hint": "200","unitText": "万字","defaultValue": 200,"min": 200}
+				]
+			}
+		},
+		"chuangshi": {
+			"mainUrl": ["http://chuangshi.qq.com/bang/"],
+			"rolePathKey": "rankType",
+			"roleParamsKeys": {},
+			"use4WordsList": ["rankType","dateType"],
+			"hasNoKeys": {
+				"rankType_cs": ["bookType","dateType"],
+				"rankType_pt": ["bookType","dateType"],
+				"rankType_rq": ["dateType"],
+				"rankType_tj": ["dateType"],
+				"rankType_zs": ["dateType"],
+				"rankType_fav": ["dateType"],
+				"rankType_gz": ["dateType"],
+				"rankType_qy": ["dateType"]
+			},
+			"options": {
+				"rankType_榜单_rq": [
+					{"name":"原创","id":"mo"},
+					{"name":"人气","id":"rq"},
+					{"name":"推荐","id":"tj"},
+					{"name":"总字数","id":"zs"},
+					{"name":"创世热销","id":"cs"},
+					{"name":"平台热销","id":"pt"},
+					{"name":"总收藏","id":"fav"},
+					{"name":"公众新书","id":"gz"},
+					{"name":"签约新书","id":"qy"}
+				],
+				"bookType_类型_xh": [
+					{"name":"全部","id":"all"},
+					{"name":"玄幻","id":"xh"},
+					{"name":"奇幻","id":"qh"},
+					{"name":"武侠","id":"wx"},
+					{"name":"仙侠","id":"xx"},
+					{"name":"历史","id":"ls"},
+					{"name":"军事","id":"js"},
+					{"name":"游戏","id":"wy"},
+					{"name":"体育","id":"ty"},
+					{"name":"科幻","id":"kh"},
+					{"name":"悬疑","id":"ly"},
+					{"name":"言情","id":"nva"}
+				],
+				"dateType_日期_2019-09": [
+					{"name":"2019-09","id":"2019-09"},
+					{"name":"2019-08","id":"2019-08"},
+					{"name":"2019-07","id":"2019-07"},
+					{"name":"2019-06","id":"2019-06"},
+					{"name":"2019-05","id":"2019-05"},
+					{"name":"2019-04","id":"2019-04"},
+					{"name":"2019-03","id":"2019-03"},
+					{"name":"2019-02","id":"2019-02"},
+					{"name":"2019-01","id":"2019-01"},
+					{"name":"2018-12","id":"2018-12"}
 				]
 			}
 		}
