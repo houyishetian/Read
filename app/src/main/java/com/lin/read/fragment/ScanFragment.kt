@@ -25,6 +25,7 @@ import com.lin.read.utils.Constants
 import com.lin.read.utils.animationListener
 import com.lin.read.utils.makeMsg
 import com.lin.read.utils.setOnNoDoubleClickListener
+import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.fragment_scan.*
 import kotlinx.android.synthetic.main.layout_scan_filter.*
 import java.io.InputStreamReader
@@ -45,8 +46,10 @@ class ScanFragment : Fragment() {
 
     private fun initData() {
         allBookData = mutableListOf()
+        DialogUtil.getInstance().showLoadingDialog(activity)
         GsonBuilder().create().fromJson(InputStreamReader(activity.assets.open("read_scan.json")), ScanBean::class.java).apply {
             Log.e("Test","get read scan data successfully!")
+            DialogUtil.getInstance().hideLoadingView()
             rcv_scan.let {
                 it.layoutManager = LinearLayoutManager(activity)
                 it.addItemDecoration(ScanItemDecoration(activity, top = 15))
