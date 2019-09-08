@@ -53,6 +53,7 @@ class ScanFragment : Fragment() {
                 it.adapter = ScanFilterItemAdapter(activity, this)
                 it.setOnTouchListener { view, event ->
                     (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken,0)
+                    false
                 }
             }
         }.takeIf { it.webs.values.first().isNotEmpty() }?.let {
