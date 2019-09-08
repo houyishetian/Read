@@ -10,11 +10,10 @@ import android.view.ViewGroup
 import com.lin.read.R
 import com.lin.read.decoration.ScanItemDecoration
 import com.lin.read.filter.scan.*
-import com.lin.read.utils.logE
+import com.lin.read.utils.isNotNull
 import com.lin.read.utils.pairBean
 import com.lin.read.utils.tripleBean
 import kotlinx.android.synthetic.main.item_scan_group_type.view.*
-import java.lang.Exception
 
 class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: ScanBean) : RecyclerView.Adapter<ScanFilterItemAdapter.GroupViewHolder>() {
     private val allSplitData: MutableList<Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>
@@ -85,7 +84,7 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
                             val selectedId = (pair.second.first { it.second }.first as ScanOptionItemBean).id
                             if (scanBean.details[selectWeb]!!.rolePathKey == selectedRelatedGroupKey) {
                                 rolePathValue = selectedId!!
-                            } else if (roleParamsKeys.containsKey(selectedRelatedGroupKey)) {
+                            } else if (roleParamsKeys.containsKey(selectedRelatedGroupKey) && selectedId.isNotNull()) {
                                 roleParamMap.put(roleParamsKeys[selectedRelatedGroupKey]!!, selectedId)
                             }
                         }
