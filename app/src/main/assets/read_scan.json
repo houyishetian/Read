@@ -139,16 +139,16 @@
 			"mainUrl": ["http://chuangshi.qq.com/bang/"],
 			"rolePathKey": "rankType",
 			"roleParamsKeys": {},
-			"use4WordsList": ["rankType","dateType"],
+			"use4WordsList": ["rankType","monthType"],
 			"hasNoKeys": {
-				"rankType_cs": ["bookType","dateType"],
-				"rankType_pt": ["bookType","dateType"],
-				"rankType_rq": ["dateType"],
-				"rankType_tj": ["dateType"],
-				"rankType_zs": ["dateType"],
-				"rankType_fav": ["dateType"],
-				"rankType_gz": ["dateType"],
-				"rankType_qy": ["dateType"]
+				"rankType_cs": ["bookType","monthType"],
+				"rankType_pt": ["bookType","monthType"],
+				"rankType_rq": ["monthType"],
+				"rankType_tj": ["monthType"],
+				"rankType_zs": ["monthType"],
+				"rankType_fav": ["monthType"],
+				"rankType_gz": ["monthType"],
+				"rankType_qy": ["monthType"]
 			},
 			"options": {
 				"rankType_榜单_rq": [
@@ -176,18 +176,7 @@
 					{"name":"悬疑","id":"ly"},
 					{"name":"言情","id":"nva"}
 				],
-				"dateType_日期_2019-09": [
-					{"name":"2019-09","id":"2019-09"},
-					{"name":"2019-08","id":"2019-08"},
-					{"name":"2019-07","id":"2019-07"},
-					{"name":"2019-06","id":"2019-06"},
-					{"name":"2019-05","id":"2019-05"},
-					{"name":"2019-04","id":"2019-04"},
-					{"name":"2019-03","id":"2019-03"},
-					{"name":"2019-02","id":"2019-02"},
-					{"name":"2019-01","id":"2019-01"},
-					{"name":"2018-12","id":"2018-12"}
-				]
+                "monthType_月份": []
 			}
 		}
 	}

@@ -14,6 +14,9 @@ import com.lin.read.utils.isNotNull
 import com.lin.read.utils.pairBean
 import com.lin.read.utils.tripleBean
 import kotlinx.android.synthetic.main.item_scan_group_type.view.*
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.LinkedHashMap
 
 class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: ScanBean) : RecyclerView.Adapter<ScanFilterItemAdapter.GroupViewHolder>() {
     private val allSplitData: MutableList<Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>
@@ -44,6 +47,12 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
             scanBean.details.forEach { webKey, detailItem ->
                 put(webKey, mutableListOf<Pair<String, List<VarPair<ScanBaseItemBean, Boolean>>>>().apply {
                     detailItem.options.forEach { optionKey, optionData ->
+                        // dynamically add the month type
+                        if (optionKey.pairBean.first == "monthType" && optionData.isEmpty()) {
+                            optionData.run {
+                                addAll(getLatest10MonthsType())
+                            }
+                        }
                         val defaultSelectId = optionKey.tripleBean.third.let { defaultId ->
                             defaultId.takeIf { optionData.firstOrNull { it.id == defaultId }.isNotNull() }
                                     ?: optionData.first().id
@@ -64,6 +73,17 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
             }
         }
         updateAllSplitData()
+    }
+
+    // get latest 10 months data
+    private fun getLatest10MonthsType(): List<ScanOptionItemBean> = mutableListOf<ScanOptionItemBean>().apply {
+        val calendar = Calendar.getInstance()
+        for (index in 0 until 10) {
+            "${calendar.get(Calendar.YEAR)}-${String.format("%02d", calendar.get(Calendar.MONTH) + 1)}".let {
+                add(ScanOptionItemBean(it, it))
+            }
+            calendar.add(Calendar.MONTH, -1)
+        }
     }
 
     private fun getExcludeKeysList(): List<String> = mutableListOf<String>().apply {
