@@ -31,9 +31,6 @@ import java.io.InputStreamReader
 import java.util.*
 
 class ScanFragment : Fragment() {
-
-    private var softDisplay = false
-    private var lastHeight = -1
     private lateinit var allBookData: MutableList<ScanBookBean>
     private var bookComparatorUtil: BookComparatorUtil? = null
     private var scanMenuIsSliding = false
@@ -52,8 +49,11 @@ class ScanFragment : Fragment() {
             Log.e("Test","get read scan data successfully!")
             rcv_scan.let {
                 it.layoutManager = LinearLayoutManager(activity)
-                it.addItemDecoration(ScanItemDecoration(activity,top = 15))
-                it.adapter = ScanFilterItemAdapter(activity,this)
+                it.addItemDecoration(ScanItemDecoration(activity, top = 15))
+                it.adapter = ScanFilterItemAdapter(activity, this)
+                it.setOnTouchListener { view, event ->
+                    (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken,0)
+                }
             }
         }.takeIf { it.webs.values.first().isNotEmpty() }?.let {
             scan_filter.setOnNoDoubleClickListener {
@@ -102,9 +102,7 @@ class ScanFragment : Fragment() {
 
     fun isFilterLayoutVisible(): Boolean = layout_scan_filter.visibility == View.VISIBLE
 
-    fun hideSoft() = takeIf { softDisplay }?.activity?.getSystemService(Context.INPUT_METHOD_SERVICE)?.let {
-        (it as InputMethodManager).toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
-    }
+    fun hideSoft() = (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(rcv_scan.windowToken, 0)
 
     private fun startScanning() {
         (rcv_scan.adapter as ScanFilterItemAdapter).getScanDataBean()?.let {

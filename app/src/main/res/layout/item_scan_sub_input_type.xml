@@ -13,11 +13,10 @@
         <EditText
             android:id="@+id/scan_sub_item_et"
             android:layout_width="60dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/shape_scan_type_item_unselected"
             android:maxLength="4"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:padding="5dp"
             android:textSize="12sp" />
 
         <TextView
