@@ -3,17 +3,14 @@ package com.lin.read.activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
-import android.view.KeyEvent
 import android.view.View
 import com.lin.read.R
 import com.lin.read.fragment.BookMarksFragment
 import com.lin.read.fragment.ScanFragment
 import com.lin.read.fragment.SearchFragment
-import com.lin.read.utils.addFragment
-import com.lin.read.utils.hideFragment
-import com.lin.read.utils.makeMsg
-import com.lin.read.utils.showFragment
+import com.lin.read.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 class  MainActivity : FragmentActivity(),View.OnClickListener {
     private lateinit var fragmentViews:HashMap<View,Fragment>
@@ -47,6 +44,10 @@ class  MainActivity : FragmentActivity(),View.OnClickListener {
         rl_scan.setOnClickListener(this)
         rl_search.setOnClickListener(this)
         rl_history.setOnClickListener(this)
+
+        KeyboardVisibilityEvent.setEventListener(this){
+            ll_main_functions.visibility = if(it) View.GONE else View.VISIBLE
+        }
     }
 
     private fun setClickedRlBackground(view: View) {

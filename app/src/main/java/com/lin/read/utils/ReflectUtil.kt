@@ -36,12 +36,6 @@ class ReflectUtil {
             }
         }
 
-        fun <T> deepCopy(src: T): T {
-            val byteOut = ByteArrayOutputStream()
-            ObjectOutputStream(byteOut).writeObject(src)
-            return ObjectInputStream(ByteArrayInputStream(byteOut.toByteArray())).readObject() as T
-        }
-
         fun <T : Any> copyProperteries(src: T, des: T) {
             src.javaClass.declaredFields.forEach {
                 it.isAccessible = true

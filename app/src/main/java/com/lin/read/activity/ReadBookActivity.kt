@@ -26,6 +26,7 @@ import com.lin.read.utils.*
 import com.lin.read.view.DialogUtil
 import kotlinx.android.synthetic.main.activity_read_book.*
 import kotlinx.android.synthetic.main.layout_book_chapter.*
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.text.NumberFormat
 
 class ReadBookActivity : Activity() {
@@ -141,6 +142,9 @@ class ReadBookActivity : Activity() {
                 page_skip.performClick()
             }
             return@setOnEditorActionListener false
+        }
+        KeyboardVisibilityEvent.setEventListener(this){
+            ll_chapter_functions.visibility = if(it) View.GONE else View.VISIBLE
         }
     }
 
@@ -261,7 +265,7 @@ class ReadBookActivity : Activity() {
             LoadChapter.PREVIOUS -> chaptersList[currentReadInfo.bookChapterInfo.index - 1]
             LoadChapter.NEXT -> chaptersList[currentReadInfo.bookChapterInfo.index + 1]
         }
-        val afterCopy = ReflectUtil.deepCopy(bookChapterInfo)
+        val afterCopy = bookChapterInfo.deepClone()
         GetChapterContentTask(afterCopy, object : GetChapterContentTask.OnTaskListener {
             override fun onSucc(content: String) {
                 runOnUiThread {

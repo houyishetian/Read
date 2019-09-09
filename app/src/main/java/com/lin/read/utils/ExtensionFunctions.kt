@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.widget.EditText
 import android.widget.Toast
+import com.google.gson.GsonBuilder
 import com.lin.read.R
 import com.lin.read.filter.search.BookChapterInfo
 import okhttp3.ResponseBody
@@ -225,8 +226,8 @@ val String.tripleBean: Triple<String, String, String?>
         }
     }
 
-fun Any?.logE(msg: String, tag: String? = null) {
-    Log.e(tag ?: this?.javaClass?.name ?: "null", msg)
+fun <T : Any> T.logE(tag: String? = null): T = this.apply {
+    Log.e(tag ?: this.javaClass.simpleName, this.toString())
 }
 
 fun EditText.textWatcher(beforeChange: ((CharSequence?, Int, Int, Int) -> Unit)? = null, onChange: ((CharSequence?, Int, Int, Int) -> Unit)? = null, afterChange: ((Editable?) -> Unit)? = null) {
@@ -243,4 +244,10 @@ fun EditText.textWatcher(beforeChange: ((CharSequence?, Int, Int, Int) -> Unit)?
             onChange?.invoke(s, start, before, count)
         }
     })
+}
+
+fun <T : Any> T.deepClone(): T = GsonBuilder().create().let {
+    it.toJson(this)?.run {
+        it.fromJson(this, this@deepClone.javaClass)
+    }?: throw java.lang.Exception("cannot parse internal class to Json")
 }
