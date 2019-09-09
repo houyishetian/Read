@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Html
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -149,10 +148,10 @@ class ReadBookActivity : Activity() {
     }
 
     private fun showSearchChapterLayout(){
+        chapter_search_layout.visibility = View.VISIBLE
         chapter_content_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_chapter_view_out))
         chapter_search_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_search_view_in).apply {
             animationListener {
-                chapter_search_layout.visibility = View.VISIBLE
                 chapter_content_layout.visibility = View.GONE
             }
         })
@@ -161,11 +160,11 @@ class ReadBookActivity : Activity() {
     private fun hideSearchChapterLayout(){
         if(chapter_search_layout.visibility == View.VISIBLE && !searchChapterLayoutIsSliding){
             searchChapterLayoutIsSliding = true
+            chapter_content_layout.visibility = View.VISIBLE
             chapter_search_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_search_view_out))
             chapter_content_layout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.set_read_chapter_view_in).apply {
                 animationListener {
                     chapter_search_layout.visibility = View.GONE
-                    chapter_content_layout.visibility = View.VISIBLE
                     chapter_search_et.setText("")
                     searchChapterLayoutIsSliding = false
                 }

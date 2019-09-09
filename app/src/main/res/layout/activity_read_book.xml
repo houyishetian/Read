@@ -15,27 +15,28 @@
             android:layout_marginTop="15dp"
             android:minHeight="30dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/chapter_content_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/chapter_menu"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
                     android:src="@drawable/chapter" />
 
                 <TextView
                     android:id="@+id/chapter_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="80dp"
-                    android:layout_marginRight="80dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:ellipsize="start"
                     android:gravity="center"
                     android:maxLines="2"
@@ -46,11 +47,8 @@
                     android:id="@+id/chapter_search_iv"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
                     android:src="@drawable/search" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/chapter_search_layout"
