@@ -76,9 +76,12 @@ class Constants {
             }
         }
 
-        const val WEB_QIDIAN = "起点"
-        const val WEB_QIDIAN_FINISH = "完本"
         const val WEB_YOU_SHU = "优书"
+
+        const val WEB_QIDIAN_ID = "qidian"
+        const val WEB_QIDIAN_FINISH_ID = "qidianfinish"
+        const val WEB_CHUANGSHI_ID = "chuangshi"
+        const val WEB_YOUSHU_ID = "youshu"
 
         const val INPUT_INT = "int"
         const val INPUT_FLOAT = "float"

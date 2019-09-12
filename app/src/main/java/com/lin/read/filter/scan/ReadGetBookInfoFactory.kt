@@ -10,8 +10,8 @@ abstract class ReadGetBookInfoFactory {
     companion object {
         fun getInstance(type: String): ReadGetBookInfoFactory? {
             return when (type) {
-                Constants.WEB_YOU_SHU -> ReadGetYouShuBookInfoFactory()
-                Constants.WEB_QIDIAN,Constants.WEB_QIDIAN_FINISH -> ReadGetQiDianBookInfoFactory()
+                Constants.WEB_YOUSHU_ID -> ReadGetYouShuBookInfoFactory()
+                Constants.WEB_QIDIAN_ID,Constants.WEB_QIDIAN_FINISH_ID -> ReadGetQiDianBookInfoFactory()
                 else -> null
             }
         }

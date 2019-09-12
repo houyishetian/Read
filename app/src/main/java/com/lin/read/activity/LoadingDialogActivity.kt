@@ -62,10 +62,10 @@ class LoadingDialogActivity : Activity() {
     override fun onResume() {
         super.onResume()
         val scanInfo = intent.getSerializableExtra(Constants.KEY_SEARCH_INFO) as ScanDataBean
-        ReadGetBookInfoFactory.getInstance(scanInfo.webName)?.getBookInfo(this, handler, scanInfo, object : ReadGetBookInfoFactory.OnScanResult {
+        ReadGetBookInfoFactory.getInstance(scanInfo.webId)?.getBookInfo(this, handler, scanInfo, object : ReadGetBookInfoFactory.OnScanResult {
             override fun onSucceed(totalNum: Int, bookInfoList: List<ScanBookBean>) {
                 setResult(Constants.SCAN_RESPONSE_SUCC, Intent().apply {
-                    if (Constants.WEB_YOU_SHU == scanInfo.webName) {
+                    if (Constants.WEB_YOUSHU_ID == scanInfo.webId) {
                         putExtra(MessageUtils.TOTAL_PAGE, totalNum)
                         putExtra(MessageUtils.CURRENT_PAGE, scanInfo.page)
                     }

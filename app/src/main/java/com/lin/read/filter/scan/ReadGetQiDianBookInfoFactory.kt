@@ -41,8 +41,8 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
     private fun getBookInfos(searchInfo: ScanDataBean) {
         val service = RetrofitInstance(searchInfo.mainUrl[0]).create(ReadRetrofitService::class.java)
         val result = mutableListOf<BookLinkInfo>()
-        val observable: Observable<ResponseBody> = when (searchInfo.webName) {
-            Constants.WEB_QIDIAN -> service.getQiDianBookList(searchInfo.rolePathValue, searchInfo.roleParamPairs, 1)
+        val observable: Observable<ResponseBody> = when (searchInfo.webId) {
+            Constants.WEB_QIDIAN_ID -> service.getQiDianBookList(searchInfo.rolePathValue, searchInfo.roleParamPairs, 1)
             else -> service.getQiDianBookList(searchInfo.roleParamPairs, 1)
         }
         observable.subscribeOn(Schedulers.io())
@@ -57,8 +57,8 @@ class ReadGetQiDianBookInfoFactory : ReadGetBookInfoFactory() {
                         Log.e(tag, "first page complete, max page:$maxPage, book count:${maxPageWithBookInfo.size}")
                         val observableArray = arrayListOf<Observable<ResponseBody>>()
                         for (item in (2..maxPage)) {
-                            val otherPagesInfo: Observable<ResponseBody> = when (searchInfo.webName) {
-                                Constants.WEB_QIDIAN -> service.getQiDianBookList(searchInfo.rolePathValue, searchInfo.roleParamPairs, item)
+                            val otherPagesInfo: Observable<ResponseBody> = when (searchInfo.webId) {
+                                Constants.WEB_QIDIAN_ID -> service.getQiDianBookList(searchInfo.rolePathValue, searchInfo.roleParamPairs, item)
                                 else -> service.getQiDianBookList(searchInfo.roleParamPairs, item)
                             }
                             observableArray.add(otherPagesInfo.subscribeOn(Schedulers.io()).observeOn(Schedulers.io()))
