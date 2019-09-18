@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.text.Html
+import android.text.InputFilter
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -232,6 +233,7 @@ class ReadBookActivity : Activity() {
                                     index = allInfo.takeIf { index >= it.size }?.size?.minus(1) ?: index
                                 } ?: BookMark(readBookBean.webType, readBookBean.bookName, readBookBean.authorName, readBookBean.chapterLink)
                         chapter_total_page.text = "${splitInfos.size}"
+                        page_skip_et.filters = arrayOf(InputFilter.LengthFilter(chapter_total_page.text.length))
                         chaptersList.clear()
                         chaptersList.addAll(allInfo)
                         splitChaptersList.clear()
