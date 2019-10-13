@@ -19,6 +19,35 @@ class ReadBookResolveUtil {
             return BookChapterContent("")
         }
 
+        fun getChapterContentFromBIQUGE2(readResolveBean: ReadResolveBean): BookChapterContent {
+            var lastNonEmptyLine = ""
+            var resultContent = ""
+            readResolveBean.responseBody.readLinesOfHtml().forEach {
+                it.trim().let {
+                    if(it.contains("<div id=\"content\" class=\"showtxt\">")){
+                        StringKtUtil.getDataFromContentByRegex(it, "<div id=\"content\" class=\"showtxt\">([^\n]+)", listOf(1))?.let {
+                            resultContent = it[0]
+                            return@forEach
+                        }
+                    }
+                    resultContent.takeIf { it.isNotEmpty() }?.run {
+                        if (it.contains("chaptererror")) {
+                            return StringKtUtil.getDataFromContentByRegex(it, "([\\s\\S]+?)(?=\\(${readResolveBean.bookChapterInfo?.chapterLink}\\)<br /><br /><script>chaptererror)", listOf(1))?.let {
+                                resultContent += it[0]
+                                BookChapterContent(resultContent)
+                            } ?: run {
+                                resultContent += it
+                                BookChapterContent(resultContent)
+                            }
+                        }
+                        resultContent += it
+                    }
+                    lastNonEmptyLine = it
+                }
+            }
+            return BookChapterContent("")
+        }
+
         fun getChapterContentFromDINGDIAN(readResolveBean: ReadResolveBean): BookChapterContent {
             var lastNonEmptyLine = ""
             readResolveBean.responseBody.readLinesOfHtml().forEach {
@@ -125,6 +154,32 @@ class ReadBookResolveUtil {
                         StringKtUtil.getDataFromContentByRegex(it, "<dd><a href=\"([^\"]+)\">([\\s\\S]+?)</a></dd>", listOf(1, 2))?.let {
                             result.add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
                                     it[0], StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
+                        }
+                    }
+                }
+                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
+            }
+            return result
+        }
+
+        fun getChapterListFromBIQUGE2(readResolveBean: ReadResolveBean): List<BookChapterInfo> {
+            var lastNonEmptyLine = ""
+            var startResolving = false
+            val result = mutableListOf<BookChapterInfo>()
+            readResolveBean.responseBody.readLinesOfHtml().forEach {
+                if (!startResolving && lastNonEmptyLine == "<dt>《${readResolveBean.readBookBean?.bookName}》正文卷</dt>") {
+                    startResolving = true
+                }
+                if (startResolving && lastNonEmptyLine == "</dl>") {
+                    return result
+                }
+                if (startResolving) {
+                    //<dd><a href ="/book_64640/20467850.html">超维术士</a></dd>
+                    readResolveBean.readBookBean?.run {
+                        StringKtUtil.getDataFromContentByRegex(it, "<dd><a href\\s*=\"([^\"]+)\">([\\s\\S]+?)(?=</a></dd>)", listOf(1, 2))?.let {
+                            result.add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
+                                    "https://www.biqugex.com" + it[0],
+                                    StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                         }
                     }
                 }

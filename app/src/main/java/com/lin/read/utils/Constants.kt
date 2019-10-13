@@ -24,6 +24,7 @@ class Constants {
         const val KEY_SKIP_TO_READ = "KEY_SKIP_TO_READ"
 
         const val RESOLVE_FROM_BIQUGE = "BIQUGE"
+        const val RESOLVE_FROM_BIQUGE2 = "BIQUGE2"
         const val RESOLVE_FROM_DINGDIAN = "DINGDIAN"
         const val RESOLVE_FROM_BIXIA = "BIXIA"
         const val RESOLVE_FROM_AISHU = "AISHUWANG"
@@ -32,6 +33,7 @@ class Constants {
 
         val SEARCH_WEB_NAME_MAP: LinkedHashMap<String, String> = linkedMapOf<String, String>().apply {
             put(RESOLVE_FROM_BIQUGE, "笔趣阁")
+            put(RESOLVE_FROM_BIQUGE2, "笔趣2")
             put(RESOLVE_FROM_DINGDIAN, "顶点")
             put(RESOLVE_FROM_BIXIA, "笔下")
             put(RESOLVE_FROM_AISHU, "爱书网")
@@ -41,6 +43,7 @@ class Constants {
 
         val SEARCH_WEB_BASEURL_MAP:HashMap<String,String> = hashMapOf<String, String>().apply {
             put(RESOLVE_FROM_BIQUGE, "http://www.biquge5200.com/")
+            put(RESOLVE_FROM_BIQUGE2, "https://so.biqusoso.com/")
             put(RESOLVE_FROM_DINGDIAN, "https://www.x23us.com/")
             put(RESOLVE_FROM_BIXIA, "http://www.bxwx666.org/")
             put(RESOLVE_FROM_AISHU, "http://www.22ff.org/")
@@ -50,7 +53,7 @@ class Constants {
 
         val SEARCH_WEB_RETRO_PARAMS_MAP = fun(tag: String, bookName: String): Any {
             val searchKey = when (tag) {
-                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_AISHU -> bookName
+                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE2, RESOLVE_FROM_AISHU -> bookName
                 RESOLVE_FROM_DINGDIAN, RESOLVE_FROM_BIXIA, RESOLVE_FROM_QINGKAN, RESOLVE_FROM_SANQI -> URLEncoder.encode(bookName, "gbk")
                 else -> throw Exception("cannot resolve current type:$tag")
             }
@@ -71,6 +74,12 @@ class Constants {
                     put("searchtype", "novelname")
                     put("input", "")
                     put("searchkey", searchKey)
+                }
+                RESOLVE_FROM_BIQUGE2 -> hashMapOf<String, String>().apply {
+                    //https://so.biqusoso.com/s.php?ie=utf-8&siteid=biqugex.com&q=%E8%B6%85%E7%BB%B4%E6%9C%AF%E5%A3%AB
+                    put("ie", "utf-8")
+                    put("siteid", "biqugex.com")
+                    put("q", searchKey)
                 }
                 else -> throw Exception("cannot resolve current params:$tag")
             }

@@ -11,9 +11,7 @@ class ReflectUtil {
         }
 
         fun <T> invokeMethod(obj: Any, methodName: String, returnClz: Class<T>, vararg params: Any): T? {
-            obj.javaClass.methods.forEach {
-                Log.d("available item", "${it.name},params type:${it.parameterTypes.map { it.name }.joinToString("/")}")
-            }
+            Log.e("invoke method","${obj.javaClass.name}.$methodName")
             return obj.javaClass.getMethod(methodName, *params.map {
                 it::class.javaPrimitiveType ?: it.javaClass
             }.toTypedArray()).invoke(obj, *params).let {

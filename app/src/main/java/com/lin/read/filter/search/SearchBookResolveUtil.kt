@@ -47,6 +47,39 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
+        fun resolveFromBIQUGE2(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
+            val result = mutableListOf<SearchBookBean>()
+            var bookInfo: SearchBookBean? = null
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
+                val current = it.trim()
+                //<span class="s1">1</span>
+                if (StringKtUtil.matchesRegex(current,"<span\\s+class=\"s1\">\\d+</span>")) {
+                    bookInfo = SearchBookBean(Constants.RESOLVE_FROM_BIQUGE2)
+                    return@forEach
+                }
+                bookInfo?.let {
+                    it.takeIf { it.bookName.isEmpty() }?.let {
+                        //<span class="s2"><a href="http://www.biqugex.com/book/goto/id/64640" target="_blank">超维术士</a></span>
+                        StringKtUtil.getDataFromContentByRegex(current, "<span\\s+class=\"s2\"><a href=\"([^\"]+)\"\\s+target=\"_blank\">([\\s\\S]+?)(?=</a></span>)", listOf(1, 2))?.run {
+                            it.chapterLink = this[0]
+                            it.bookName = this[1]
+                        }
+                    } ?: it.takeIf { it.authorName.isEmpty() }?.let {
+                        //<span class="s4">牧狐</span>
+                        StringKtUtil.getDataFromContentByRegex(current, "<span\\s+class=\"s4\">([\\s\\S]+?)(?=</span>)", listOf(1))?.run {
+                            it.authorName = this[0]
+                            it.lastChapter = "--"
+                            it.lastUpdate = "--"
+                            result.add(it)
+                        }
+                    } ?: takeIf { current == "</li>" }?.run {
+                        bookInfo = null
+                    }
+                }
+            }
+            return if (result.isEmpty()) null else result
+        }
+
         fun resolveFromDINGDIAN(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
             var bookInfo: SearchBookBean? = null
             val result = mutableListOf<SearchBookBean>()

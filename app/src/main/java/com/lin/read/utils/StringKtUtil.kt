@@ -110,6 +110,8 @@ class StringKtUtil {
         fun removeSeconds(data: String): String = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}):\\d{2}").matcher(data).takeIf { it.matches() }?.group(1)
                 ?: data
 
+        fun matchesRegex(content: String, regex: String): Boolean = Pattern.compile(regex).matcher(content).matches()
+
         fun removeAdsFromContent(content: String): String = let {
             var result = content
             listOf(
