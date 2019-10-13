@@ -35,6 +35,11 @@ interface ReadRetrofitService {
     //https://so.biqusoso.com/s.php?ie=utf-8&siteid=biqugex.com&q=%E8%B6%85%E7%BB%B4%E6%9C%AF%E5%A3%AB
     fun searchFromBIQUGE2(@QueryMap(encoded = true) params:HashMap<String,String>): Observable<ResponseBody>
 
+    @GET("/search.php")
+    @Headers("User-Agent:Mozilla/4.0 (compatible; MSIE 7.0; Windows 7)")
+    //https://www.xbiquge6.com/search.php?keyword=仙逆
+    fun searchFromBIQUGE3(@Query("keyword", encoded = true) bookName: String): Observable<ResponseBody>
+
     @GET("/modules/article/search.php")
     @Headers("User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
     //"https://www.x23us.com/modules/article/search.php?searchtype=keywords&searchkey=" + URLEncoder.encode(params[0], "gbk");

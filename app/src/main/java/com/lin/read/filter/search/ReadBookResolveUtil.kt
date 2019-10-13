@@ -48,6 +48,18 @@ class ReadBookResolveUtil {
             return BookChapterContent("")
         }
 
+        fun getChapterContentFromBIQUGE3(readResolveBean: ReadResolveBean): BookChapterContent {
+            readResolveBean.responseBody.readLinesOfHtml().forEach {
+                it.trim().takeIf { it.contains("\"content\"") }?.let {
+                    //<div id="content">
+                    StringKtUtil.getDataFromContentByRegex(it, "<div id=\"content\">([^\n]+)", listOf(1))?.let {
+                        return BookChapterContent(it[0])
+                    }
+                }
+            }
+            return BookChapterContent("")
+        }
+
         fun getChapterContentFromDINGDIAN(readResolveBean: ReadResolveBean): BookChapterContent {
             var lastNonEmptyLine = ""
             readResolveBean.responseBody.readLinesOfHtml().forEach {
@@ -180,6 +192,30 @@ class ReadBookResolveUtil {
                             result.add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
                                     "https://www.biqugex.com" + it[0],
                                     StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
+                        }
+                    }
+                }
+                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
+            }
+            return result
+        }
+
+        fun getChapterListFromBIQUGE3(readResolveBean: ReadResolveBean): List<BookChapterInfo> {
+            var lastNonEmptyLine = ""
+            val result = mutableListOf<BookChapterInfo>()
+            readResolveBean.responseBody.readLinesOfHtml().forEach {
+                //<dt>《超维术士》正文</dt>
+                if (lastNonEmptyLine == "<dt>《${readResolveBean.readBookBean?.bookName}》正文</dt>") {
+                    readResolveBean.readBookBean?.run {
+                        //<dd><a href="/76_76069/1332439.html">第2097节 疑问</a></dd>
+                        StringKtUtil.getDataListFromContentByRegex(it, "<dd><a href=\"([^\"]+)\">([\\s\\S]+?)</a></dd>", listOf(1, 2))?.let {
+                            return mutableListOf<BookChapterInfo>().apply {
+                                it.forEach {
+                                    add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
+                                            StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[webType]!!, it[0]),
+                                            StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
+                                }
+                            }
                         }
                     }
                 }

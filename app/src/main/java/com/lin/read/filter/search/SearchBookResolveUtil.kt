@@ -80,6 +80,59 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
+        fun resolveFromBIQUGE3(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
+            val result = mutableListOf<SearchBookBean>()
+            var bookInfo: SearchBookBean? = null
+            var lastNonEmptyLine = ""
+            searchResolveBean.responseBody.readLinesOfHtml().forEach {
+                val current = it.trim()
+                //<h3 class="result-item-title result-game-item-title">
+                if (current == "<h3 class=\"result-item-title result-game-item-title\">") {
+                    bookInfo = SearchBookBean(Constants.RESOLVE_FROM_BIQUGE3)
+                    return@forEach
+                }
+                bookInfo?.let {
+                    it.takeIf { it.chapterLink.isEmpty() }?.let {
+                        //<a cpos="title" href="https://www.xbiquge6.com/11_11401/" title="崩仙逆道"
+                        StringKtUtil.getDataFromContentByRegex(current, "<a cpos=\"title\" href=\"([^\"]+)\"", listOf(1))?.run {
+                            it.chapterLink = this[0]
+                        }
+                    } ?: it.takeIf { it.bookName.isEmpty() }?.let {
+                        //<span>超维术士</span>
+                        StringKtUtil.getDataFromContentByRegex(current, "<span>([\\s\\S]+?)(?=</span>)", listOf(1))?.run {
+                            it.bookName = this[0]
+                        }
+                    } ?: it.takeIf { it.authorName.isEmpty() }?.let {
+                        //                        <span>
+                        //                            牧狐
+                        if(lastNonEmptyLine == "<span>"){
+                            it.authorName = current
+                        }
+                    } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
+                        //                        <span class="result-game-item-info-tag-title preBold">更新时间：</span>
+                        //                        <span class="result-game-item-info-tag-title">2016-02-12</span>
+                        if (lastNonEmptyLine == "<span class=\"result-game-item-info-tag-title preBold\">更新时间：</span>") {
+                            StringKtUtil.getDataFromContentByRegex(current, "<span class=\"result-game-item-info-tag-title\">([\\s\\S]+?)(?=</span>)", listOf(1))?.run {
+                                it.lastUpdate = this[0]
+                            } ?: run { it.lastUpdate = "--" }
+                        }
+                    }?: it.takeIf { it.lastChapter.isEmpty() }?.let {
+                        //                        <span class="result-game-item-info-tag-title preBold">最新章节：</span>
+                        //                        <a cpos="newchapter" href=" https://www.xbiquge6.com/76_76069/1332450.html " class="result-game-item-info-tag-item" target="_blank"> 第2099节 梦中相逢 </a>
+                        if (lastNonEmptyLine == "<span class=\"result-game-item-info-tag-title preBold\">最新章节：</span>") {
+                            StringKtUtil.getDataFromContentByRegex(current, "class=\"result-game-item-info-tag-item\" target=\"_blank\">([\\s\\S]+?)(?=</a>)", listOf(1))?.run {
+                                it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
+                            } ?: run { it.lastChapter = "--" }
+                            result.add(it)
+                            bookInfo = null
+                        }
+                    }
+                }
+                lastNonEmptyLine = current
+            }
+            return if (result.isEmpty()) null else result
+        }
+
         fun resolveFromDINGDIAN(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
             var bookInfo: SearchBookBean? = null
             val result = mutableListOf<SearchBookBean>()
