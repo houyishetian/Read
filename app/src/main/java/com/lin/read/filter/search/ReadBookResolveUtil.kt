@@ -1,9 +1,6 @@
 package com.lin.read.filter.search
 
-import com.lin.read.utils.Constants
-import com.lin.read.utils.StringKtUtil
-import com.lin.read.utils.baseUrl
-import com.lin.read.utils.readLinesOfHtml
+import com.lin.read.utils.*
 
 class ReadBookResolveUtil {
     companion object {
@@ -126,25 +123,22 @@ class ReadBookResolveUtil {
             }
         }
 
-        fun getChapterContentFromSANQI(readResolveBean: ReadResolveBean): BookChapterContent {
-            var start = false
-            var resultContent: String? = null
-            readResolveBean.responseBody.readLinesOfHtml().forEach {
-                val current = it.trim()
-                //<div id="neirong">
-                if (!start && current.startsWith("<div id=\"neirong\">")) {
-                    start = true
-                    resultContent = current.replace("<div id=\"neirong\">", "")
-                    return@forEach
-                }
-                if (start) {
-                    if (!current.endsWith("</div>")) {
-                        resultContent += current
-                    } else {
-                        resultContent += current.replace("</div>", "")
-                        return BookChapterContent(resultContent ?: "")
+        data class DPCQJsonBean(val status: Int, val info: String, val url: String)
+
+        fun getChapterContentFromDPCQ(readResolveBean: ReadResolveBean): BookChapterContent {
+            //$.get('/novelsearch/reader/transcode/siteid/20/url/aHR0cHM6Ly93d3cuZGFqaWFkdTguY29tL2ZpbGVzL2FydGljbGUvaHRtbC8xNS8xNTc0Ny8zOTEyNDA2Lmh0bWw=',{},function(res){
+            val contents = readResolveBean.responseBody.readLinesOfHtml()
+            if (contents.size > 1) {
+                contents.forEach {
+                    StringKtUtil.getDataFromContentByRegex(it, "\\$\\.get\\('([^'^\"]+)'", listOf(1))?.let {
+                        return BookChapterContent("").apply {
+                            isComplete = false
+                            nextLink = arrayOf(Constants.SEARCH_WEB_BASEURL_MAP[readResolveBean.bookChapterInfo?.webType]!!, it[0]).appendToUrl()
+                        }
                     }
                 }
+            } else {
+                return BookChapterContent(contents[0].toBean(DPCQJsonBean::class.java)?.info ?: "")
             }
             return BookChapterContent("")
         }
@@ -318,27 +312,18 @@ class ReadBookResolveUtil {
             return result
         }
 
-        fun getChapterListFromSANQI(readResolveBean: ReadResolveBean): List<BookChapterInfo> {
-            var lastNonEmptyLine = ""
-            readResolveBean.responseBody.readLinesOfHtml().forEach {
-                if(lastNonEmptyLine == "<div class=\"liebiao_bottom\">"){
-                    readResolveBean.readBookBean?.run {
-                        //<dd><a href="/html/65/65143/18844843.html">第三百一十二章 雷豆（六一快乐^^）</a></dd>
-                        //<dd><a href="/html/65/65143/17223065.html">仙界篇外传一</a></dd>
-                        StringKtUtil.getDataListFromContentByRegex(it, "<dd><a href=\"([^\"]+)\">([\\s\\S]+?)(?=</a></dd>)", listOf(1, 2))?.let {
-                            return mutableListOf<BookChapterInfo>().apply {
-                                it.forEach {
-                                    add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
-                                            StringKtUtil.parseLineForIncompletedLinks(Constants.SEARCH_WEB_BASEURL_MAP[webType]!!, it[0]),
-                                            StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
-                                }
+        fun getChapterListFromDPCQ(readResolveBean: ReadResolveBean): List<BookChapterInfo> =
+                mutableListOf<BookChapterInfo>().apply {
+                    readResolveBean.responseBody.readLinesOfHtml().forEach {
+                        readResolveBean.readBookBean?.run {
+                            //<li><a href="/109/2361.html" title="蛊真人 第三百六十八节：方源、巨阳战星宿" target="_blank">第三百六十八节：方源、巨阳战星宿</a></li>
+                            StringKtUtil.getDataFromContentByRegex(it, "<li><a href=\"([^\"]+)\" title=\"[^\"]+\" target=\"_blank\">([\\s\\S]+?)(?=</a></li>)", listOf(1, 2))?.let {
+                                add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
+                                        arrayOf(Constants.SEARCH_WEB_BASEURL_MAP[webType]!!, it[0]).appendToUrl(),
+                                        StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                             }
                         }
                     }
                 }
-                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
-            }
-            return listOf()
-        }
     }
 }

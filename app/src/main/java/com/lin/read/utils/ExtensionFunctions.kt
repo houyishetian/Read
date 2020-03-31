@@ -92,7 +92,7 @@ fun ResponseBody.readLinesOfHtml(): List<String> {
     val inputStream1 = ByteArrayInputStream(byteOutPutStream.toByteArray())
     val charset = inputStream0.bufferedReader().readLines().firstOrNull { it.toLowerCase().contains("charset=\"?[^\"^\n^;]+\"?".toRegex()) }?.let {
         StringKtUtil.getDataFromContentByRegex(it.toLowerCase(), "charset=\"?([^\"^\n^;]+)\"?", listOf(1))?.get(0)
-    } ?: throw Exception("no charset found!")
+    } ?: return mutableListOf(inputStream1.bufferedReader().readText())
     Log.d("charset", charset)
     return inputStream1.bufferedReader(Charset.forName(charset)).readLines().apply {
         inputStream0.close()
@@ -251,3 +251,17 @@ fun <T : Any> T.deepClone(): T = GsonBuilder().create().let {
         it.fromJson(this, this@deepClone.javaClass)
     }?: throw java.lang.Exception("cannot parse internal class to Json")
 }
+
+fun Array<String>.appendToUrl(): String = when (this.size) {
+    0 -> ""
+    else -> {
+        var result = this[0]
+        for (index in 1 until this.size) {
+            val startIndex = if (result.endsWith("/") && this[index].startsWith("/")) 1 else 0
+            result = result + this[index].substring(startIndex)
+        }
+        result
+    }
+}
+
+fun <T> String.toBean(clz: Class<T>): T? = GsonBuilder().create().fromJson(this, clz)

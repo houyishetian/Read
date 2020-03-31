@@ -3,6 +3,7 @@ package com.lin.read.filter.search
 import com.lin.read.filter.SearchBookBean
 import com.lin.read.utils.Constants
 import com.lin.read.utils.StringKtUtil
+import com.lin.read.utils.appendToUrl
 import com.lin.read.utils.readLinesOfHtml
 
 class SearchBookResolveUtil {
@@ -312,45 +313,36 @@ class SearchBookResolveUtil {
             return if (result.isEmpty()) null else result
         }
 
-        fun resolveFromSANQI(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
-            var lastNonEmptyLine = ""
+        fun resolveFromDPCQ(searchResolveBean: SearchResolveBean): List<SearchBookBean>? {
             val result = mutableListOf<SearchBookBean>()
             var searchBookBean:SearchBookBean? = null
             searchResolveBean.responseBody.readLinesOfHtml().forEach {
                 val current = it.trim()
-                if(lastNonEmptyLine == "<tr>"){
-                    searchBookBean = SearchBookBean(Constants.RESOLVE_FROM_SANQI)
-                }
-                if(current == "</tr>"){
-                    searchBookBean = null
-                    return@forEach
-                }
                 searchBookBean?.let {
-                    it.takeIf { it.bookName.isEmpty() }?.let {
-                        //<td class="odd"><a href="https://www.37shuwu.com/html/65/65143/index.html">凡人修仙之仙界篇</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\"><a href=\"([^\"]+)\">([\\s\\S]+?)</a></td>", listOf(1, 2))?.run {
-                            it.chapterLink = this[0]
-                            it.bookName = this[1]
-                        }
-                    } ?: it.takeIf { it.lastChapter.isEmpty() }?.let {
-                        //<td class="even"><a href="/html/65/65143/20979788.html" target="_blank"> 第一千零六十八章 出手</a></td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"even\"><a href=\"([^\"]+)\" target=\"_blank\">([\\s\\S]+?)</a></td>", listOf(2))?.run {
-                            it.lastChapter = StringKtUtil.removeUnusefulCharsFromChapter(this[0])
-                        }
-                    } ?: it.takeIf { it.authorName.isEmpty() }?.let {
-                        //<td class="odd">忘语</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\">([\\s\\S]+?)</td>", listOf(1))?.run {
+                    it.takeIf { it.authorName.isEmpty() }?.let {
+                        //<span>作者：<a href="/author/%E6%88%91%E5%91%BD%E9%BD%90%E5%A4%A9/" title="我命齐天 作品列表">我命齐天</a></span>
+                        StringKtUtil.getDataFromContentByRegex(current, "<span>作者：<a[^<^>]+>([\\s\\S]+?)</a></span>", listOf(1))?.run {
                             it.authorName = this[0]
                         }
                     } ?: it.takeIf { it.lastUpdate.isEmpty() }?.let {
-                        //<td class="odd" align="">19-08-17</td>
-                        StringKtUtil.getDataFromContentByRegex(current, "<td class=\"odd\" align=\"\">([\\s\\S]+?)</td>", listOf(1))?.run {
-                            it.lastUpdate = this[0]
+                        //最新章节：<a href="/7401/1110.html" title="蛊真人之齐天传 561.巨阳的底线" target="_blank">561.巨阳的底线</a>(07-14 22:37)
+                        StringKtUtil.getDataFromContentByRegex(current, "最新章节：<a[^<^>]+>([\\s\\S]+?)</a>\\(([\\s\\S]*?)\\)", listOf(1,2))?.run {
+                            it.lastChapter = this[0]
+                            it.lastUpdate = this[1]
                             result.add(it)
+                            searchBookBean = null
+                        }
+                    }
+                } ?: let {
+                    //<span>《<a href="/7401/" class="novelname" title="蛊真人之齐天传">蛊真人之齐天传</a>》</span>
+                    StringKtUtil.getDataFromContentByRegex(current, "<span>《<a href=\"([^\"]+)\" class=\"novelname\" title=\"[^\"]+\">([\\s\\S]+?)</a>》</span>", listOf(1, 2))?.run {
+                        searchBookBean = SearchBookBean(Constants.RESOLVE_FROM_DPCQ)
+                        searchBookBean?.let {
+                            it.chapterLink = arrayOf(searchResolveBean.baseUrl, this[0]).appendToUrl()
+                            it.bookName = this[1]
                         }
                     }
                 }
-                lastNonEmptyLine = if (it.trim().isEmpty()) lastNonEmptyLine else it.trim()
             }
             return if (result.isEmpty()) null else result
         }

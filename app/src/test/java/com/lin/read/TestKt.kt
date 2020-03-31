@@ -190,4 +190,21 @@ class TestKt {
         list.first().a = "new"
         println(list.hashCode())
     }
+
+    @Test
+    fun testAppendToUrl(){
+        println(arrayOf<String>().appendToUrl())
+        println(arrayOf<String>("abc").appendToUrl())
+        println(arrayOf<String>("abc","/def","/ghi").appendToUrl())
+        println(arrayOf<String>("abc","/def/","/ghi/","/fff").appendToUrl())
+    }
+
+    @Test
+    fun testDPCQ(){
+        //<li><a href="/109/2361.html" title="蛊真人 第三百六十八节：方源、巨阳战星宿" target="_blank">第三百六十八节：方源、巨阳战星宿</a></li>
+        val data = "<li><a href=\"/109/2361.html\" title=\"蛊真人 第三百六十八节：方源、巨阳战星宿\" target=\"_blank\">第三百六十八节：方源、巨阳战星宿</a></li>"
+        StringKtUtil.getDataFromContentByRegex(data, "<li><a href=\"([^\"]+)\" title=\"[^\"]+\" target=\"_blank\">([\\s\\S]+?)(?=</a></li>)", listOf(1, 2))?.let {
+            println(it.toString())
+        }
+    }
 }

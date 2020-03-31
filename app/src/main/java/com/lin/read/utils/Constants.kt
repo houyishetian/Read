@@ -30,17 +30,17 @@ class Constants {
         const val RESOLVE_FROM_BIXIA = "BIXIA"
         const val RESOLVE_FROM_AISHU = "AISHUWANG"
         const val RESOLVE_FROM_QINGKAN = "QINGKAN"
-        const val RESOLVE_FROM_SANQI = "SANQI"
+        const val RESOLVE_FROM_DPCQ = "DPCQ"
 
         val SEARCH_WEB_NAME_MAP: LinkedHashMap<String, String> = linkedMapOf<String, String>().apply {
             put(RESOLVE_FROM_BIQUGE, "笔趣阁")
 //            put(RESOLVE_FROM_BIQUGE2, "笔趣2")
             put(RESOLVE_FROM_BIQUGE3, "笔趣3")
             put(RESOLVE_FROM_DINGDIAN, "顶点")
-            put(RESOLVE_FROM_BIXIA, "笔下")
+//            put(RESOLVE_FROM_BIXIA, "笔下")
             put(RESOLVE_FROM_AISHU, "爱书网")
             put(RESOLVE_FROM_QINGKAN, "请看")
-            put(RESOLVE_FROM_SANQI, "三七")
+            put(RESOLVE_FROM_DPCQ, "DPCQ")
         }
 
         val SEARCH_WEB_BASEURL_MAP:HashMap<String,String> = hashMapOf<String, String>().apply {
@@ -48,16 +48,16 @@ class Constants {
             put(RESOLVE_FROM_BIQUGE2, "https://so.biqusoso.com/")
             put(RESOLVE_FROM_BIQUGE3, "https://www.xbiquge6.com/")
             put(RESOLVE_FROM_DINGDIAN, "https://www.23wxc.com/")
-            put(RESOLVE_FROM_BIXIA, "http://www.bxwx666.org/")
+            put(RESOLVE_FROM_BIXIA, "https://www.bxwx666.org/")
             put(RESOLVE_FROM_AISHU, "http://www.22ff.org/")
             put(RESOLVE_FROM_QINGKAN, "https://www.qk6.org/")
-            put(RESOLVE_FROM_SANQI, "http://www.37shuwu.com/")
+            put(RESOLVE_FROM_DPCQ, "https://dpcq1.net/")
         }
 
         val SEARCH_WEB_RETRO_PARAMS_MAP = fun(tag: String, bookName: String): Any {
             val searchKey = when (tag) {
-                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE2, RESOLVE_FROM_BIQUGE3, RESOLVE_FROM_AISHU -> bookName
-                RESOLVE_FROM_DINGDIAN, RESOLVE_FROM_BIXIA, RESOLVE_FROM_QINGKAN, RESOLVE_FROM_SANQI -> URLEncoder.encode(bookName, "gbk")
+                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE2, RESOLVE_FROM_BIQUGE3, RESOLVE_FROM_AISHU, RESOLVE_FROM_DPCQ -> bookName
+                RESOLVE_FROM_DINGDIAN, RESOLVE_FROM_BIXIA, RESOLVE_FROM_QINGKAN -> URLEncoder.encode(bookName, "gbk")
                 else -> throw Exception("cannot resolve current type:$tag")
             }
             return when (tag) {
@@ -65,7 +65,7 @@ class Constants {
                 // "http://www.bxwx666.org/search.aspx?bookname=" + URLEncoder.encode(params[0], "gbk")
                 //"http://www.22ff.org/s_"+bookName;
                 //http://www.37shuwu.com/modules/article/ss.php?searchkey=%CF%C9%C4%E6
-                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE3, RESOLVE_FROM_BIXIA, RESOLVE_FROM_AISHU, RESOLVE_FROM_SANQI -> searchKey
+                RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE3, RESOLVE_FROM_BIXIA, RESOLVE_FROM_AISHU -> searchKey
                 RESOLVE_FROM_DINGDIAN -> hashMapOf<String, String>().apply {
                     //"https://www.x23us.com/modules/article/search.php?searchtype=articlename&searchkey=" + URLEncoder.encode(params[0], "gbk");
                     put("searchtype", "articlename")
@@ -76,6 +76,11 @@ class Constants {
                     put("action", "search")
                     put("searchtype", "novelname")
                     put("input", "")
+                    put("searchkey", searchKey)
+                }
+                //https://dpcq1.net/search.html?searchtype=novelname&searchkey=%E8%9B%8A%E7%9C%9F%E4%BA%BA
+                RESOLVE_FROM_DPCQ -> hashMapOf<String, String>().apply {
+                    put("searchtype", "novelname")
                     put("searchkey", searchKey)
                 }
                 RESOLVE_FROM_BIQUGE2 -> hashMapOf<String, String>().apply {
