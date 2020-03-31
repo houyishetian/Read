@@ -63,7 +63,7 @@ class ReadBookResolveUtil {
         fun getChapterContentFromDINGDIAN(readResolveBean: ReadResolveBean): BookChapterContent {
             var lastNonEmptyLine = ""
             readResolveBean.responseBody.readLinesOfHtml().forEach {
-                if (lastNonEmptyLine == "<div class=\"read_share\"><script>show_share();</script></div>") {
+                if (lastNonEmptyLine == "<div class=\"adhtml\"><script>show_htm();</script></div>") {
                     //<div class="read_share"><script>show_share();</script></div>
                     StringKtUtil.getDataFromContentByRegex(it, "<dd id=\"contents\">([^\n]+)</dd>", listOf(1))?.let {
                         return BookChapterContent(it[0])
@@ -236,7 +236,8 @@ class ReadBookResolveUtil {
                                 return mutableListOf<BookChapterInfo>().apply {
                                     it.forEach {
                                         add(BookChapterInfo(webType, Constants.SEARCH_WEB_NAME_MAP[webType]!!,
-                                                chapterLink + it[0], StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
+                                                chapterLink.takeIf { it.endsWith("index.html") }?.replace("index.html", "") + it[0],
+                                                StringKtUtil.removeUnusefulCharsFromChapter(it[1]), it[1]))
                                     }
                                 }
                             }

@@ -34,7 +34,7 @@ class Constants {
 
         val SEARCH_WEB_NAME_MAP: LinkedHashMap<String, String> = linkedMapOf<String, String>().apply {
             put(RESOLVE_FROM_BIQUGE, "笔趣阁")
-            put(RESOLVE_FROM_BIQUGE2, "笔趣2")
+//            put(RESOLVE_FROM_BIQUGE2, "笔趣2")
             put(RESOLVE_FROM_BIQUGE3, "笔趣3")
             put(RESOLVE_FROM_DINGDIAN, "顶点")
             put(RESOLVE_FROM_BIXIA, "笔下")
@@ -44,10 +44,10 @@ class Constants {
         }
 
         val SEARCH_WEB_BASEURL_MAP:HashMap<String,String> = hashMapOf<String, String>().apply {
-            put(RESOLVE_FROM_BIQUGE, "http://www.biquge5200.com/")
+            put(RESOLVE_FROM_BIQUGE, "https://www.biquge5200.com/")
             put(RESOLVE_FROM_BIQUGE2, "https://so.biqusoso.com/")
             put(RESOLVE_FROM_BIQUGE3, "https://www.xbiquge6.com/")
-            put(RESOLVE_FROM_DINGDIAN, "https://www.x23us.com/")
+            put(RESOLVE_FROM_DINGDIAN, "https://www.23wxc.com/")
             put(RESOLVE_FROM_BIXIA, "http://www.bxwx666.org/")
             put(RESOLVE_FROM_AISHU, "http://www.22ff.org/")
             put(RESOLVE_FROM_QINGKAN, "https://www.qk6.org/")
@@ -67,8 +67,8 @@ class Constants {
                 //http://www.37shuwu.com/modules/article/ss.php?searchkey=%CF%C9%C4%E6
                 RESOLVE_FROM_BIQUGE, RESOLVE_FROM_BIQUGE3, RESOLVE_FROM_BIXIA, RESOLVE_FROM_AISHU, RESOLVE_FROM_SANQI -> searchKey
                 RESOLVE_FROM_DINGDIAN -> hashMapOf<String, String>().apply {
-                    //"https://www.x23us.com/modules/article/search.php?searchtype=keywords&searchkey=" + URLEncoder.encode(params[0], "gbk");
-                    put("searchtype", "keywords")
+                    //"https://www.x23us.com/modules/article/search.php?searchtype=articlename&searchkey=" + URLEncoder.encode(params[0], "gbk");
+                    put("searchtype", "articlename")
                     put("searchkey", searchKey)
                 }
                 //"https://www.qk6.org/novel.php?action=search&searchtype=novelname&searchkey=" + searchKey + "&input="
