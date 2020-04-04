@@ -17,6 +17,6 @@ class LaunchActivity : Activity(){
         Handler().postDelayed({
             startActivity(Intent(this@LaunchActivity, MainActivity::class.java))
             finish()
-        }, 3000)
+        }, 200)
     }
 }
