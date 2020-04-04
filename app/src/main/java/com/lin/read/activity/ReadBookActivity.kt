@@ -271,7 +271,7 @@ class ReadBookActivity : Activity() {
             override fun onSucc(content: String) {
                 runOnUiThread {
                     DialogUtil.getInstance().hideLoadingView()
-                    chapter_name.text = afterCopy.chapterName
+                    chapter_name.setTextWithAutoFontSize(afterCopy.chapterName)
                     chapter_content.text = Html.fromHtml(content)
                     ReflectUtil.copyProperteries(afterCopy, currentReadInfo.bookChapterInfo)
                     updatePosition(afterCopy.page)

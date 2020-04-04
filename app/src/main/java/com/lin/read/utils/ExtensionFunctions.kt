@@ -13,11 +13,14 @@ import android.support.v4.content.FileProvider
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.animation.Animation
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.GsonBuilder
 import com.lin.read.R
@@ -26,6 +29,7 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.lang.IllegalArgumentException
 import java.net.URL
 import java.nio.charset.Charset
 
@@ -265,3 +269,26 @@ fun Array<String>.appendToUrl(): String = when (this.size) {
 }
 
 fun <T> String.toBean(clz: Class<T>): T? = GsonBuilder().create().fromJson(this, clz)
+
+fun TextView.setTextWithAutoFontSize(displayText: String, defaultFontSize: Float = 20f, minFontSize: Float = 8f) {
+    if (defaultFontSize < 0 || minFontSize < 0) throw IllegalArgumentException("the font size must be bigger than 0!")
+    var chapterFontSize = defaultFontSize
+    text = displayText
+    setTextSize(TypedValue.COMPLEX_UNIT_SP, chapterFontSize)
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (layout == null) {
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, chapterFontSize)
+            } else {
+                if (layout.let { it.getEllipsisCount(it.lineCount - 1) > 0 } && chapterFontSize >= minFontSize) {
+                    Log.d("Test", "$chapterFontSize is too large, try chapter size:${chapterFontSize - 1}")
+                    chapterFontSize--
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, chapterFontSize)
+                } else {
+                    viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    Log.d("Test", "remove listener, the final chapter font size:$chapterFontSize")
+                }
+            }
+        }
+    })
+}
