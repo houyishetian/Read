@@ -13,7 +13,8 @@
             android:supportsRtl="true"
             android:fullBackupContent="false"
             android:theme="@style/ThemeSplash">
-        <activity android:name=".activity.LaunchActivity">
+        <activity android:name=".activity.LaunchActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,13 +22,16 @@
             </intent-filter>
         </activity>
         <activity
+                android:screenOrientation="portrait"
                 android:name=".activity.MainActivity"
                 android:theme="@android:style/Theme.Light.NoTitleBar"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
+                android:screenOrientation="portrait"
                 android:name=".activity.LoadingDialogActivity"
                 android:theme="@style/LoadingDialogActivityStyle"/>
         <activity
+                android:screenOrientation="portrait"
                 android:name=".activity.ReadBookActivity"
                 android:theme="@android:style/Theme.Light.NoTitleBar"
                 android:windowSoftInputMode="adjustResize|stateHidden"/>

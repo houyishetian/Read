@@ -7,6 +7,7 @@ import android.os.Handler
 import android.text.Html
 import android.text.InputFilter
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -41,6 +42,7 @@ class ReadBookActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_book)
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         init()
         getChapterInfo()
     }
