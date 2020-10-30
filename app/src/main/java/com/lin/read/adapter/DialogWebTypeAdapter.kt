@@ -1,7 +1,7 @@
 package com.lin.read.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.lin.read.filter.search.SearchWebBean
 
 class DialogWebTypeAdapter(private val context: Context, private val webInfos: List<SearchWebBean>) : RecyclerView.Adapter<DialogWebTypeAdapter.ViewHolder>() {
     lateinit var onItemWebClickListener:OnItemWebClickListener
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_select_web_dialog, null))
     }
 
@@ -19,9 +19,9 @@ class DialogWebTypeAdapter(private val context: Context, private val webInfos: L
         return webInfos.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         webInfos[position].run {
-            holder?.let {
+            holder.let {
                 it.webName.text = webName
                 it.downloadText.visibility = if (canDownload) View.VISIBLE else View.GONE
                 it.webName.setOnClickListener{

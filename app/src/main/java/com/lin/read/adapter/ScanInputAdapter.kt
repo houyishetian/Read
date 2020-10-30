@@ -1,7 +1,7 @@
 package com.lin.read.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,13 +30,13 @@ class ScanInputAdapter(private val context: Context, private val data: List<Scan
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): InputViewHolder = InputViewHolder(LayoutInflater.from(context).inflate(R.layout.item_scan_sub_input_type, null))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InputViewHolder = InputViewHolder(LayoutInflater.from(context).inflate(R.layout.item_scan_sub_input_type, null))
 
     override fun getItemCount(): Int = data.size
 
-    override fun onBindViewHolder(holder: InputViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: InputViewHolder, position: Int) {
         isBinding = true
-        holder?.itemView?.run {
+        holder.itemView.run {
             data[position].let {
                 scan_sub_item_et.hint = it.hint
                 scan_sub_item_et.setText(it.defaultValue.toString())

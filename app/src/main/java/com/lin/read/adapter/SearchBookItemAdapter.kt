@@ -3,7 +3,7 @@ package com.lin.read.adapter
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import com.lin.read.utils.Constants
 import kotlinx.android.synthetic.main.item_search_book.view.*
 
 class SearchBookItemAdapter(private val context: Context, private val allBookData: List<SearchBookBean>) : RecyclerView.Adapter<SearchBookItemAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_book, null).apply {
             setOnClickListener{
                 readBook(allBookData[it.tag as Int])
@@ -27,14 +27,14 @@ class SearchBookItemAdapter(private val context: Context, private val allBookDat
         return allBookData.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.view?.tag = position
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.view.tag = position
         allBookData[position].run {
-            holder?.itemView?.book_item_bookname?.text = bookName
-            holder?.itemView?.book_item_authorname?.text = authorName
-            holder?.itemView?.book_item_lastupdate?.text = lastUpdate
-            holder?.itemView?.book_item_lastcontent?.text = lastChapter
-            holder?.itemView?.book_item_read?.setOnClickListener {
+            holder.itemView.book_item_bookname?.text = bookName
+            holder.itemView.book_item_authorname?.text = authorName
+            holder.itemView.book_item_lastupdate?.text = lastUpdate
+            holder.itemView.book_item_lastcontent?.text = lastChapter
+            holder.itemView.book_item_read?.setOnClickListener {
                 readBook(this)
             }
         }

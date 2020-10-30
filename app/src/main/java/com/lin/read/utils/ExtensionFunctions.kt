@@ -5,11 +5,11 @@ import android.app.Dialog
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Point
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.content.FileProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.core.content.FileProvider
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -166,13 +166,15 @@ inline fun <T, R> Iterable<T>.minusBy(elements: Iterable<T>, block: (T) -> R): L
 }
 
 fun Fragment.shareFile(filePath: String, requestCode: Int? = null, title: String = "分享") {
-    Intent(Intent.ACTION_SEND).run {
-        type = "*/*"
-        setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(activity, getString(R.string.file_provider_auth), File(filePath)))
-        requestCode?.let {
-            startActivityForResult(Intent.createChooser(this, title), requestCode)
-        } ?: startActivity(Intent.createChooser(this, title))
+    context?.let { context ->
+        Intent(Intent.ACTION_SEND).run {
+            type = "*/*"
+            setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, getString(R.string.file_provider_auth), File(filePath)))
+            requestCode?.let {
+                startActivityForResult(Intent.createChooser(this, title), requestCode)
+            } ?: startActivity(Intent.createChooser(this, title))
+        }
     }
 }
 

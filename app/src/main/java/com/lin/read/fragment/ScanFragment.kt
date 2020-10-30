@@ -3,8 +3,8 @@ package com.lin.read.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,52 +35,55 @@ class ScanFragment : Fragment() {
     private lateinit var allBookData: MutableList<ScanBookBean>
     private var bookComparatorUtil: BookComparatorUtil? = null
     private var scanMenuIsSliding = false
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(activity).inflate(R.layout.fragment_scan, null)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initData()
     }
 
     private fun initData() {
-        allBookData = mutableListOf()
-        DialogUtil.getInstance().showLoadingDialog(activity)
-        GsonBuilder().create().fromJson(InputStreamReader(activity.assets.open("read_scan.json")), ScanBean::class.java).apply {
-            Log.e("Test","get read scan data successfully!")
-            DialogUtil.getInstance().hideLoadingView()
-            rcv_scan.let {
-                it.layoutManager = LinearLayoutManager(activity)
-                it.addItemDecoration(ScanItemDecoration(activity, top = 15))
-                it.adapter = ScanFilterItemAdapter(activity, this)
-                it.setOnTouchListener { view, event ->
-                    (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken,0)
-                    false
+        activity?.let { activity ->
+            allBookData = mutableListOf()
+            DialogUtil.getInstance().showLoadingDialog(activity)
+            GsonBuilder().create().fromJson(InputStreamReader(activity.assets.open("read_scan.json")), ScanBean::class.java).apply {
+                Log.e("Test", "get read scan data successfully!")
+                DialogUtil.getInstance().hideLoadingView()
+                rcv_scan.let {
+                    it.layoutManager = LinearLayoutManager(activity)
+                    it.addItemDecoration(ScanItemDecoration(activity, top = 15))
+                    it.adapter = ScanFilterItemAdapter(activity, this)
+                    it.setOnTouchListener { view, _ ->
+                        view.performClick()
+                        (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken, 0)
+                        false
+                    }
+                }
+            }.takeIf { it.webs.values.first().isNotEmpty() }?.let {
+                scan_filter.setOnNoDoubleClickListener {
+                    layout_scan_filter.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.set_scan_filter_menu_in))
+                    layout_scan_filter.visibility = View.VISIBLE
                 }
             }
-        }.takeIf { it.webs.values.first().isNotEmpty() }?.let {
-            scan_filter.setOnNoDoubleClickListener {
-                layout_scan_filter.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.set_scan_filter_menu_in))
-                layout_scan_filter.visibility = View.VISIBLE
+            rcv_scan_all_books.run {
+                layoutManager = LinearLayoutManager(activity)
+                addItemDecoration(ScanBooksItemDecoration(activity))
+                adapter = ScanBookItemAdapter(activity, allBookData)
             }
-        }
-        rcv_scan_all_books.run {
-            layoutManager = LinearLayoutManager(activity)
-            addItemDecoration(ScanBooksItemDecoration(activity))
-            adapter = ScanBookItemAdapter(activity, allBookData)
-        }
-        scan_filter_blank.setOnNoDoubleClickListener {
-            hideFilter()
-        }
-        scan_ok.setOnNoDoubleClickListener {
-            hideFilter()
-            startScanning()
-        }
-        scan_sort.setOnNoDoubleClickListener {
-            bookComparatorUtil?.showSortDialog(activity, allBookData) {
-                rcv_scan_all_books.adapter.notifyDataSetChanged()
-                rcv_scan_all_books.smoothScrollToPosition(0)
+            scan_filter_blank.setOnNoDoubleClickListener {
+                hideFilter()
+            }
+            scan_ok.setOnNoDoubleClickListener {
+                hideFilter()
+                startScanning()
+            }
+            scan_sort.setOnNoDoubleClickListener {
+                bookComparatorUtil?.showSortDialog(activity, allBookData) {
+                    rcv_scan_all_books.adapter?.notifyDataSetChanged()
+                    rcv_scan_all_books.smoothScrollToPosition(0)
+                }
             }
         }
     }
@@ -106,7 +109,7 @@ class ScanFragment : Fragment() {
 
     fun isFilterLayoutVisible(): Boolean = layout_scan_filter.visibility == View.VISIBLE
 
-    fun hideSoft() = (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(rcv_scan.windowToken, 0)
+    fun hideSoft() = (activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.hideSoftInputFromWindow(rcv_scan.windowToken, 0)
 
     private fun startScanning() {
         (rcv_scan.adapter as ScanFilterItemAdapter).getScanDataBean()?.let {
@@ -124,7 +127,7 @@ class ScanFragment : Fragment() {
                     scan_result_qidian.visibility = View.VISIBLE
                     scan_result_qidian.text = String.format(Locale.CHINA, Constants.TEXT_SCAN_BOOK_INFO_RESULT, 0)
                     allBookData.clear()
-                    rcv_scan_all_books.adapter.notifyDataSetChanged()
+                    rcv_scan_all_books.adapter?.notifyDataSetChanged()
                     rcv_scan_all_books.visibility = View.GONE
                     empty_view.visibility = View.VISIBLE
                     bookComparatorUtil = null
@@ -142,7 +145,7 @@ class ScanFragment : Fragment() {
                     makeMsg(if (allBookData.isEmpty()) "未扫描到数据！" else "扫描结束！")
                     bookComparatorUtil = BookComparatorUtil()
                     bookComparatorUtil?.sortByDefaultRules(allBookData) {
-                        rcv_scan_all_books.adapter.notifyDataSetChanged()
+                        rcv_scan_all_books.adapter?.notifyDataSetChanged()
                         rcv_scan_all_books.smoothScrollToPosition(0)
                     }
                 }

@@ -1,14 +1,13 @@
 package com.lin.read.adapter
 
 import android.content.Context
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lin.read.R
-import com.lin.read.decoration.ScanItemDecoration
 import com.lin.read.filter.scan.*
 import com.lin.read.utils.isNotNull
 import com.lin.read.utils.pairBean
@@ -28,7 +27,7 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
 
     private val allInputValues: HashMap<String, LinkedHashMap<String, String>>
 
-    private val optionItemSelectedListener = fun(selectedId: String?, selectedName: String) {
+    private val optionItemSelectedListener = fun(_: String?, _: String) {
         updateAllSplitData()
         notifyDataSetChanged()
     }
@@ -155,12 +154,12 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GroupViewHolder = GroupViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_scan_group_type, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder = GroupViewHolder(LayoutInflater.from(ctx).inflate(R.layout.item_scan_group_type, parent, false))
 
     override fun getItemCount(): Int = allSplitData.size
 
-    override fun onBindViewHolder(holder: GroupViewHolder?, position: Int) {
-        holder?.itemView?.run {
+    override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
+        holder.itemView.run {
             allSplitData[position].let { pairBean ->
                 tv_scan_group_type.text = pairBean.first.pairBean.second
                 if (position == 0) {
@@ -168,7 +167,6 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
                         this.setHasFixedSize(true)
                         layoutManager = GridLayoutManager(ctx, 4)
                         getItemDecorationAt(0)
-                                ?: addItemDecoration(ScanItemDecoration(ctx, top = 15, left = 10))
                         adapter = ScanDataAdapter(ctx, pairBean.second, false).apply {
                             onScanItemClickListener = fun(id, name) {
                                 Log.e("select web item", "${Pair(name, id)}")
@@ -186,7 +184,6 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
                                 this.setHasFixedSize(true)
                                 layoutManager = GridLayoutManager(ctx, if (use4Words) 3 else 4)
                                 getItemDecorationAt(0)
-                                        ?: addItemDecoration(ScanItemDecoration(ctx, top = 15, left = 10))
                                 adapter = ScanDataAdapter(ctx, pairBean.second, use4Words).apply {
                                     onScanItemClickListener = fun(id, name) {
                                         Log.e("select item", "${Pair(name, id)}")
@@ -200,7 +197,6 @@ class ScanFilterItemAdapter(private val ctx: Context, private var scanBean: Scan
                                 setHasFixedSize(true)
                                 layoutManager = GridLayoutManager(ctx, 2)
                                 getItemDecorationAt(0)
-                                        ?: addItemDecoration(ScanItemDecoration(ctx, top = 15, left = 10))
                                 adapter = ScanInputAdapter(ctx, pairBean.second.map { it.first as ScanInputItemBean }, fun(inputDatas) {
                                     allInputValues.put(selectWeb, inputDatas)
                                 })

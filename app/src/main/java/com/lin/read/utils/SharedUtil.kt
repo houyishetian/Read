@@ -9,11 +9,11 @@ import java.io.ObjectOutputStream
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class SharedUtil<T>(private val ctx: Context, private val key: String, private val default: T, private val sharedName: String = Constants.DEFAULT_SHARED_NAME) : ReadWriteProperty<Any?, T> {
+class SharedUtil<T:Any>(private val ctx: Context, private val key: String, private val default: T, private val sharedName: String = Constants.DEFAULT_SHARED_NAME) : ReadWriteProperty<Any?, T> {
     private val shared: SharedPreferences by lazy { ctx.getSharedPreferences(sharedName, Context.MODE_PRIVATE) }
     private val CHARSET_NAME = "ISO-8859-1"
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = shared.run {
-        val result = when (default) {
+        val result:Any = when (default) {
             is String -> getString(key, default)
             is Long -> getLong(key, default)
             is Float -> getFloat(key, default)

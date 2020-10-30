@@ -3,8 +3,8 @@ package com.lin.read.adapter
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,7 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
     private var isBinding = false
     lateinit var onCheckBoxClickListener: OnCheckBoxClickListener
     lateinit var onItemLongClickListener: OnItemLongClickListener
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(fragment.activity as Context).inflate(R.layout.item_book_mark, null).apply {
             setOnLongClickListener{
                 onItemLongClickListener.onItemLongClick(this)
@@ -40,13 +40,13 @@ class BookMarksAdapter(private val fragment: Fragment, private val bookMarksData
         return bookMarksData.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         isBinding = true
-        holder?.view?.tag = position
-        holder?.view?.setTag(R.integer.read_book_cb_view_id, holder.itemView?.mark_select_cb)
+        holder.view.tag = position
+        holder.view.setTag(R.integer.read_book_cb_view_id, holder.itemView.mark_select_cb)
         bookMarksData[position].let { varPair ->
             val bookmark = varPair.first
-            holder?.itemView?.let {
+            holder.itemView.let {
                 it.mark_item_bookname?.text = bookmark.bookName
                 it.mark_item_authorname?.text = bookmark.authorName
                 it.mark_item_web_name?.text = Constants.SEARCH_WEB_NAME_MAP[bookmark.webType]

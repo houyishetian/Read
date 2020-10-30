@@ -2,9 +2,9 @@ package com.lin.read.decoration
 
 import android.content.Context
 import android.graphics.Rect
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.lin.read.utils.UIUtils
@@ -13,7 +13,7 @@ class ScanItemDecoration(private val ctx: Context, private val top: Int? = null,
                          private val bottom: Int? = null, private val right: Int? = null) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View,
-                                parent: RecyclerView, state: RecyclerView.State?) {
+                                parent: RecyclerView, state: RecyclerView.State) {
 
         val spanCount = when (parent.layoutManager) {
             is GridLayoutManager -> (parent.layoutManager as GridLayoutManager).spanCount
